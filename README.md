@@ -1,0 +1,1 @@
+this project will evaluate the methodological quality of meta-analyses on the effect of transcranial direct-current stimulation on motor learning. It is currently in the pilot phase (master thesis). For the data and data analyses code used in the pilot phase, refer to the "thesis" branch. 
