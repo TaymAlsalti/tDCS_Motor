@@ -1,9 +1,229 @@
 ---
-title: Code
+title: Data analysis code, Meta-Analyses in tDCS - Motor Learning Research 
 author: Taym Alsalti
-date: July 28, 2021
 output:
-  prettydoc::html_pretty:
-    theme: architect
-    highlight: github
+  html_document:
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: true
 ---
+
+**Load packages and dataset**
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = TRUE
+)
+# options(scipen = 999, digits = 2)
+```
+
+```{css, echo = FALSE}
+# Automatically number chunks
+body {
+  counter-reset: counter-rchunks;
+}
+
+div.main-container {
+  padding-left: 3em;
+}
+
+pre.r {
+  counter-increment: counter-rchunks;
+  position: relative;
+  overflow: visible;
+}
+
+pre.r::before {
+  content: '[' counter(counter-rchunks) ']:';
+  display: inline-block;
+  position: absolute;
+  left: -3em;
+  color: rgb(48, 63, 159);
+}
+```
+
+```{r}
+library("readxl") 
+library("writexl")
+library("tidyverse")
+df <- read_excel("data_thesis/Data_sheet_ps.xlsx")
+```
+
+If you want to run the code outside of the project folder, loading the packages using the package `groundhog` would ensure the code's long term reproducibility:
+```{r}
+# install.packages("groundhog")
+# library("groundhog")
+# pkgs <- c("readxl","writexl", "tidyverse")
+# date = "2021-08-27"
+# groundhog.library(pkgs, date)
+```
+
+
+# Reproducibility
+Note that most of the code in this section was adapted from [Maassen et al. (2020)](https://doi.org/10.1371/journal.pone.0233107)'s data analysis code, available [here](https://github.com/emaassen/paper-effectsizes/tree/master/code). 
+
+## Functions for reproducing primary SMDs
+
+### Cohen's d for a between-groups comparison
+This formula is very commonly used and can be found in dozens of text books, e.g., [Hedges and Olkin, 1985](https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis), p. 78-79:
+$$d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}$$
+
+$$\begin{equation*}
+s={\sqrt {\frac {(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}}}
+\end{equation*}$$
+
+Where ${\bar {x}}_{1}$ is the mean of the treatment group, ${\bar {x}}_{2}$ is the mean of the control group, $s$ is the pooled standard deviation, $n_{1}$ and $n_{2}$ are the sample sizes of the treatment and control groups, respectively, and $s_{1}$ and $s_{2}$ are the standard deviations of the treatment and control groups, respectively.
+
+```{r}
+cd_between <- function(x) {
+  
+  cohensd <- c()  
+  
+  for (k in 1:nrow(x)) {
+    
+    nc <- as.numeric(x$nc_ps)[k]
+    nt <- as.numeric(x$nt_ps)[k]
+
+      
+      mc <-  as.numeric(eval(parse(text = paste0("x$mc_ps.2"))))[k]
+      mt <-  as.numeric(eval(parse(text = paste0("x$mt_ps.2"))))[k]
+      sdc <- as.numeric(eval(parse(text = paste0("x$sdc_ps.2"))))[k]
+      sdt <- as.numeric(eval(parse(text = paste0("x$sdt_ps.2"))))[k]
+      
+      d <- (mt - mc) / sqrt((((nc - 1) * (sdc^2)) + ((nt - 1) * (sdt^2))) / (nc + nt - 2))
+      
+    cohensd[k] <- d
+    
+  }
+  return(cohensd)
+}
+```
+
+
+### Hedges' g for a between-groups comparison
+Hedges' *g* is a small sample correction of Cohen's *d*, one way to compute it can be found in [Hedges and Olkin, 1985](https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis), p. 81:
+$$\begin{equation*}
+d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}={\frac {\mu_{1}-\mu_{2}}{s}}
+\end{equation*}$$
+
+$$\begin{equation*}
+s={\sqrt {\frac {(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}}}
+\end{equation*}$$
+
+$$\begin{equation*}
+J={1-{\frac {3}{4N-9}}}
+\end{equation*}$$
+
+$$\begin{equation*}
+g=J \times d
+\end{equation*}$$
+Where $N = n_{1}+n_{2}$
+
+```{r}
+hg_between <- function(x) {
+  
+  hedgesg <- c()  
+  
+  for (k in 1:nrow(x)) {
+    
+    nc <- as.numeric(x$nc_ps)[k]
+    nt <- as.numeric(x$nt_ps)[k]
+    n <- nc + nt
+      
+      mc <-  as.numeric(eval(parse(text = paste0("x$mc_ps.2"))))[k]
+      mt <-  as.numeric(eval(parse(text = paste0("x$mt_ps.2"))))[k]
+      sdc <- as.numeric(eval(parse(text = paste0("x$sdc_ps.2"))))[k]
+      sdt <- as.numeric(eval(parse(text = paste0("x$sdt_ps.2"))))[k]
+      
+      d <- (mt - mc) / sqrt((((nc - 1) * (sdc^2)) + ((nt - 1) * (sdt^2))) / (nc + nt - 2))
+      
+    # transform to hedges g
+    J <- 1 - (3 / ((4 * n) - 9))  
+    hedgesg[k] <- J * d
+  }
+  return(hedgesg)
+}
+```
+
+
+## Meta-analysis 1
+### Data wrangling
+#### Add a column specifying availablity of Ms and SDs
+This facilitates automating the process of using the SMDs as reported in the meta-analysis in the case of primary studies for which it was impossible to reproduce the primary effect sizes due to lack of necessary data. 
+```{r}
+df <- df %>% 
+  mutate(data_available = if_else(is.na(mc_ps.2), "no", "yes")) 
+```
+In the case of this meta-analysis, all primary studies (PS) reported all Ms and SDs for the second time point if they reported one of them, which is why the new column is based on the mean of the control group at the second time point as an example. Will change this code if it turns out not to be the case in a future meta-analysis. 
+
+#### Convert standard errors extracted from PS 8 to standard deviations
+```{r}
+# remove asterisks highlighting SEs
+df[] <- lapply(df, gsub, pattern = '*', replacement = '', fixed = TRUE)
+df <- df %>% mutate_at(vars(starts_with('sd')), as.numeric)
+# multiply SEs by the square of the sample size (10 in both groups in PS 8)
+df[11, "sdc_ps.1"] <- df[11, "sdc_ps.1"] * sqrt(10)
+df[11, "sdc_ps.2"] <- df[11, "sdc_ps.2"] * sqrt(10)
+df[11, "sdt_ps.1"] <- df[11, "sdt_ps.1"] * sqrt(10)
+df[11, "sdt_ps.2"] <- df[11, "sdt_ps.2"] * sqrt(10)
+```
+
+### Reproduce primary effect sizes
+17 primary studies were included in MA1, based on which 21 comparisons were made and thus 21 SMDs calculated. Two comparisons were made based on studies 5, 6, 7 and 14, which had three groups: anodal, cathodal, and sham tDCS in contrast to the other studies which either had one type of tDCS or combined both types into one group. Hence, effect sizes/comparison ids 5 & 6, 7 & 8, 9 & 10, and 17 & 18 are based on identical control/sham groups.
+```{r}
+# compute Cohen's ds for the comparisons for which necessary data were available
+df_1 <- df[df$id_ma %in% "1" & df$data_available %in% "yes",]
+smd_1 <- cd_between(x = df_1)
+
+# fill in the calculated Cohen's ds  for the comparisons for which necessary data were available
+df$smd_r_d[df$id_ma %in% "1" & df$data_available %in% "yes"] <- smd_1
+
+# fill in the SMDs as reported in the MA for the comparisons for which necessary data were missing
+df$smd_r_d[df$id_ma %in% "1" & df$data_available %in% "no"] <- df$smd_ma[df$id_ma %in% "1" & df$data_available %in% "no"]
+
+# repeat process but with Hedges' gs
+df_2 <- df[df$id_ma %in% "1" & df$data_available %in% "yes",]
+smd_2 <- hg_between(x = df_2)
+df$smd_r_g[df$id_ma %in% "1" & df$data_available %in% "yes"] <- smd_2
+df$smd_r_g[df$id_ma %in% "1" & df$data_available %in% "no"] <- df$smd_ma[df$id_ma %in% "1" & df$data_available %in% "no"]
+
+
+# put relevant columns next to each other to facilitate inspection
+df <- df %>% relocate(data_available, .before = smd_r_d)
+df <- df %>% relocate(smd_ma, .after = smd_r_g)
+df <- df %>% relocate(24:27, .after = author)
+```
+Enough data were available to reproduce 8 out of the 21 effect sizes: comparison ids 4,5,6, 11, 14, 16, 17, and 18. Since the calculated Cohen's ds are closer to the SMDs reported in the MA, these will be used for computing the pooled SMD. Before double checking correct data extraction, 4 out of the 8 reproduced primary SMDs were equal to the reported ones after rounding to the second decimal place. For comparison ids 11, 16, 17, and 18, the reproduced SMD did not equal the reported one. Data extraction for these comparisons was double checked:
+
+* For comparison 11, the reproduced SMD was the negative of the reported one, indicating the meta-analysts reversed the sign as a reduction on the specific scale used in that study means improvement (SMD No. 11 was made positive in code chunk No. 8 below). Thus, this primary SMD can be seen as reproducible, which brings the number of reproducible SMDs to 5.
+* For comparison 16, it turns out the means and SDs of changes were extracted, not the raw means and SDs, which were not reported in the PS. Thus, the number of comparisons for which enough data is available is down to 7.
+* For comparisons 17 and 18, both from PS 14, I could not find any errors in my data collection. However, since A. the meta-analysis specified "FMA" as the outcome measure used to compute the primary SMD and B. PS 14 reported values on two outcomes "FMA-total" and "UL-FMA", I tried reproducing the reported primary SMDs using the "FMA-total" values after having used the "UL-FMA" with the original data extraction. Regardless of the fact that neither sets of values reproduced the original SMDs (see code chunk No. 9), the UL-FMA values are more likely to be the ones used the by meta-analysts as the UL-FMA has the same scale as FMA-outcome measures from other primary studies included in the meta-analysis, which is why I will use these to compute the pooled SD.
+
+### Post hoc wrangling
+
+#### Convert SMD 11 to positive
+```{r}
+# Convert the reproduced SMDs to numerics
+df$smd_r_d <- as.numeric(df$smd_r_d)
+
+# Make SMD 11 positive
+df$smd_r_d[df$id_comparison %in% "11"] <- -df$smd_r_d[df$id_comparison %in% "11"]
+```
+
+#### Reproducing SMDs 17 and 18 using the alternative "FMA-total" means and SDs
+```{r}
+nc_ps <- c(7, 7) 
+nt_ps <- c(7, 7)
+mc_ps.2 <- c(123.1, 123.1) # "FMA-total" values
+mt_ps.2 <- c(124.7, 126.7) # "FMA-total" values
+sdc_ps.2 <- c(7.47, 7.47) # "FMA-total" values
+sdt_ps.2 <- c(6.94, 6.18) # "FMA-total" values
+smd_ma <- c(0.94, 0.24) # SMDs reported in the meta-analysis for comparison
+ps_14b <- data.frame(nc_ps, nt_ps, mc_ps.2, mt_ps.2, sdc_ps.2, sdt_ps.2, smd_ma)
+ps_14b_smd_2 <- cd_between(x = ps_14b)
+ps_14b$alternative_smd <- ps_14b_smd_2
+print(ps_14b)
+```
+
