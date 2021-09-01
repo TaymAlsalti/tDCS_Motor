@@ -26,7 +26,7 @@ body {
 }
 
 div.main-container {
-  padding-left: 3em;
+  padding-left: 4em;
 }
 
 pre.r {
@@ -39,7 +39,7 @@ pre.r::before {
   content: '[' counter(counter-rchunks) ']:';
   display: inline-block;
   position: absolute;
-  left: -3em;
+  left: -4em;
   color: rgb(48, 63, 159);
 }
 ```
@@ -48,10 +48,10 @@ pre.r::before {
 library("readxl") 
 library("writexl")
 library("tidyverse")
-df <- read_excel("data_thesis/Data_sheet_ps.xlsx")
+df <- read_excel("data_thesis/Data_sheet_ps_ma1.xlsx")
 ```
 
-If you want to run the code outside of the project folder, loading the packages using the package `groundhog` would ensure the code's long term reproducibility:
+If you want to run the code outside of the project folder and without the renv.lock file (from the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package), loading the packages using the package [`groundhog`](https://groundhogr.com/) would ensure the code's long term reproducibility:
 ```{r}
 # install.packages("groundhog")
 # library("groundhog")
@@ -195,13 +195,22 @@ df <- df %>% relocate(data_available, .before = smd_r_d)
 df <- df %>% relocate(smd_ma, .after = smd_r_g)
 df <- df %>% relocate(24:27, .after = author)
 ```
-Enough data were available to reproduce 8 out of the 21 effect sizes: comparison ids 4,5,6, 11, 14, 16, 17, and 18. Since the calculated Cohen's ds are closer to the SMDs reported in the MA, these will be used for computing the pooled SMD. Before double checking correct data extraction, 4 out of the 8 reproduced primary SMDs were equal to the reported ones after rounding to the second decimal place. For comparison ids 11, 16, 17, and 18, the reproduced SMD did not equal the reported one. Data extraction for these comparisons was double checked:
+Enough data were available to reproduce 8 out of the 21 effect sizes: comparison ids 4,5,6, 11, 14, 16, 17, and 18. Since the calculated Cohen's ds are almost identical to the SMDs reported in the MA, these will be used for computing the pooled SMD. Before double checking correct data extraction, 4 out of the 8 reproduced primary SMDs were equal to the reported ones after rounding to the second decimal place. For comparisons 11, 16, 17, and 18, the reproduced SMD did not equal the reported one. Data extraction for these comparisons was double checked:
 
-* For comparison 11, the reproduced SMD was the negative of the reported one, indicating the meta-analysts reversed the sign as a reduction on the specific scale used in that study means improvement (SMD No. 11 was made positive in code chunk No. 8 below). Thus, this primary SMD can be seen as reproducible, which brings the number of reproducible SMDs to 5.
-* For comparison 16, it turns out the means and SDs of changes were extracted, not the raw means and SDs, which were not reported in the PS. Thus, the number of comparisons for which enough data is available is down to 7.
-* For comparisons 17 and 18, both from PS 14, I could not find any errors in my data collection. However, since A. the meta-analysis specified "FMA" as the outcome measure used to compute the primary SMD and B. PS 14 reported values on two outcomes "FMA-total" and "UL-FMA", I tried reproducing the reported primary SMDs using the "FMA-total" values after having used the "UL-FMA" with the original data extraction. Regardless of the fact that neither sets of values reproduced the original SMDs (see code chunk No. 9), the UL-FMA values are more likely to be the ones used the by meta-analysts as the UL-FMA has the same scale as FMA-outcome measures from other primary studies included in the meta-analysis, which is why I will use these to compute the pooled SD.
+* For comparison 11, the reproduced SMD was the negative of the reported one, indicating the meta-analysts reversed the sign as a reduction on the specific scale used in that study means improvement (SMD No. 11 was made positive in code chunk No. 9 below). Thus, this primary SMD can be seen as reproducible, which brings the number of reproducible SMDs to 5.
+
+* For comparison 16, it turns out the means and SDs of changes were extracted, not the raw means and SDs, which were not reported in the PS. These values removed in chunk 10. Thus, the number of comparisons for which enough data is available is down to 7.
+
+* For comparisons 17 and 18, both from PS 14, I could not find any errors in my data collection. However, since A. the meta-analysis specified "FMA" as the outcome measure used to compute the primary SMD and B. PS 14 reported values on two outcomes "FMA-total" and "UL-FMA", I tried reproducing the reported primary SMDs using the "FMA-total" values after having used the "UL-FMA" with the original data extraction. Regardless of the fact that neither sets of values reproduced the original SMDs (see code chunk No. 11), the UL-FMA values are more likely to be the ones used the by meta-analysts as the UL-FMA has the same scale as FMA-outcome measures from other primary studies included in the meta-analysis, which is why I will use these to compute the pooled SD.
+
+In sum, there were enough data in the primary studies to attempt to reproduce 7 out of the 21 SMDs reported in MA1. Out of these 7 SMDs, 5 could be  reproduced using Cohen's *d*s. 
 
 ### Post hoc wrangling
+
+#### Remove the Hedges' *g*s column
+```{r}
+df <- select(df, -"smd_r_g")
+```
 
 #### Convert SMD 11 to positive
 ```{r}
@@ -209,10 +218,26 @@ Enough data were available to reproduce 8 out of the 21 effect sizes: comparison
 df$smd_r_d <- as.numeric(df$smd_r_d)
 
 # Make SMD 11 positive
-df$smd_r_d[df$id_comparison %in% "11"] <- -df$smd_r_d[df$id_comparison %in% "11"]
+df[11, "smd_r_d"] <- -df[11, "smd_r_d"]
+#df$smd_r_d[df$id_comparison %in% "11"] <- -df$smd_r_d[df$id_comparison %in% "11"]
 ```
 
-#### Reproducing SMDs 17 and 18 using the alternative "FMA-total" means and SDs
+#### Remove the erroneous means and SDs extracted for SMD 16
+```{r}
+#df[16, "mc_ps.2"] <- NA
+#df[16, "mt_ps.2"] <- NA
+#df[16, "sdc_ps.2"] <- NA
+#df[16, "sdt_ps.2"] <- NA
+
+df[16, 18:21] <- NA
+# change availability of data to "no" 
+df[16, "data_available"] <- "no"
+
+# replace the reproduced SMD with the SMD reported in the MA
+df[16, "smd_r_d"] <-  as.numeric(df[16, "smd_ma"])
+```
+
+#### Reproduce SMDs 17 and 18 using the alternative "FMA-total" means and SDs
 ```{r}
 nc_ps <- c(7, 7) 
 nt_ps <- c(7, 7)
@@ -225,5 +250,10 @@ ps_14b <- data.frame(nc_ps, nt_ps, mc_ps.2, mt_ps.2, sdc_ps.2, sdt_ps.2, smd_ma)
 ps_14b_smd_2 <- cd_between(x = ps_14b)
 ps_14b$alternative_smd <- ps_14b_smd_2
 print(ps_14b)
+```
+
+#### Round the reproduced SMDs to match reported ones
+```{r}
+df$smd_r_d <- round(df$smd_r_d,digits = 2)
 ```
 
