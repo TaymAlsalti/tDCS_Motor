@@ -48,6 +48,7 @@ pre.r::before {
 library("readxl") 
 library("writexl")
 library("tidyverse")
+library("metafor")
 df <- read_excel("data_thesis/Data_sheet_ps_ma1.xlsx")
 ```
 
@@ -55,18 +56,20 @@ If you want to run the code outside of the project folder and without the renv.l
 ```{r}
 # install.packages("groundhog")
 # library("groundhog")
-# pkgs <- c("readxl","writexl", "tidyverse")
+# pkgs <- c("readxl","writexl", "tidyverse", "metafor")
 # date = "2021-08-27"
 # groundhog.library(pkgs, date)
 ```
 
 
-# Reproducibility
-Note that most of the code in this section was adapted from [Maassen et al. (2020)](https://doi.org/10.1371/journal.pone.0233107)'s data analysis code, available [here](https://github.com/emaassen/paper-effectsizes/tree/master/code). 
+# Meta-analysis 1
 
-## Functions for reproducing primary SMDs
+## Reproducibility 
+Note that most of the code in this section was adapted from [Maassen et al. (2020)](https://doi.org/10.1371/journal.pone.0233107)'s data analysis code, available [here](https://github.com/emaassen/paper-effectsizes/tree/master/code).
 
-### Cohen's d for a between-groups comparison
+### Functions for reproducing primary SMDs
+
+#### Cohen's d for a between-groups comparison
 This formula is very commonly used and can be found in dozens of text books, e.g., [Hedges and Olkin, 1985](https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis), p. 78-79:
 $$d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}$$
 
@@ -102,7 +105,7 @@ cd_between <- function(x) {
 ```
 
 
-### Hedges' g for a between-groups comparison
+#### Hedges' g for a between-groups comparison
 Hedges' *g* is a small sample correction of Cohen's *d*, one way to compute it can be found in [Hedges and Olkin, 1985](https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis), p. 81:
 $$\begin{equation*}
 d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}={\frac {\mu_{1}-\mu_{2}}{s}}
@@ -147,8 +150,6 @@ hg_between <- function(x) {
 }
 ```
 
-
-## Meta-analysis 1
 ### Data wrangling
 #### Add a column specifying availablity of Ms and SDs
 This facilitates automating the process of using the SMDs as reported in the meta-analysis in the case of primary studies for which it was impossible to reproduce the primary effect sizes due to lack of necessary data. 
@@ -170,7 +171,7 @@ df[11, "sdt_ps.1"] <- df[11, "sdt_ps.1"] * sqrt(10)
 df[11, "sdt_ps.2"] <- df[11, "sdt_ps.2"] * sqrt(10)
 ```
 
-### Reproduce primary effect sizes
+### Reproduce primary SMDs
 17 primary studies were included in MA1, based on which 21 comparisons were made and thus 21 SMDs calculated. Two comparisons were made based on studies 5, 6, 7 and 14, which had three groups: anodal, cathodal, and sham tDCS in contrast to the other studies which either had one type of tDCS or combined both types into one group. Hence, effect sizes/comparison ids 5 & 6, 7 & 8, 9 & 10, and 17 & 18 are based on identical control/sham groups.
 ```{r}
 # compute Cohen's ds for the comparisons for which necessary data were available
@@ -219,7 +220,6 @@ df$smd_r_d <- as.numeric(df$smd_r_d)
 
 # Make SMD 11 positive
 df[11, "smd_r_d"] <- -df[11, "smd_r_d"]
-#df$smd_r_d[df$id_comparison %in% "11"] <- -df$smd_r_d[df$id_comparison %in% "11"]
 ```
 
 #### Remove the erroneous means and SDs extracted for SMD 16
@@ -248,7 +248,7 @@ sdt_ps.2 <- c(6.94, 6.18) # "FMA-total" values
 smd_ma <- c(0.94, 0.24) # SMDs reported in the meta-analysis for comparison
 ps_14b <- data.frame(nc_ps, nt_ps, mc_ps.2, mt_ps.2, sdc_ps.2, sdt_ps.2, smd_ma)
 ps_14b_smd_2 <- cd_between(x = ps_14b)
-ps_14b$alternative_smd <- ps_14b_smd_2
+ps_14b$alternative_smd <- ps_14b_smd_2 
 print(ps_14b)
 ```
 
@@ -256,4 +256,3 @@ print(ps_14b)
 ```{r}
 df$smd_r_d <- round(df$smd_r_d,digits = 2)
 ```
-
