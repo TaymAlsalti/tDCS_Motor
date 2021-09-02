@@ -256,10 +256,3 @@ print(ps_14b)
 ```{r}
 df$smd_r_d <- round(df$smd_r_d,digits = 2)
 ```
-
-### Reproduce the pooled SMD
-**Load the dataset containing the meta-analysis level variables**
-```{r}
-Data_sheet_ma_ma1 <- read_excel("data_thesis/Data_sheet_ma_ma1.xlsx")
-```
-
