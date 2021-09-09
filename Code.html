@@ -287,88 +287,17 @@ df &lt;- read_excel(&quot;data_thesis/Data_sheet_ps_ma1.xlsx&quot;)</code></pre>
 <div id="reproducibility" class="section level2" number="1.1">
 <h2 number="1.1"><span class="header-section-number">1.1</span> Reproducibility</h2>
 <p>Note that most of the code in this section was adapted from <a href="https://doi.org/10.1371/journal.pone.0233107">Maassen et al. (2020)</a>’s data analysis code, available <a href="https://github.com/emaassen/paper-effectsizes/tree/master/code">here</a>.</p>
-<div id="functions-for-reproducing-primary-smds" class="section level3" number="1.1.1">
-<h3 number="1.1.1"><span class="header-section-number">1.1.1</span> Functions for reproducing primary SMDs</h3>
-<div id="cohens-d-for-a-between-groups-comparison" class="section level4" number="1.1.1.1">
-<h4 number="1.1.1.1"><span class="header-section-number">1.1.1.1</span> Cohen’s d for a between-groups comparison</h4>
-<p>This formula is very commonly used and can be found in dozens of text books, e.g., <a href="https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis">Hedges and Olkin, 1985</a>, p. 78-79: <span class="math display">\[d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}\]</span></p>
-<p><span class="math display">\[\begin{equation*}
-s={\sqrt {\frac {(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}}}
-\end{equation*}\]</span></p>
-<p>Where <span class="math inline">\({\bar {x}}_{1}\)</span> is the mean of the treatment group, <span class="math inline">\({\bar {x}}_{2}\)</span> is the mean of the control group, <span class="math inline">\(s\)</span> is the pooled standard deviation, <span class="math inline">\(n_{1}\)</span> and <span class="math inline">\(n_{2}\)</span> are the sample sizes of the treatment and control groups, respectively, and <span class="math inline">\(s_{1}\)</span> and <span class="math inline">\(s_{2}\)</span> are the standard deviations of the treatment and control groups, respectively.</p>
-<pre class="r"><code>cd_between &lt;- function(x) {
-  
-  cohensd &lt;- c()  
-  
-  for (k in 1:nrow(x)) {
-    
-    nc &lt;- as.numeric(x$nc_ps)[k]
-    nt &lt;- as.numeric(x$nt_ps)[k]
-
-      
-      mc &lt;-  as.numeric(eval(parse(text = paste0(&quot;x$mc_ps.2&quot;))))[k]
-      mt &lt;-  as.numeric(eval(parse(text = paste0(&quot;x$mt_ps.2&quot;))))[k]
-      sdc &lt;- as.numeric(eval(parse(text = paste0(&quot;x$sdc_ps.2&quot;))))[k]
-      sdt &lt;- as.numeric(eval(parse(text = paste0(&quot;x$sdt_ps.2&quot;))))[k]
-      
-      d &lt;- (mt - mc) / sqrt((((nc - 1) * (sdc^2)) + ((nt - 1) * (sdt^2))) / (nc + nt - 2))
-      
-    cohensd[k] &lt;- d
-    
-  }
-  return(cohensd)
-}</code></pre>
-</div>
-<div id="hedges-g-for-a-between-groups-comparison" class="section level4" number="1.1.1.2">
-<h4 number="1.1.1.2"><span class="header-section-number">1.1.1.2</span> Hedges’ g for a between-groups comparison</h4>
-<p>Hedges’ <em>g</em> is a small sample correction of Cohen’s <em>d</em>, one way to compute it can be found in <a href="https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis">Hedges and Olkin, 1985</a>, p. 81: <span class="math display">\[\begin{equation*}
-d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}={\frac {\mu_{1}-\mu_{2}}{s}}
-\end{equation*}\]</span></p>
-<p><span class="math display">\[\begin{equation*}
-s={\sqrt {\frac {(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}}}
-\end{equation*}\]</span></p>
-<p><span class="math display">\[\begin{equation*}
-J={1-{\frac {3}{4N-9}}}
-\end{equation*}\]</span></p>
-<p><span class="math display">\[\begin{equation*}
-g=J \times d
-\end{equation*}\]</span> Where <span class="math inline">\(N = n_{1}+n_{2}\)</span></p>
-<pre class="r"><code>hg_between &lt;- function(x) {
-  
-  hedgesg &lt;- c()  
-  
-  for (k in 1:nrow(x)) {
-    
-    nc &lt;- as.numeric(x$nc_ps)[k]
-    nt &lt;- as.numeric(x$nt_ps)[k]
-    n &lt;- nc + nt
-      
-      mc &lt;-  as.numeric(eval(parse(text = paste0(&quot;x$mc_ps.2&quot;))))[k]
-      mt &lt;-  as.numeric(eval(parse(text = paste0(&quot;x$mt_ps.2&quot;))))[k]
-      sdc &lt;- as.numeric(eval(parse(text = paste0(&quot;x$sdc_ps.2&quot;))))[k]
-      sdt &lt;- as.numeric(eval(parse(text = paste0(&quot;x$sdt_ps.2&quot;))))[k]
-      
-      d &lt;- (mt - mc) / sqrt((((nc - 1) * (sdc^2)) + ((nt - 1) * (sdt^2))) / (nc + nt - 2))
-      
-    # transform to hedges g
-    J &lt;- 1 - (3 / ((4 * n) - 9))  
-    hedgesg[k] &lt;- J * d
-  }
-  return(hedgesg)
-}</code></pre>
-</div>
-</div>
-<div id="data-wrangling" class="section level3" number="1.1.2">
-<h3 number="1.1.2"><span class="header-section-number">1.1.2</span> Data wrangling</h3>
-<div id="add-a-column-specifying-availablity-of-ms-and-sds" class="section level4" number="1.1.2.1">
-<h4 number="1.1.2.1"><span class="header-section-number">1.1.2.1</span> Add a column specifying availablity of Ms and SDs</h4>
+<div id="data-wrangling---before-double-checking-data-extraction" class="section level3" number="1.1.1">
+<h3 number="1.1.1"><span class="header-section-number">1.1.1</span> Data wrangling - before double checking data extraction</h3>
+<div id="add-a-column-specifying-availablity-of-ms-and-sds" class="section level4" number="1.1.1.1">
+<h4 number="1.1.1.1"><span class="header-section-number">1.1.1.1</span> Add a column specifying availablity of Ms and SDs</h4>
 <p>This facilitates automating the process of using the SMDs as reported in the meta-analysis in the case of primary studies for which it was impossible to reproduce the primary effect sizes due to lack of necessary data.</p>
 <pre class="r"><code>df &lt;- df %&gt;% 
-  mutate(data_available = if_else(is.na(mc_ps.2), &quot;no&quot;, &quot;yes&quot;)) </code></pre>
+  mutate(data_available = if_else(is.na(mc_ps.2), &quot;no&quot;, &quot;yes&quot;))</code></pre>
 <p>In the case of this meta-analysis, all primary studies (PS) reported all Ms and SDs for the second time point if they reported one of them, which is why the new column is based on the mean of the control group at the second time point as an example. Will change this code if it turns out not to be the case in a future meta-analysis.</p>
 </div>
-<div id="convert-standard-errors-extracted-from-ps-8-to-standard-deviations" class="section level4" number="1.1.2.2">
-<h4 number="1.1.2.2"><span class="header-section-number">1.1.2.2</span> Convert standard errors extracted from PS 8 to standard deviations</h4>
+<div id="convert-standard-errors-extracted-from-ps-8-to-standard-deviations" class="section level4" number="1.1.1.2">
+<h4 number="1.1.1.2"><span class="header-section-number">1.1.1.2</span> Convert standard errors extracted from PS 8 to standard deviations</h4>
 <pre class="r"><code># remove asterisks highlighting SEs
 df[] &lt;- lapply(df, gsub, pattern = &#39;*&#39;, replacement = &#39;&#39;, fixed = TRUE)
 df &lt;- df %&gt;% mutate_at(vars(starts_with(&#39;sd&#39;)), as.numeric)
@@ -379,26 +308,79 @@ df[11, &quot;sdt_ps.1&quot;] &lt;- df[11, &quot;sdt_ps.1&quot;] * sqrt(10)
 df[11, &quot;sdt_ps.2&quot;] &lt;- df[11, &quot;sdt_ps.2&quot;] * sqrt(10)</code></pre>
 </div>
 </div>
+<div id="functions-for-reproducing-primary-smds" class="section level3" number="1.1.2">
+<h3 number="1.1.2"><span class="header-section-number">1.1.2</span> Functions for reproducing primary SMDs</h3>
+<div id="cohens-d-for-a-between-groups-comparison" class="section level4" number="1.1.2.1">
+<h4 number="1.1.2.1"><span class="header-section-number">1.1.2.1</span> Cohen’s <em>d</em> for a between-groups comparison</h4>
+<p>This formula is very commonly used and can be found in dozens of text books, e.g., <a href="https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis">Hedges and Olkin (1985, p. 78-79)</a>: <span class="math display">\[d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}\]</span></p>
+<p><span class="math display">\[s={\sqrt {\frac {(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}}}\]</span></p>
+<p>Where <span class="math inline">\({\bar {x}}_{1}\)</span> is the mean of the treatment group, <span class="math inline">\({\bar {x}}_{2}\)</span> is the mean of the control group, <span class="math inline">\(s\)</span> is the pooled standard deviation, <span class="math inline">\(n_{1}\)</span> and <span class="math inline">\(n_{2}\)</span> are the sample sizes of the treatment and control groups, respectively, and <span class="math inline">\(s_{1}\)</span> and <span class="math inline">\(s_{2}\)</span> are the standard deviations of the treatment and control groups, respectively.</p>
+<pre class="r"><code>cd_between &lt;- function(x) {
+  
+  cohensd &lt;- c()  
+  
+  for (k in 1:nrow(x)) {
+    
+    nc &lt;- as.numeric(x$nc_ps)[k]
+    nt &lt;- as.numeric(x$nt_ps)[k]
+    
+    mc &lt;-  as.numeric(x$mc_ps.2)[k]
+    mt &lt;-  as.numeric(x$mt_ps.2)[k]
+    sdc &lt;- as.numeric(x$sdc_ps.2)[k]
+    sdt &lt;- as.numeric(x$sdt_ps.2)[k]
+    
+    
+    if (df$data_available[k] == &quot;yes&quot;) {
+      d &lt;- ((mt - mc) / sqrt((((nc - 1) * (sdc^2)) + ((nt - 1) * (sdt^2))) / (nc + nt - 2)))
+    } else {
+      d &lt;- as.numeric(df$smd_ma)[k]
+    }    
+    
+
+    cohensd[k] &lt;- d
+    
+  }
+  return(cohensd)
+}</code></pre>
+</div>
+<div id="hedges-g-for-a-between-groups-comparison" class="section level4" number="1.1.2.2">
+<h4 number="1.1.2.2"><span class="header-section-number">1.1.2.2</span> Hedges’ <em>g</em> for a between-groups comparison</h4>
+<p>Hedges’ <em>g</em> is a small sample correction of Cohen’s <em>d</em>, one way to compute it can be found in <a href="https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis">Hedges and Olkin (1985, p. 81)</a>: <span class="math display">\[d={\frac {{\bar {x}}_{1}-{\bar {x}}_{2}}{s}}={\frac {\mu_{1}-\mu_{2}}{s}}\]</span></p>
+<p><span class="math display">\[s={\sqrt {\frac {(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}}}\]</span></p>
+<p><span class="math display">\[J={1-{\frac {3}{4N-9}}}\]</span></p>
+<p><span class="math display">\[g=J \times d\]</span> Where <span class="math inline">\(N = n_{1}+n_{2}\)</span></p>
+<pre class="r"><code>hg_between &lt;- function(x) {
+  
+  hedgesg &lt;- c()  
+  
+  for (k in 1:nrow(x)) {
+    
+    nc &lt;- as.numeric(x$nc_ps)[k]
+    nt &lt;- as.numeric(x$nt_ps)[k]
+    n &lt;- nc + nt
+    
+    mc &lt;-  as.numeric(x$mc_ps.2)[k]
+    mt &lt;-  as.numeric(x$mt_ps.2)[k]
+    sdc &lt;- as.numeric(x$sdc_ps.2)[k]
+    sdt &lt;- as.numeric(x$sdt_ps.2)[k]
+    
+    d &lt;- (mt - mc) / sqrt((((nc - 1) * (sdc^2)) + ((nt - 1) * (sdt^2))) / (nc + nt - 2))
+    # the f-else function was added to the Cohen&#39;s d function later. no need for it here since 
+    # this meta-analysis used Cohen&#39;s ds, as demonstrated below
+    
+    # transform to hedges g
+    J &lt;- 1 - (3 / ((4 * n) - 9))  
+    hedgesg[k] &lt;- J * d
+  }
+  return(hedgesg)
+}</code></pre>
+</div>
+</div>
 <div id="reproduce-primary-smds" class="section level3" number="1.1.3">
 <h3 number="1.1.3"><span class="header-section-number">1.1.3</span> Reproduce primary SMDs</h3>
 <p>17 primary studies were included in MA1, based on which 21 comparisons were made and thus 21 SMDs calculated. Two comparisons were made based on studies 5, 6, 7 and 14, which had three groups: anodal, cathodal, and sham tDCS in contrast to the other studies which either had one type of tDCS or combined both types into one group. Hence, effect sizes/comparison ids 5 &amp; 6, 7 &amp; 8, 9 &amp; 10, and 17 &amp; 18 are based on identical control/sham groups.</p>
-<pre class="r"><code># compute Cohen&#39;s ds for the comparisons for which necessary data were available
-df_1 &lt;- df[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;yes&quot;,]
-smd_1 &lt;- cd_between(x = df_1)
-
-# fill in the calculated Cohen&#39;s ds  for the comparisons for which necessary data were available
-df$smd_r_d[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;yes&quot;] &lt;- smd_1
-
-# fill in the SMDs as reported in the MA for the comparisons for which necessary data were missing
-df$smd_r_d[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;no&quot;] &lt;- df$smd_ma[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;no&quot;]
-
-# repeat process but with Hedges&#39; gs
-df_2 &lt;- df[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;yes&quot;,]
-smd_2 &lt;- hg_between(x = df_2)
-df$smd_r_g[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;yes&quot;] &lt;- smd_2
-df$smd_r_g[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;no&quot;] &lt;- df$smd_ma[df$id_ma %in% &quot;1&quot; &amp; df$data_available %in% &quot;no&quot;]
-
-
+<pre class="r"><code>df$smd_r_d &lt;- cd_between(df)
+df$smd_r_g &lt;- hg_between(df)
 # put relevant columns next to each other to facilitate inspection
 df &lt;- df %&gt;% relocate(data_available, .before = smd_r_d)
 df &lt;- df %&gt;% relocate(smd_ma, .after = smd_r_g)
@@ -411,8 +393,8 @@ df &lt;- df %&gt;% relocate(24:27, .after = author)</code></pre>
 </ul>
 <p>In sum, there were enough data in the primary studies to attempt to reproduce 7 out of the 21 SMDs reported in MA1. Out of these 7 SMDs, 5 could be reproduced using Cohen’s <em>d</em>s.</p>
 </div>
-<div id="post-hoc-wrangling" class="section level3" number="1.1.4">
-<h3 number="1.1.4"><span class="header-section-number">1.1.4</span> Post hoc wrangling</h3>
+<div id="data-wrangling---after-double-checking-data-extraction" class="section level3" number="1.1.4">
+<h3 number="1.1.4"><span class="header-section-number">1.1.4</span> Data wrangling - after double checking data extraction</h3>
 <div id="remove-the-hedges-gs-column" class="section level4" number="1.1.4.1">
 <h4 number="1.1.4.1"><span class="header-section-number">1.1.4.1</span> Remove the Hedges’ <em>g</em>s column</h4>
 <pre class="r"><code>df &lt;- select(df, -&quot;smd_r_g&quot;)</code></pre>
@@ -427,12 +409,7 @@ df[11, &quot;smd_r_d&quot;] &lt;- -df[11, &quot;smd_r_d&quot;]</code></pre>
 </div>
 <div id="remove-the-erroneous-means-and-sds-extracted-for-smd-16" class="section level4" number="1.1.4.3">
 <h4 number="1.1.4.3"><span class="header-section-number">1.1.4.3</span> Remove the erroneous means and SDs extracted for SMD 16</h4>
-<pre class="r"><code>#df[16, &quot;mc_ps.2&quot;] &lt;- NA
-#df[16, &quot;mt_ps.2&quot;] &lt;- NA
-#df[16, &quot;sdc_ps.2&quot;] &lt;- NA
-#df[16, &quot;sdt_ps.2&quot;] &lt;- NA
-
-df[16, 18:21] &lt;- NA
+<pre class="r"><code>df[16, 18:21] &lt;- NA
 # change availability of data to &quot;no&quot; 
 df[16, &quot;data_available&quot;] &lt;- &quot;no&quot;
 
@@ -449,12 +426,69 @@ sdc_ps.2 &lt;- c(7.47, 7.47) # &quot;FMA-total&quot; values
 sdt_ps.2 &lt;- c(6.94, 6.18) # &quot;FMA-total&quot; values
 smd_ma &lt;- c(0.94, 0.24) # SMDs reported in the meta-analysis for comparison
 ps_14b &lt;- data.frame(nc_ps, nt_ps, mc_ps.2, mt_ps.2, sdc_ps.2, sdt_ps.2, smd_ma)
-ps_14b_smd_2 &lt;- cd_between(x = ps_14b)
-ps_14b$alternative_smd &lt;- ps_14b_smd_2 
+ps_14b$alternative_smd &lt;- cd_between(ps_14b) # &quot;alternative&quot; as in using alternative Ms and SDs to the originally reproduced SMDs above
 print(ps_14b)</code></pre>
 <pre><code>##   nc_ps nt_ps mc_ps.2 mt_ps.2 sdc_ps.2 sdt_ps.2 smd_ma alternative_smd
-## 1     7     7   123.1   124.7     7.47     6.94   0.94       0.2219180
-## 2     7     7   123.1   126.7     7.47     6.18   0.24       0.5251327</code></pre>
+## 1     7     7   123.1   124.7     7.47     6.94   0.94            0.16
+## 2     7     7   123.1   126.7     7.47     6.18   0.24            0.18</code></pre>
+</div>
+<div id="round-the-reproduced-smds-to-match-reported-ones" class="section level4" number="1.1.4.5">
+<h4 number="1.1.4.5"><span class="header-section-number">1.1.4.5</span> Round the reproduced SMDs to match reported ones</h4>
+<pre class="r"><code>#df$smd_r_d &lt;- round(df$smd_r_d,digits = 2)</code></pre>
+</div>
+</div>
+<div id="functions-for-reproducing-within-study-variances" class="section level3" number="1.1.5">
+<h3 number="1.1.5"><span class="header-section-number">1.1.5</span> Functions for reproducing within-study variances</h3>
+<div id="compute-variance-of-cohens-d-for-a-between-groups-comparison" class="section level4" number="1.1.5.1">
+<h4 number="1.1.5.1"><span class="header-section-number">1.1.5.1</span> Compute variance of Cohen’s <em>d</em> for a between-groups comparison</h4>
+<p>To compute the pooled SMD, the within-study variance for each study, <span class="math inline">\(\hat\sigma_i\)</span>, must be determined. The formula used here can be found in <a href="https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis">Hedges and Olkin (1985, p. 86)</a>:</p>
+<p><span class="math display">\[\hat\sigma_i={\frac {n_{1}+n_{2}}{n_{1}n_{2}}}+{\frac {d^2}{2(n_{1}+n_{2})}}\]</span></p>
+<pre class="r"><code>vd_between &lt;- function(x) {
+  
+  vd &lt;- c()  
+  
+  for (k in 1:nrow(x)) {
+    
+    nc &lt;- as.numeric(x$nc_ps)[k]
+    nt &lt;- as.numeric(x$nt_ps)[k]
+    
+    d &lt;- as.numeric(df$smd_r_d)[k]
+    
+    v &lt;- ((nc + nt) / (nc*nt)) + (d^2 / (2 * (nc + nt)))
+      
+    vd[k] &lt;- v
+    
+  }
+  return(vd)
+}</code></pre>
+</div>
+<div id="compute-variance-of-cohens-d-for-a-within-group-comparison" class="section level4" number="1.1.5.2">
+<h4 number="1.1.5.2"><span class="header-section-number">1.1.5.2</span> Compute variance of Cohen’s <em>d</em> for a within-group comparison</h4>
+</div>
+</div>
+<div id="reproduce-the-pooled-smd" class="section level3" number="1.1.6">
+<h3 number="1.1.6"><span class="header-section-number">1.1.6</span> Reproduce the pooled SMD</h3>
+<div id="compute-variances-of-primary-smds" class="section level4" number="1.1.6.1">
+<h4 number="1.1.6.1"><span class="header-section-number">1.1.6.1</span> Compute variances of primary SMDs</h4>
+<pre class="r"><code>df$vd &lt;- vd_between(df)</code></pre>
+</div>
+<div id="confirm-that-the-hatsigma_is-can-be-reproduced-by-already-available-software" class="section level4" number="1.1.6.2">
+<h4 number="1.1.6.2"><span class="header-section-number">1.1.6.2</span> Confirm that the <span class="math inline">\(\hat\sigma_i\)</span>s can be reproduced by already available software</h4>
+<pre class="r"><code>#library(&quot;MAd&quot;)
+
+# compute ds and corresponding within study variances
+#df &lt;- compute_ds(as.numeric(nt_ps), as.numeric(mt_ps.2), as.numeric(sdt_ps.2), as.numeric(nc_ps), as.numeric(mc_ps.2), as.numeric(sdc_ps.2), df, denom = &quot;pooled.sd&quot;)
+# note that the ds are reproduced here too
+
+# relocate to facilitate inspection
+#df &lt;- df %&gt;% relocate(c(d, vd, var.d), .after = smd_ma)</code></pre>
+<p>At this point (07.09.21) I was reminded that, like in the case of the Cohen’s <em>d</em>s themselves, the formula for computing the corresponding within-study variance wouldn’t work for studies that had no control groups (cross-over trials). I contacted the authors of MA 1 on the 08.09.21 and received a reply that they used CMA to run the meta-analysis. As of 09.09.21, I’m waiting for further information.</p>
+<p>** Load the dataset containing the meta-analysis level data**</p>
+<pre class="r"><code>#DF &lt;- read_excel(&quot;data_thesis/Data_sheet_ma_ma1.xlsx&quot;)</code></pre>
+</div>
+<div id="set-the-type-of-the-smd-for-ma-1-to-be-d" class="section level4" number="1.1.6.3">
+<h4 number="1.1.6.3"><span class="header-section-number">1.1.6.3</span> Set the type of the SMD for MA 1 to be “d”</h4>
+<pre class="r"><code>#DF[1, &quot;psmd_type&quot;] &lt;- &quot;d&quot;</code></pre>
 </div>
 </div>
 </div>
