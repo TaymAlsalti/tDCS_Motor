@@ -26,7 +26,7 @@ body {
 }
 
 div.main-container {
-  padding-left: 4em;
+  padding-left: 3.5em;
 }
 
 pre.r {
@@ -39,10 +39,11 @@ pre.r::before {
   content: '[' counter(counter-rchunks) ']:';
   display: inline-block;
   position: absolute;
-  left: -4em;
+  left: -3.5em;
   color: rgb(48, 63, 159);
 }
 ```
+
 
 ```{r}
 library("readxl") 
@@ -450,9 +451,9 @@ vd_between <- function(x) {
 ```
 
 ```{r}
-df$vd_r <- vd_between(df)
+df$vi_r <- vd_between(df)
 # compare the variances calculated based on the ps data with the ones calculated on the CIs reported in the MA
-df$vd_ma <- ((df$ciu_ma - df$smd_ma)  / 1.96)^2
+df$vi_ma <- ((df$ciu_ma - df$smd_ma)  / 1.96)^2
 df <- df %>% relocate(50:51, .after = smd_ma)
 ```
 The variances calculated based on the reproduced Cohen's $d$s and sample sizes approximated those calculated using the CIs reported in the MA in most, but not all cases. The confidence intervals must have been computed using varying formulas (which is not implausible given the variable designs of the studies included in the MA).
@@ -467,26 +468,141 @@ DF <- read_excel("data_thesis/Data_sheet_ma_ma1.xlsx")
 
 #### Meta-analysis using the Cohen's $d$s & the variances calculated based on the CIs reported in the MA
 ```{r}
-rm <- rma(smd_ma, vd_ma, data = df, method = "DL") # DerSimonian-Laird is the default between-study heterogeneity estimator in the CMA software
+rm <- rma(smd_ma, vi_ma, data = df, method = "DL") # DerSimonian-Laird is the default between-study heterogeneity estimator in the CMA software
 rm
 ```
 The reproduced PSMD is 0.0469067 larger than the one reported in the MA. The heterogeneity parameters $\tau^2$, $Q$, and $I^2$ could not be reproduced, either.
 
 #### Meta-analysis using the Cohen's $d$s & the weights reported in the MA
 ```{r}
-rm <- rma(smd_ma, vd_ma, weights = weights_ma, data = df, method = "DL")
+rm <- rma(smd_ma, vi_ma, weights = weights_ma, data = df, method = "DL")
 rm
 ```
 By weighing the SMDs by the weights reported in the MA instead of the within-study variances calculated based on the reported CIs, the pooled SMD could be reproduced.
 
 #### Meta-analysis using the reproduced Cohen's $d$s & variances
 ```{r}
-rm <- rma(smd_r_d, vd_r, data = df, method = "DL")
+rm <- rma(smd_r_d, vi_r, data = df, method = "DL")
 rm
 ```
 The reproduced PSMD is 0.0637099 larger than the one reported in the MA. The heterogeneity parameters are considerably larger than the reported ones.
 
+#### Meta-analysis using the SMDs reported in the MA and SEs extracted from the funnel plot in the MA
+It occurred to me to extract the SEs from the figure while working on the publication bias analysis section (see below). This extraction followed the steps: 1. extract the SMDs and the corresponding SEs using Webplotdigitizer, 2. Find the SMD reported in the MA that corresponds to each SMD extracted from the figure, 3. assign each SE paired with a figure-extracted SMD to its corresponding reported SMD.
+
+```{r}
+# SES extracted from the funnel plot, correctly ordered
+df$vi_ma_f <- c(0.534502924, 0.335672515, 0.450292398, 0.603508772, 0.450292398, 0.266666667, 0.264327485, 0.440935673, 0.41871345, 0.591812865, 0.649122807, 0.562573099, 0.264327485, 0.449122807, 0.528654971, 0.596491228, 0.281871345, 0.535672515, 0.458479532, 0.216374269, 0.476023392)^2
+rm <- rma(smd_ma, vi_ma_f, data = df, method = "DL")
+rm
+```
+These results (including the heterogeneity parameters) correspond very closely to the reported ones. 
 
 
+
+
+## Publication bias analysis
+Besides the packages loaded above, two further packages are needed in order to conduct the publication bias analysis. The analysis in this section mostly follows the tutorial [here](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/pub-bias.html#addressing-pubbias).
+```{r}
+library(dmetar) # not available on CRAN: devtools::install_github("MathiasHarrer/dmetar")
+library(meta)
+```
+
+### PET-PEESE
+#### Put the necessary variables together
+For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
+```{r}
+petpeese <- data.frame(smd_i = df$smd_ma) # smds
+petpeese$v_i <- df$vi_ma_f # within-study variances (extracted from the figures)
+petpeese$se_i <- sqrt(petpeese$v_i) # standard errors of SMD estimates
+petpeese$w_i <- 1/petpeese$v_i # inverse variance weights
+```
+
+#### PET (precision-effect test)
+```{r}
+pet <- lm(smd_i ~ se_i, weights = w_i, data = petpeese)
+summary(pet)
+```
+
+#### PEESE (precision-effect estimate with standard error)
+```{r}
+peese <- lm(smd_i ~ v_i, weights = w_i, data = petpeese)
+summary(peese)
+```
+Both estimates indicate the presence of publication bias since they're smaller than the original.
+
+
+### P-Curve
+#### Create a `meta` package meta-analysis object, necessary for the `pcurve` function
+```{r}
+ma1 <- metagen(TE = smd_ma,
+              seTE = sqrt(vi_ma_f),
+              studlab = id_comparison,
+              data = df,
+              sm = "SMD", # type of effect size
+              comb.fixed = FALSE, # not a fixed effect MA
+              comb.random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+```
+
+
+#### P-Curve
+```{r}
+pcurve(ma1, 
+       effect.estimation = TRUE,
+       N = df$nt_ma + df$nc_ma, 
+       dmin = 0,
+       dmax = 1)
+```
+No indication of bias.
+
+
+### Three-parameter selection model
+#### Create a `metafor` package meta-analysis object, necessary for the `selmodel` function
+```{r}
+ma2 <- rma(yi = smd_ma,        
+          sei = sqrt(vi_ma_f),
+          data = df,
+          method = "DL")
+```
+
+#### Fit the selection model
+```{r}
+selmodel(ma2,
+         type = "stepfun",
+         steps = 0.05)
+```
+No indication of bias.
+
+Since only 1 out of the three methods indicated that bias might be a concern, 
+
+## Outlier/influence diagnostics
+### Leave-one-out analysis
+```{r}
+metainf(ma1, pooled = "random")
+```
+Removing SMD 8 would reduce the pooled SMD by ~ 0.05 and considerably reduce the variance.
+
+### Some plots
+#### Baujat 
+```{r}
+outl <- InfluenceAnalysis(ma1, random = TRUE)
+plot(outl, "baujat")
+```
+
+#### Forest plot
+```{r}
+plot(outl, "ES")
+```
+
+
+SMDs 6, 7, and 8 contribute disproportionately to both the variance and the pooled SMD.
+
+### Run meta-analysis without outliers
+```{r}
+update.meta(ma1, subset = -c(6, 7, 8))
+```
+Removing the outliers increases the pooled SMD by ~ 0.7 and eliminates between-study heterogeneity altogether.
 
 
