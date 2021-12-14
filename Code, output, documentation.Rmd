@@ -575,7 +575,6 @@ selmodel(ma2,
 ```
 No indication of bias.
 
-Since only 1 out of the three methods indicated that bias might be a concern, 
 
 ## Outlier/influence diagnostics
 ### Leave-one-out analysis
