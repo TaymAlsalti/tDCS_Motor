@@ -69,12 +69,11 @@ h4{
 
 ```{r}
 library("readxl") 
-library("writexl")
 library("tidyverse")
 library("metafor")
 library("MAd")
 library("meta")
-library("dmetar")
+library("dmetar") # not available on CRAN as of September 2021, pulled from GitHub
 df <- read_excel("data_thesis/Data_sheet_ps_ma1.xlsx")
 ```
 
@@ -82,8 +81,8 @@ If you want to run the code outside of the project folder and without the renv.l
 ```{r}
 # install.packages("groundhog")
 # library(groundhog)
-# pkgs <- c("readxl","writexl", "tidyverse", "metafor", "MAd")
-# date = "2021-09-10"
+# pkgs <- c("readxl", "tidyverse", "metafor", "MAd", "meta")
+# date = "2021-11-19"
 # groundhog.library(pkgs, date)
 ```
 
@@ -577,11 +576,18 @@ df[20, "sdc_ps.1"] <- (df[20, "sdc_ps.1"] - df[20, "mc_ps.1"]) * sqrt(45) / 1.96
 df[20, "sdt_ps.1"] <- (df[20, "sdt_ps.1"] - df[20, "mt_ps.1"]) * sqrt(45) / 1.96
 ```
 
+```{r}
+# average group sample size
+mean((df$nc_ma + df$nt_ma) / 2)
+```
+
+
+
 ### Reproduce primary SMDs
 3 meta-analytic models were fit:
 
-1. Using the SMDs reproduced Strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs (e.g., Cohen’s $d$ of tDCS vs. Sham at post intervention).
-2. Using the SMDs reproduced Strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs + SMDs that could be successfully reproduced (i.e., reproduced SMD = reported SMD) following a procedure which __either__ does not entirely correspond to what the meta-analysts report having adopted __or__ does not (necessarily) produce an SMD that is comparable to what would result from following the procedure apparently adopted for at least 2 other primary SMDs
+1. Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs (e.g., Cohen’s $d$ of tDCS vs. Sham at post intervention).
+2. Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs + SMDs that could be successfully reproduced (i.e., reproduced SMD = reported SMD) following a procedure which __either__ does not entirely correspond to what the meta-analysts report having adopted __or__ does not (necessarily) produce an SMD that is comparable to what would result from following the procedure apparently adopted for at least 2 other primary SMDs
 3. Using the reported SMDs only (reproduce fitting the MA model using values reported in the MA only)
 
 #### Between-groups studies which reported sample sizes, means and SDs (SEs/CIs)
@@ -634,8 +640,8 @@ Data extraction was correct for all SMDs and no further data were extracted.
 5. successfully reproduced
 6. successfully reproduced
 7. successfully reproduced
-8. approximated
-9. approximated
+8. irreproducible
+9. irreproducible
 10. approximated
 11. approximated
 12. irreproducible. SMD based on the first set of means and SDs will be used for MA model 2  (according to definition above) since the control values here are the baseline (0) values which corresponds more or less to the meta-analysts' description of their procedure "baseline: Ctrl".
@@ -645,7 +651,7 @@ Data extraction was correct for all SMDs and no further data were extracted.
 16. irreproducible using the values purported to have been used by the meta-analysts "3J-ROM(ctDCS on cH during OT at retention: Rx vs sham during OT at retention: Ctrl)", successfully reproduced using "Proportional change in 3J-ROM" values. The SMD based on the latter values will be used for MA model 2 .
 17. irreproducible. 
 18. irreproducible.
-19. successfully reproduced but not according to the information given in the MA. the values used are for changed in JHFT time from baseline whereas the meta-analysts report using "Time in JHFT".
+19. successfully reproduced but not according to the information given in the MA. the values used are for changes in JHFT time from baseline whereas the meta-analysts report using "Time in JHFT".
 20. successfully reproduced using a $p$-value based on differences in medians. will be used for  MA model 2.
 21. irreproducible.
 
@@ -660,7 +666,7 @@ df$smd_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, 
 df$smd_re1[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[21]]
 
 # SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
-df$smd_re1[[16]] <- NA
+# df$smd_re1[[16]] <- NA WRONG ==> use the 
 
 df$smd_re1[[19]] <- NA
 
@@ -711,16 +717,32 @@ df <- df %>% relocate(smd_re2, .after = smd_re1)
 ### Proportion of successfully reproduced primary SMDs strictly following information given in the MA
 #### reproducible to the second decimal place
 ```{r}
-df <- transform(df, irrep_1_sec_dec = ifelse(round(smd_re1, digits = 2) == smd_ma, 1, 0))
+df <- transform(df, rep_1_sec_dec = ifelse(round(smd_re1, digits = 2) == smd_ma, 1, 0))
 sum(df$irrep_1_sec_dec, na.rm = TRUE)
 sum(df$irrep_1_sec_dec, na.rm = TRUE)/21 * 100
 ```
+#### reproducible to the first decimal place
+```{r}
+df <- transform(df, rep_1_fir_dec = ifelse(round(smd_re1, digits = 1) == round(smd_ma, digits = 1), 1, 0))
+sum(df$rep_1_fir_dec, na.rm = TRUE)
+sum(df$rep_1_fir_dec, na.rm = TRUE)/21 * 100
+```
+### Proportion of successfully reproduced primary SMDs brute force
 #### reproducible to the second decimal place
 ```{r}
-df <- transform(df, irrep_1_fir_dec = ifelse(round(smd_re1, digits = 1) == round(smd_ma, digits = 1), 1, 0))
-sum(df$irrep_1_fir_dec, na.rm = TRUE)
-sum(df$irrep_1_fir_dec, na.rm = TRUE)/21 * 100
+df <- transform(df, rep_2_sec_dec = ifelse(round(smd_re2, digits = 2) == smd_ma, 1, 0))
+sum(df$rep_2_sec_dec, na.rm = TRUE)
+sum(df$rep_2_sec_dec, na.rm = TRUE)/21 * 100
 ```
+#### reproducible to the first decimal place
+```{r}
+df <- transform(df, rep_2_fir_dec = ifelse(round(smd_re2, digits = 1) == round(smd_ma, digits = 1), 1, 0))
+sum(df$rep_2_fir_dec, na.rm = TRUE)
+sum(df$rep_2_fir_dec, na.rm = TRUE)/21 * 100
+
+df <- df %>% relocate(c(id_comparison, rep_1_sec_dec, rep_2_sec_dec, rep_1_fir_dec, rep_2_fir_dec, smd_re1, smd_re2, smd_ma), .after = id_ps)
+```
+
 
 
 ### Reproduce variances of the primary SMDs for MA model 1
@@ -735,7 +757,7 @@ df$v_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, da
 df$v_re1[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$var.d[[21]]
 
 # SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
-df$v_re1[[16]] <- NA
+# df$v_re1[[16]] <- NA
 
 df$v_re1[[19]] <- NA
 
@@ -794,14 +816,17 @@ ma1 <- metagen(TE = smd_re1,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+windowsFonts(A = windowsFont("Times New Roman"))
+
+png("figures/fig3_mam1.png", units = "in", width = 7.2, height = 6, res = 300)
 forest.meta(ma1,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "d", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
 ```
 
 #### MA model 2
@@ -811,14 +836,15 @@ ma2 <- metagen(TE = smd_re2,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+png("figures/fig3_mam2.png", units = "in", width = 7.2, height = 6, res = 300)
 forest.meta(ma2,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "d", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
 ```
 
 #### MA model 3
@@ -828,14 +854,15 @@ ma3 <- metagen(TE = smd_ma,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+png("figures/fig3_mam3.png", units = "in", width = 7.2, height = 6, res = 300)
 forest.meta(ma3,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "d", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
 ```
 
 
@@ -912,7 +939,8 @@ Removing SMD 8 would reduce the pooled SMD by ~ 0.05 and considerably reduce the
 ### Some plots
 #### Baujat 
 ```{r}
-outl <- InfluenceAnalysis(ma3, random = TRUE)
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
+png("figures/fig6.png", units = "in", width = 5, height = 5, res = 300)
 plot(outl, "baujat")
 ```
 
@@ -928,7 +956,7 @@ SMDs 6, 7, and 8 contribute disproportionately to both the variance and the pool
 ```{r}
 s <- update.meta(ma3, subset = -c(6, 7, 8))
 forest.meta(s,
-            predict = TRUE, 
+
             print.tau2 = TRUE,
             leftlabs = c("SMD No.", "d", "SE"))
 ```
@@ -977,6 +1005,11 @@ df[13, "sdc_ps.1"] <- (df[13, "sdc_ps.1"] + df[13, "mc_ps.1"]) * sqrt(25)
 df[13, "sdt_ps.1"] <- (df[13, "sdt_ps.1"] + df[13, "mt_ps.1"]) * sqrt(25)
 
 df[18, "sdt_ps.1"] <- (df[18, "sdt_ps.1"] + df[18, "mt_ps.1"]) * sqrt(13)
+```
+
+```{r}
+# average group sample size
+mean((df$nc_ma + df$nt_ma) / 2)
 ```
 
 ### Reproduce primary SMDs
@@ -1086,7 +1119,7 @@ Overview of the results of double-checking data extraction for each of the 20 pr
 7. Since the means and SDs from the first set are for changes in the outcome and not raw, I extracted raw means and SDs from figures. SMDs based on these values will be used for the pooled SMD. The SMD is irreproducible.
 8. successfully reproduced using a $p$ value for the comparison between the 3 groups cathodal, anodal and sham at post, will be used for MA model 2
 9. Data extraction correct, primary SMD irreproducible. successfully reproduced using a $p$ value for the comparison between the 3 groups cathodal, anodal and sham at post, will be used for MA model 2
-10. SMD can be considered as reproducible since the difference is probably due to variation in how the means and SDs were extracted from the figure.
+10. SMD can be considered as reproducible since the difference is probably due to variation in how the means and SDs were extracted from the figure. NOPE ACCORDING TO CLASSIFICATION SCHEME
 11. Same as 10, but negative since the scale used is negatively coded.
 12. I made a mistake in extracting sample sizes. The SMD remains irreproducible after correction.
 13. Data extraction correct, primary SMD irreproducible.
@@ -1264,7 +1297,7 @@ df$v_re1[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1,
 
 df$v_re1[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[18,], denom = "pooled.sd")$var.d
 
-df$v_re1[[19]] <- -p_to_d1(df$p_ps[[19]], df$n_ps[[19]], df$n_ps[[19]])[2]
+df$v_re1[[19]] <- p_to_d1(df$p_ps[[19]], df$n_ps[[19]], df$n_ps[[19]])[2]
 
 df$v_re1[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[20,], denom = "pooled.sd")$var.d
 
@@ -1315,7 +1348,7 @@ df$v_re2[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1,
 
 df$v_re2[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[18,], denom = "pooled.sd")$var.d
 
-df$v_re2[[19]] <- -p_to_d1(df$p_ps[[19]], df$n_ps[[19]], df$n_ps[[19]])[2]
+df$v_re2[[19]] <- p_to_d1(df$p_ps[[19]], df$n_ps[[19]], df$n_ps[[19]])[2]
 
 df$v_re2[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[20,], denom = "pooled.sd")$var.d
 
@@ -1331,14 +1364,17 @@ ma1 <- metagen(TE = smd_re1,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+windowsFonts(A = windowsFont("Times New Roman"))
+
+png("figures/fig4_mam1.png", units = "in", width = 7.2, height = 6, res = 300)
 forest.meta(ma1,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "d", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
 ```
 
 #### MA model 2
@@ -1348,14 +1384,15 @@ ma2 <- metagen(TE = smd_re2,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+png("figures/fig4_mam2.png", units = "in", width = 7.2, height = 6, res = 300)
 forest.meta(ma2,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "d", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
 ```
 
 #### MA model 3
@@ -1365,15 +1402,17 @@ ma3 <- metagen(TE = smd_ma,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+png("figures/fig4_mam3.png", units = "in", width = 7.2, height = 6, res = 300)
 forest.meta(ma3,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "d", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
 ```
+
 
 ## Publication bias analysis
 
@@ -1382,7 +1421,7 @@ forest.meta(ma3,
 For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
 ```{r}
 petpeese <- data.frame(smd = df$smd_ma) # smds
-petpeese$v <- df$v_ma # within-study variances (extracted from the figures)
+petpeese$v <- df$se_ma^2 # within-study variances (extracted from the figures)
 petpeese$se <- df$se_ma # standard errors of SMD estimates
 petpeese$w <- 1/petpeese$v # inverse variance weights
 ```
@@ -1441,7 +1480,8 @@ metainf(ma3, pooled = "random")
 ### Some plots
 #### Baujat 
 ```{r}
-outl <- InfluenceAnalysis(ma3, random = TRUE)
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
+png("figures/fig7.png", units = "in", width = 5, height = 5, res = 300)
 plot(outl, "baujat")
 ```
 
@@ -1453,7 +1493,7 @@ plot(outl, "ES")
 ```{r}
 s <- update.meta(ma1, subset = -c(8, 9, 11, 19))
 forest.meta(s,
-            predict = TRUE, 
+
             print.tau2 = TRUE,
             leftlabs = c("SMD No.", "d", "SE"))
 ```
@@ -1478,6 +1518,12 @@ df <- df %>% mutate_at(vars(starts_with('t_')), as.numeric)
 df <- df %>% mutate_at(vars(starts_with('F_')), as.numeric)
 df <- df %>% mutate_at(vars(starts_with('si')), as.numeric)
 ```
+
+```{r}
+# average group sample size
+mean((df$nc_ma + df$nt_ma) / 2, na.rm = TRUE)
+```
+
 ### Reproduce primary SMDs
 This MA only included RCTs. 1 out of the 6 studies included was a conference abstract which only reported the total sample size. The 5 others reported group sample sizes, 3 reported raw means and SDs, one reported a potentially usable $t$-value. Hedges' $g$ was used. 
 #### Studies which reported means and SDs
@@ -1516,16 +1562,17 @@ compute_dgs(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = df[2,], d
 ```
 
 ```{r}
-#df$mt_ps.3[[2]] <- (df$mt_ps.1[[2]] + df$mt_ps.2[[2]]) / 2
-#df$sdt_ps.3[[2]] <- (df$sdt_ps.1[[2]] + df$sdt_ps.2[[2]]) / 2
+df$mt_ps.3 <- (df$mt_ps.1 + df$mt_ps.2) / 2
+df$sdt_ps.3 <- (df$sdt_ps.1 + df$sdt_ps.2) / 2
 
-#compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g
+compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g
 ```
-```{r}
-#df$mt_ps.3[[2]] <- (df$mt_ps.1[[2]] + df$mt_ps.2[[2]]) / 2
-#df$sdt_ps.3[[2]] <- (df$sdt_ps.1[[2]] + df$sdt_ps.2[[2]]) / 2
 
-#compute_dgs(nt_ps*2, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g
+```{r}
+df$mt_ps.3[[2]] <- (df$mt_ps.1[[2]] + df$mt_ps.2[[2]]) / 2
+df$sdt_ps.3[[2]] <- (df$sdt_ps.1[[2]] + df$sdt_ps.2[[2]]) / 2
+
+compute_dgs(nt_ps*2, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g
 ```
 
 ```{r}
@@ -1568,12 +1615,12 @@ compute_gs(d, vd, nt_ps, nc_ps, df)$g[6]
 yup
 
 Overview of the results of double-checking data extraction for each of the 20 primary SMDs:
-1. SMD 1 could be reproduced using a $p$ value (given as a range <0.01) for the comparison between the control and treatment medians at post. It will be used for the pooled SMD. 
-2. Best approximated by taking the first set of means and SDs (SMA) and doubling the sample size for the treatment group. It was negative because the variable is reaction times. The variation without doubling the sample size will be used.
-3. Same as 1
-4. Reproducible
-5. SMD 5 was approximated well by averaging sets 1 and 2 and computing the SMD based on the averaged values.
-6. SMD 6 could be reproduced using a $p$ value for the comparison between the control and treatment mean change from baseline.
+1. SMD 1 could be reproduced using a $p$ value (given as a range <0.01) for the comparison between the control and treatment medians at post. It will be used for MMA2.----- 3
+2. Best approximated by taking the first set of means and SDs (SMA) and doubling the sample size for the treatment group (USED FOR MMA2). It was negative because the variable is reaction times. The variation without doubling the sample size and by averaging the two sets will be used for MMA 1 since it corresponds to other reproducible SMDs. ----- 2, 3
+3. Same as 1 -------- 3
+4. reproducible based on means and SDs of change percentages from pre to post -------- 3
+5. SMD 5 was approximated well by averaging sets 1 and 2 and computing the SMD based on the averaged values. ------ 1
+6. SMD 6 could be reproduced using a $p$ value for the comparison between the control and treatment mean change from baseline. ----- 3
 
 
 ### Collate reproduced primary SMDs for MA model 1
@@ -1582,13 +1629,16 @@ Overview of the results of double-checking data extraction for each of the 20 pr
 df$smd_re1[[1]] <- NA
 
 # 2
-df$smd_re1[[2]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g %>% abs()
+
+df$mt_ps.3 <- (df$mt_ps.1 + df$mt_ps.2) / 2
+df$sdt_ps.3 <- (df$sdt_ps.1 + df$sdt_ps.2) / 2
+df$smd_re1[[2]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g %>% abs()
 
 # 3
 df$smd_re1[[3]] <- NA
 
 # 4
-df$smd_re1[[4]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[4,], denom = "pooled.sd")$g
+df$smd_re1[[4]] <- NA
 
 #5 
 df$mc_ps.3 <- (df$mc_ps.1 + df$mc_ps.2) / 2
@@ -1617,7 +1667,7 @@ df$vd <- p_to_d2(df$p_ps[[1]], df$nt_ps[[1]], df$nc_ps[[1]])[2]
 df$smd_re2[[1]] <- compute_gs(d, vd, nt_ps, nc_ps, df)$g[1]
 
 # 2
-df$smd_re2[[2]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g %>% abs()
+df$smd_re2[[2]] <- compute_dgs(nt_ps*2, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g %>% abs()
 
 # 3
 df$d <- p_to_d2(df$p_ps[[3]], df$n_ps[[3]], df$n_ps[[3]])[1]
@@ -1653,13 +1703,13 @@ df <- df %>% relocate(smd_re2,  .after = smd_re1)
 df$v_re1[[1]] <- NA
 
 # 2
-df$v_re1[[2]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$var.g
+df$v_re1[[2]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$var.g
 
 # 3
 df$v_re1[[3]] <- NA
 
 # 4
-df$v_re1[[4]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[4,], denom = "pooled.sd")$var.g
+df$v_re1[[4]] <- NA
 
 #5 
 df$mc_ps.3 <- (df$mc_ps.1 + df$mc_ps.2) / 2
@@ -1682,7 +1732,7 @@ df$vd <- p_to_d2(0.01, df$nt_ps[[1]], df$nc_ps[[1]])[2]
 df$v_re2[[1]] <- compute_gs(d, vd, nt_ps, nc_ps, df)$var.g[1]
 
 # 2
-df$v_re2[[2]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$var.g
+df$v_re2[[2]] <- compute_dgs(nt_ps*2, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$var.g
 
 # 3
 df$d <- p_to_d2(0.01, df$n_ps[[3]], df$n_ps[[3]])[1]
@@ -1728,14 +1778,17 @@ ma1 <- metagen(TE = smd_re1,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+windowsFonts(A = windowsFont("Times New Roman"))
+
+png("figures/fig5_mam1.png", units = "in", width = 7.2, height = 3, res = 300)
 forest.meta(ma1,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "g", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "g", "SE"))
 ```
 
 #### MA model 2
@@ -1745,14 +1798,15 @@ ma2 <- metagen(TE = smd_re2,
               studlab = id_comparison,
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+png("figures/fig5_mam2.png", units = "in", width = 7.2, height = 3, res = 300)
 forest.meta(ma2,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "g", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "g", "SE"))
 ```
 
 #### MA model 3
@@ -1762,14 +1816,15 @@ ma3 <- metagen(TE = smd_ma,
               studlab = as.character(id_comparison),
               data = df,
               sm = "SMD",
-              comb.fixed = FALSE,
-              comb.random = TRUE, # a random effects MA
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
               method.tau = "DL", # DerSimonian-Laird estimator
                  )
+png("figures/fig5_mam3.png", units = "in", width = 7.2, height = 3, res = 300)
 forest.meta(ma3,
-            predict = TRUE, 
-            print.tau2 = TRUE,
-            leftlabs = c("SMD No.", "g", "SE"))
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "g", "SE"))
 ```
 
 ## Publication bias analysis
@@ -1838,7 +1893,8 @@ metainf(ma3, pooled = "random")
 ### Some plots
 #### Baujat 
 ```{r}
-outl <- InfluenceAnalysis(ma3, random = TRUE)
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
+png("figures/fig8.png", units = "in", width = 5, height = 5, res = 300)
 plot(outl, "baujat")
 ```
 
@@ -1851,7 +1907,7 @@ plot(outl, "ES")
 ```{r}
 s <- update.meta(ma3, subset = -c(2))
 forest.meta(s,
-            predict = TRUE, 
+
             print.tau2 = TRUE,
             leftlabs = c("SMD No.", "g", "SE"))
 ```
