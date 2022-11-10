@@ -74,7 +74,7 @@ library("metafor")
 library("MAd")
 library("meta")
 library("dmetar") # not available on CRAN as of September 2021, pulled from GitHub
-df <- read_excel("data_thesis/Data_sheet_ps_ma1.xlsx")
+df <- read_excel("data_thesis/Archive/Data_sheet_ps_ma1.xlsx")
 ```
 
 If you want to run the code outside of the project folder and without the renv.lock file (from the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package), loading the packages using the package [`groundhog`](https://groundhogr.com/) would ensure the code's long term reproducibility:
@@ -82,7 +82,7 @@ If you want to run the code outside of the project folder and without the renv.l
 # install.packages("groundhog")
 # library(groundhog)
 # pkgs <- c("readxl", "tidyverse", "metafor", "MAd", "meta")
-# date = "2021-11-19"
+# date = "2021-12-19"
 # groundhog.library(pkgs, date)
 ```
 
@@ -259,9 +259,9 @@ df[16, "smd_r_d"] <-  as.numeric(df[16, "smd_ma"])
 #df$smd_r_d <- round(df$smd_r_d,digits = 2)
 ```
 
-### Functions for reproducing within-study variances
+### Functions for reproducing sampling variances
 #### Compute variance of Cohen's $d$ for a between-groups comparison
-To compute the pooled SMD, the within-study variance for each study, $\hat\sigma_i$, must be determined. The formula used here can be found in [Hedges and Olkin (1985, p. 86)](https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis):
+To compute the pooled SMD, the sampling variance for each study, $\hat\sigma_i$, must be determined. The formula used here can be found in [Hedges and Olkin (1985, p. 86)](https://www.sciencedirect.com/book/9780080570655/statistical-methods-for-meta-analysis):
 
 $$\hat\sigma_i={\frac {n_{1}+n_{2}}{n_{1}n_{2}}}+{\frac {d^2}{2(n_{1}+n_{2})}}$$
 
@@ -294,47 +294,22 @@ df <- df %>% relocate(vd, .after = smd_ma)
 ```
 #### Confirm that the $\hat\sigma_i$s can be reproduced by already available software
 ```{r}
-#library("MAd")
-
-# compute ds and corresponding within study variances
-#df <- compute_ds(as.numeric(nt_ps), as.numeric(mt_ps.2), as.numeric(sdt_ps.2), as.numeric(nc_ps), as.numeric(mc_ps.2), as.numeric(sdc_ps.2), df, denom = "pooled.sd")
+# compute ds and corresponding sampling variances
+df <- compute_ds(as.numeric(nt_ps), as.numeric(mt_ps.2), as.numeric(sdt_ps.2), as.numeric(nc_ps), as.numeric(mc_ps.2), as.numeric(sdc_ps.2), df, denom = "pooled.sd")
 # note that the ds are reproduced here too
 
 # relocate to facilitate inspection
-#df <- df %>% relocate(c(d, vd, var.d), .after = smd_ma)
+df <- df %>% relocate(c(d, vd, var.d), .after = smd_ma)
 ```
 
-At this point (07.09.21) I was reminded that, as in the case of the Cohen's $d$s themselves, the formula for computing the corresponding within-study variance wouldn't work for studies that had no control groups (cross-over trials). I contacted the authors of MA 1 on the 08.09.21 and received a reply that they used CMA to run the meta-analysis. As of 09.09.21, I'm waiting for further information.
+At this point (07.09.21) I was reminded that, as in the case of the Cohen's $d$s themselves, the formula for computing the corresponding sampling variance wouldn't work for studies that had no control groups (cross-over trials). I contacted the authors of MA 1 on the 08.09.21 and received a reply that they used CMA to run the meta-analysis. As of 09.09.21, I'm waiting for further information.
 
 Update 10.09.2021: I was informed by the first author of the MA that they used an [online tool](https://automeris.io/WebPlotDigitizer/) to extract means and SDs from figures when these were not reported in the primary study. This was done for the 13 RCTs that were included if they did not report means and SDs. For the 4 remaining studies (comparisons 2, 12, 13, and 21), the authors used sample sizes in combination with $t$ or $p$ values. Thus, the following sections repeat the process using an updated dataset containing data extracted from figures.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### Load dataset & preprocess data as above
 ```{r}
 # load updated dataset
-df <- read_excel("data_thesis/Data_sheet_ps_ma1_updated.xlsx")
+df <- read_excel("data_thesis/Archive/Data_sheet_ps_ma1_updated.xlsx")
 
 # add a column specifying availability of necessary data
 df <- df %>% mutate(data_available = if_else(is.na(mc_ps.2), "no", "yes"))
@@ -499,7 +474,7 @@ The reproduced PSMD is 0.0469067 larger than the one reported in the MA. The het
 rm <- rma(smd_ma, vi_ma, weights = weights_ma, data = df, method = "DL")
 rm
 ```
-By weighing the SMDs by the weights reported in the MA instead of the within-study variances calculated based on the reported CIs, the pooled SMD could be reproduced.
+By weighing the SMDs by the weights reported in the MA instead of the sampling variances calculated based on the reported CIs, the pooled SMD could be reproduced.
 
 #### Meta-analysis using the reproduced Cohen's $d$s & variances
 ```{r}
@@ -521,11 +496,11 @@ rm_o
 These results (including the heterogeneity parameters) correspond very closely to the reported ones. 
 
 **UPDATE AFTER EXTRACTING DATA FOR MA2 AND MA3**
-Since my data extraction procedure was somewhat different for MA2 and MA3, I did a final round of data extraction for MA1 so that my treatment is the same of all three meta-analyses. 
+Since my data extraction procedure was somewhat different for MA2 and MA3 than for MA1, I did a final round of data extraction for MA1 so that my treatment is the same of all three meta-analyses. I used functions from the ` MAd` package because they reproduced mine.
 
-### Load dataset & preprocess data - final
+### Load dataset & preprocess data - FINAL
 ```{r}
-df <- read_excel("data_thesis/Data_ps_raw_updated.xlsx", sheet = "MA1")
+df <- read_excel("data_thesis/Data_ps_raw.xlsx", sheet = "MA1")
 
 
 # remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to convert to SDs
@@ -586,9 +561,9 @@ mean((df$nc_ma + df$nt_ma) / 2)
 ### Reproduce primary SMDs
 3 meta-analytic models were fit:
 
-1. Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs (e.g., Cohen’s $d$ of tDCS vs. Sham at post intervention).
-2. Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs + SMDs that could be successfully reproduced (i.e., reproduced SMD = reported SMD) following a procedure which __either__ does not entirely correspond to what the meta-analysts report having adopted __or__ does not (necessarily) produce an SMD that is comparable to what would result from following the procedure apparently adopted for at least 2 other primary SMDs
-3. Using the reported SMDs only (reproduce fitting the MA model using values reported in the MA only)
+1. MA1: Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs (e.g., Cohen’s $d$ of tDCS vs. Sham at post intervention).
+2. MA2: Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs + SMDs that could be successfully reproduced (i.e., reproduced SMD = reported SMD) following a procedure which __either__ does not entirely correspond to what the meta-analysts report having adopted __or__ does not (necessarily) produce an SMD that is comparable to what would result from following the procedure apparently adopted for at least 2 other primary SMDs
+3. MA3: Using the reported SMDs only (reproduce fitting the MA model using values reported in the MA only)
 
 #### Between-groups studies which reported sample sizes, means and SDs (SEs/CIs)
 ```{r}
@@ -631,10 +606,10 @@ compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df, denom = 
 Still not reproducible. SMD 13 does reproduce the Cohen's $d$ reported in the primary study, though. 
 
 ### Overview of SMDs post double checking irreproducible SMDs
-Data extraction was correct for all SMDs and no further data were extracted.
+Data extraction was correct for all SMDs and no further data were extracted (see data sheets column "comments" for sources of data).
 
-1. SMD 1 successfully reproduced
-2. approximated (values extracted from figure)
+1. successfully reproduced
+2. approximated 
 3. successfully reproduced
 4. approximated
 5. successfully reproduced
@@ -666,7 +641,6 @@ df$smd_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, 
 df$smd_re1[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[21]]
 
 # SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
-# df$smd_re1[[16]] <- NA WRONG ==> use the 
 
 df$smd_re1[[19]] <- NA
 
@@ -746,7 +720,7 @@ df <- df %>% relocate(c(id_comparison, rep_1_sec_dec, rep_2_sec_dec, rep_1_fir_d
 
 
 ### Reproduce variances of the primary SMDs for MA model 1
-`MAd`'s `compute_ds()` and `p_to_d1` functions automatically calculate the corresponding sampling/within-study variances. In cases where not enough data were available, the square of the standard error extracted from the funnel plot in the MA will be used.
+`MAd`'s `compute_ds()` and `p_to_d1` functions automatically calculate the corresponding sampling/sampling variances. In cases where not enough data were available, the square of the standard error extracted from the funnel plot in the MA will be used.
 ```{r}
 # SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
 df$v_re1 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$var.d
@@ -866,11 +840,6 @@ forest.meta(ma3,
 ```
 
 
-
-
-
-
-
 ## Publication bias analysis
 The analysis in this section mostly follows the tutorial [here](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/pub-bias.html#addressing-pubbias).
 
@@ -879,7 +848,7 @@ The analysis in this section mostly follows the tutorial [here](https://bookdown
 For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
 ```{r}
 petpeese <- data.frame(smd = df$smd_ma) # smds
-petpeese$v <- df$v_ma # within-study variances (extracted from the figures)
+petpeese$v <- df$v_ma # sampling variances (extracted from the figures)
 petpeese$se <- df$se_ma # standard errors of SMD estimates
 petpeese$w <- 1/petpeese$v # inverse variance weights
 ```
@@ -895,7 +864,7 @@ summary(pet)$coefficients
 peese <- lm(smd ~ v, weights = w, data = petpeese)
 summary(peese)$coefficients
 ```
-Both estimates indicate the presence of publication bias since they're smaller than the original.
+Both estimates indicate the presence of publication bias.
 
 
 ### P-Curve
@@ -968,7 +937,7 @@ Removing the outliers increases the pooled SMD by ~ 0.7 and eliminates between-s
 
 ### Load dataset & preprocess data
 ```{r}
-df <- read_excel("data_thesis/Data_ps_raw_updated.xlsx", sheet = "MA2")
+df <- read_excel("data_thesis/Data_ps_raw.xlsx", sheet = "MA2")
 
 
 # remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to convert to SDs
@@ -1126,7 +1095,7 @@ Overview of the results of double-checking data extraction for each of the 20 pr
 14. Data extraction correct, primary SMD irreproducible. SMDs based on set 2 are closest to the reported SMDs but these are follow up values not post. Thus the values of the first set will be used for reproducing the pooled SMD.
 15. Data extraction correct, primary SMD irreproducible. SMDs based on set 2 are closed to the reported SMDs but these are follow up values not post. Thus the values of the first set will be used for reproducing the pooled SMD.
 16. Data extraction correct, primary SMD irreproducible. Almost the same as the reported SMD but negative.
-17. Primary SMD reproducible.
+17. Reproducible.
 18. Same as 10, but negative since the variable is reaction time.
 19. Approximated by using a $p$ value for tDCS vs. sham post comparison. Cathodal had a negative effect.
 20. Data extraction correct, primary SMD irreproducible. SMD based on the second set of means and SDs will be used since it's the post values.
@@ -1145,11 +1114,6 @@ df[7, "sdt_ps.2"] <- (df[7, "sdt_ps.2"] - df[7, "mt_ps.2"])
 compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df, denom = "pooled.sd")$d[[6]]
 compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df, denom = "pooled.sd")$d[[7]]
 ```
-
-```{r}
-2.5 * sqrt(4)
-```
-
 
 
 Reproduce SMDs 8 & 9 using $p$-values:
@@ -1421,7 +1385,7 @@ forest.meta(ma3,
 For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
 ```{r}
 petpeese <- data.frame(smd = df$smd_ma) # smds
-petpeese$v <- df$se_ma^2 # within-study variances (extracted from the figures)
+petpeese$v <- df$se_ma^2 # sampling variances (extracted from the figures)
 petpeese$se <- df$se_ma # standard errors of SMD estimates
 petpeese$w <- 1/petpeese$v # inverse variance weights
 ```
@@ -1504,7 +1468,7 @@ forest.meta(s,
 
 ### Load dataset & preprocess data
 ```{r}
-df <- read_excel("data_thesis/Data_ps_raw_updated.xlsx", sheet = "MA3")
+df <- read_excel("data_thesis/Data_ps_raw.xlsx", sheet = "MA3")
 
 # make values numeric
 df <- df %>% mutate_at(vars(starts_with('sd')), as.numeric)
@@ -1834,7 +1798,7 @@ forest.meta(ma3,
 For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
 ```{r}
 petpeese <- data.frame(smd = df$smd_ma) # smds
-petpeese$v <- df$v_ma # within-study variances (extracted from the figures)
+petpeese$v <- df$v_ma # sampling variances (extracted from the figures)
 petpeese$se <- df$se_ma # standard errors of SMD estimates
 petpeese$w <- 1/petpeese$v # inverse variance weights
 ```
@@ -1911,4 +1875,7 @@ forest.meta(s,
             print.tau2 = TRUE,
             leftlabs = c("SMD No.", "g", "SE"))
 ```
+
+
+TO DO:
 
