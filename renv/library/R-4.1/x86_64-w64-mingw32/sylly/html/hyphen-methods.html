@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Automatic hyphenation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for hyphen {sylly}"><tr><td>hyphen {sylly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Automatic hyphenation</h2>
+
+<h3>Description</h3>
+
+<p>These methods implement word hyphenation, based on Liang's algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+hyphen(words, ...)
+
+## S4 method for signature 'character'
+hyphen(
+  words,
+  hyph.pattern = NULL,
+  min.length = 4,
+  rm.hyph = TRUE,
+  quiet = FALSE,
+  cache = TRUE,
+  as = "kRp.hyphen"
+)
+
+hyphen_df(words, ...)
+
+## S4 method for signature 'character'
+hyphen_df(
+  words,
+  hyph.pattern = NULL,
+  min.length = 4,
+  rm.hyph = TRUE,
+  quiet = FALSE,
+  cache = TRUE
+)
+
+hyphen_c(words, ...)
+
+## S4 method for signature 'character'
+hyphen_c(
+  words,
+  hyph.pattern = NULL,
+  min.length = 4,
+  rm.hyph = TRUE,
+  quiet = FALSE,
+  cache = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>words</code></td>
+<td>
+<p>Either a character vector with words/tokens to be hyphenated,
+or any tagged text object generated with the <code>koRpus</code> package.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Only used for the method generic.</p>
+</td></tr>
+<tr valign="top"><td><code>hyph.pattern</code></td>
+<td>
+<p>Either an object of class <code><a href="../help/kRp.hyph.pat-class.html">kRp.hyph.pat</a></code>,
+or
+a valid character string naming the language of the patterns to be used (must already be loaded,
+see details).</p>
+</td></tr>
+<tr valign="top"><td><code>min.length</code></td>
+<td>
+<p>Integer,
+number of letters a word must have for considering a hyphenation. <code>hyphen</code> will
+not split words after the first or before the last letter,
+so values smaller than 4 are not useful.</p>
+</td></tr>
+<tr valign="top"><td><code>rm.hyph</code></td>
+<td>
+<p>Logical,
+whether appearing hyphens in words should be removed before pattern matching.</p>
+</td></tr>
+<tr valign="top"><td><code>quiet</code></td>
+<td>
+<p>Logical. If <code>FALSE</code>, short status messages will be shown.</p>
+</td></tr>
+<tr valign="top"><td><code>cache</code></td>
+<td>
+<p>Logical. <code>hyphen()</code> can cache results to speed up the process. If this option is set to <code>TRUE</code>,
+the
+current cache will be queried and new tokens also be added. Caches are language-specific and reside in an environment,
+i.e., they are cleaned at the end of a session. If you want to save these for later use,
+see the option <code>hyph.cache.file</code>
+in <code><a href="../help/set.sylly.env.html">set.sylly.env</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>as</code></td>
+<td>
+<p>A character string defining the class of the object to be returned. Defaults to <code>"kRp.hyphen"</code>,
+but can also be
+set to <code>"data.frame"</code> or <code>"numeric"</code>,
+returning only the central <code>data.frame</code> or the numeric vector of counted syllables,
+respectively. For the latter two options,
+you can alternatively use the shortcut methods <code>hyphen_df</code> or  <code>hyphen_c</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>For this to work the function must be told which pattern set it should use to
+find the right hyphenation spots. The most straight forward way to add support
+for a particular language during a session is to load an appropriate language
+package (e.g., the package <code>sylly.en</code> for English or <code>sylly.de</code> for German).
+See <code><a href="../help/available.sylly.lang.html">available.sylly.lang</a></code> and
+<code><a href="../help/install.sylly.lang.html">install.sylly.lang</a></code> for more informatin on how
+to get language support packages.
+</p>
+<p>After such a package was loaded, you can simply use the language abbreviation as
+the value for the <code>hyph.pattern</code> argument (like <code>"en"</code> for the English
+pattern set). If <code>words</code> is an object that was tokenized and tagged with
+the <code>koRpus</code> package, its language definition can be used instead, i.e. you
+don't need to specify <code>hyph.pattern</code>, <code>hyphen</code> will pick the language
+automatically.
+</p>
+<p>In case you'd rather use your own pattern set, <code>hyph.pattern</code> can be an
+object of class <code>kRp.hyph.pat</code>, alternatively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.hyphen-class.html">kRp.hyphen</a></code>,
+<code>data.frame</code> or a numeric vector, depending on the value
+of the <code>as</code> argument.
+</p>
+
+
+<h3>References</h3>
+
+<p>Liang, F.M. (1983). <em>Word Hy-phen-a-tion by Com-put-er</em>.
+Dissertation, Stanford University, Dept. of Computer Science.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/read.hyph.pat.html">read.hyph.pat</a></code>,
+<code><a href="../help/manage.hyph.pat.html">manage.hyph.pat</a></code>,
+<code><a href="../help/available.sylly.lang.html">available.sylly.lang</a></code>, and
+<code><a href="../help/install.sylly.lang.html">install.sylly.lang</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+library(sylly.en)
+sampleText &lt;- c("This", "is", "a", "rather", "stupid", "demonstration")
+hyphen(sampleText, hyph.pattern="en")
+hyphen_df(sampleText, hyph.pattern="en")
+hyphen_c(sampleText, hyph.pattern="en")
+
+# using a koRpus object
+hyphen(tagged.text)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sylly</em> version 0.1-6 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

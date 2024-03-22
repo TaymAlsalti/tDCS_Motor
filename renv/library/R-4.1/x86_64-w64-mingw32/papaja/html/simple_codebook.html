@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Simple codebook</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for simple_codebook {papaja}"><tr><td>simple_codebook {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Simple codebook</h2>
+
+<h3>Description</h3>
+
+<p>Generate a simple codebook in CSV-format
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+simple_codebook(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>data.frame. Data to be written.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code><a href="../../utils/help/write.table.html">utils::write.table</a></code>
+</p>
+
+<dl>
+<dt><code>file</code></dt><dd><p>either a character string naming a file or a <a href="../../base/html/connections.html">connection</a>
+open for writing.  <code>""</code> indicates output to the console.</p>
+</dd>
+<dt><code>append</code></dt><dd><p>logical. Only relevant if <code>file</code> is a character
+string.  If <code>TRUE</code>, the output is appended to the
+file.  If <code>FALSE</code>, any existing file of the name is destroyed.</p>
+</dd>
+<dt><code>quote</code></dt><dd><p>a logical value (<code>TRUE</code> or <code>FALSE</code>) or a
+numeric vector.  If <code>TRUE</code>, any character or factor columns
+will be surrounded by double quotes.  If a numeric vector, its
+elements are taken as the indices of columns to quote.  In both
+cases, row and column names are quoted if they are written.  If
+<code>FALSE</code>, nothing is quoted.</p>
+</dd>
+<dt><code>sep</code></dt><dd><p>the field separator string.  Values within each row of
+<code>x</code> are separated by this string.</p>
+</dd>
+<dt><code>eol</code></dt><dd><p>the character(s) to print at the end of each line (row).
+For example, <code>eol = "\r\n"</code> will produce Windows' line endings on
+a Unix-alike OS, and <code>eol = "\r"</code> will produce files as expected by
+Excel:mac 2004.</p>
+</dd>
+<dt><code>na</code></dt><dd><p>the string to use for missing values in the data.</p>
+</dd>
+<dt><code>dec</code></dt><dd><p>the string to use for decimal points in numeric or complex
+columns: must be a single character.</p>
+</dd>
+<dt><code>row.names</code></dt><dd><p>either a logical value indicating whether the row
+names of <code>x</code> are to be written along with <code>x</code>, or a
+character vector of row names to be written.</p>
+</dd>
+<dt><code>col.names</code></dt><dd><p>either a logical value indicating whether the column
+names of <code>x</code> are to be written along with <code>x</code>, or a
+character vector of column names to be written.  See the section on
+&lsquo;CSV files&rsquo; for the meaning of <code>col.names = NA</code>.</p>
+</dd>
+<dt><code>qmethod</code></dt><dd><p>a character string specifying how to deal with embedded
+double quote characters when quoting strings.  Must be one of
+<code>"escape"</code> (default for <code>write.table</code>), in which case the
+quote character is escaped in C style by a backslash, or
+<code>"double"</code> (default for <code>write.csv</code> and
+<code>write.csv2</code>), in which case it is doubled.  You can specify
+just the initial letter.</p>
+</dd>
+<dt><code>fileEncoding</code></dt><dd><p>character string: if non-empty declares the
+encoding to be used on a file (not a connection) so the character data can
+be re-encoded as they are written.  See <code><a href="../../base/html/connections.html">file</a></code>.</p>
+</dd>
+</dl>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>If the <span class="pkg">skimr</span> package is installed, an inline histogram is added
+for all numeric variables.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../utils/help/write.csv.html">write.csv</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+variable_labels(cars) &lt;- c(speed = "Speed [ft/s]", dist = "Distance traveled [m]")
+simple_codebook(cars, file = "cars_codebook.csv")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

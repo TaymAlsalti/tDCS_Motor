@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A function to optimize MSTTR segment sizes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for segment.optimizer {koRpus}"><tr><td>segment.optimizer {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A function to optimize MSTTR segment sizes</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates an optimized segment size for <code><a href="../help/MSTTR.html">MSTTR</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+segment.optimizer(txtlgth, segment = 100, range = 20, favour.min = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txtlgth</code></td>
+<td>
+<p>Integer value, size of text in tokens.</p>
+</td></tr>
+<tr valign="top"><td><code>segment</code></td>
+<td>
+<p>Integer value, start value of the segment size.</p>
+</td></tr>
+<tr valign="top"><td><code>range</code></td>
+<td>
+<p>Integer value,
+range around <code>segment</code> to search for better fitting sizes.</p>
+</td></tr>
+<tr valign="top"><td><code>favour.min</code></td>
+<td>
+<p>Logical,
+whether as a last ressort smaller or larger segment sizes should be
+prefered, if in doubt.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>When calculating the mean segmental type-token ratio (MSTTR), tokens are divided into
+segments of a given size and analyzed. If at the end text is left over which won't fill another
+full segment, it is discarded,
+i.e. information is lost. For interpretation it is debatable
+which is worse: Dropping more or less actual token material,
+or variance in segment size between
+analyzed texts. If you'd prefer the latter, this function might prove helpful.
+</p>
+<p>Starting with a given text length, segment size and range to investigate,
+<code>segment.optimizer</code>
+iterates through possible segment values. It returns the segment size which would drop the fewest
+tokens (zero, if you're lucky). Should more than one value fulfill this demand,
+the one nearest to
+the segment start value is taken. In cases,
+where still two values are equally far away from the
+start value,
+it depends on the setting of <code>favour.min</code> if the smaller or larger segment size
+is returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector with two elements:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>seg</code></td>
+<td>
+<p>The optimized segment size</p>
+</td></tr>
+<tr valign="top"><td><code>drop</code></td>
+<td>
+<p>The number of tokens that would be dropped using this segment size</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/lex.div.html">lex.div</a></code>, <code><a href="../help/MSTTR.html">MSTTR</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+segment.optimizer(2014, favour.min=FALSE)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

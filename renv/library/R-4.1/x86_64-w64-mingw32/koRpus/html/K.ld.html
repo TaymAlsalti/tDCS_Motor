@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Lexical diversity: Yule's K</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for K.ld {koRpus}"><tr><td>K.ld {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Lexical diversity: Yule's K</h2>
+
+<h3>Description</h3>
+
+<p>This is just a convenient wrapper function for <code><a href="../help/lex.div.html">lex.div</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+K.ld(txt, char = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txt</code></td>
+<td>
+<p>An object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code> containing the tagged text to be analyzed.</p>
+</td></tr>
+<tr valign="top"><td><code>char</code></td>
+<td>
+<p>Logical,
+defining whether data for plotting characteristic curves should be calculated.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further valid options for the main function,
+see <code><a href="../help/lex.div.html">lex.div</a></code> for details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function calculates Yule's K. In contrast to
+<code><a href="../help/lex.div.html">lex.div</a></code>,
+which by default calculates all possible measures and
+their progressing characteristics, this function will only calculate the K value,
+and characteristics are
+off by default.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.TTR-class.html">kRp.TTR</a></code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.POS.tags.html">kRp.POS.tags</a></code>,
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code>,
+<code><a href="../help/kRp.TTR-class.html">kRp.TTR</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+K.ld(tagged.text)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Insert citation in Markdown format</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for md_cite {citr}"><tr><td>md_cite {citr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Insert citation in Markdown format</h2>
+
+<h3>Description</h3>
+
+<p>Look up entries in bibliography and insert citation in Markdown format if exactly one match is returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+md_cite(
+  x,
+  in_paren = TRUE,
+  bib_file = getOption("citr.bibliography_path"),
+  cache = TRUE,
+  use_betterbiblatex = getOption("citr.use_betterbiblatex"),
+  encoding = getOption("citr.encoding")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Character. Search terms used to filter bibliography (by author, year, title, and journal
+fields); Regex is supported.</p>
+</td></tr>
+<tr valign="top"><td><code>in_paren</code></td>
+<td>
+<p>Logical. Determines if citation is in parentheses.</p>
+</td></tr>
+<tr valign="top"><td><code>bib_file</code></td>
+<td>
+<p>Character. Path to Bib(La)TeX-file. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>cache</code></td>
+<td>
+<p>Logical. If <code>cache = TRUE</code> cached bibliography is used, if available. If
+<code>cache = FALSE</code> bibliography is re-imported on every function call.</p>
+</td></tr>
+<tr valign="top"><td><code>use_betterbiblatex</code></td>
+<td>
+<p>Logical. If <code>use_betterbiblatex = TRUE</code> references are imported from Zotero/Juris-M.</p>
+</td></tr>
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>Character. Encoding of the Bib(La)TeX-file. See the <code><a href="../../base/html/connections.html">connection</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The path to the BibTeX-file can be set in the global options and is set to
+<code>references.bib</code> when the package is loaded. Once the path is changed in the
+RStudio addin, the global option is updated. If <code>use_betterbiblatex = TRUE</code> references
+are imported from Zotero/Juris-M rather than from the Bib(La)TeX-file. The Bib(La)TeX-file
+is then updated to include the inserted reference.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the bibliography contains exactly one match the formatted citation is returned, otherwise
+returns <code>NULL</code>. <code>md_cite</code> returns an in-text citation (<code>"@foo2016"</code>), <code>md_cite</code>
+returns an in-parenthesis citation (<code>"[@foo2016]"</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../citr/help/insert_citation.html">insert_citation</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+  md_cite("foo 2016", bib_file = "references.bib")
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>citr</em> version 0.3.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

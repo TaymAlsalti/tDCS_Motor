@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Prevention of Eating Disorders at Universities dataset</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for EatingDisorderPrevention {dmetar}"><tr><td>EatingDisorderPrevention {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Prevention of Eating Disorders at Universities dataset</h2>
+
+<h3>Description</h3>
+
+<p>This is a dataset containing effect size data of a meta-analysis synthesizing
+randomized controlled trials comparing the preventive effect of psychobehavioral interventions
+delivered at universities on incidence rates of subthreshold and full-symptom eating disorders.
+Effect size data is provided as the number of cases and the person time at risk calculated for
+the intervention and control group.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data("EatingDisorderPrevention")
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A <code>data.frame</code> with 5 columns.
+</p>
+
+<dl>
+<dt>Author</dt><dd><p><code>character</code>. The study label containing the first author and year of the study.</p>
+</dd>
+<dt>event.e</dt><dd><p><code>numeric</code>. The number of identified eating disorder cases in the intervention group.</p>
+</dd>
+<dt>time.e</dt><dd><p><code>numeric</code>. The person time at risk in the intervention group.</p>
+</dd>
+<dt>event.c</dt><dd><p><code>numeric</code>. The number of identified eating disorder cases in the control group.</p>
+</dd>
+<dt>time.c</dt><dd><p><code>numeric</code>. The person time at risk in the control group.</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>This data set was used in a meta-analysis examining the effect of preventive eating disorder interventions
+at universities (Harrer et al., 2020). The data refers to the analysis in which the treatment arms of trials
+with more than one intervention group were combined so that each study is the meta-analysis is statistically independent;
+resulting in slightly different results then the ones reported in the abstract of the article. Person time at risk values
+were rounded and therefore differ slightly from the ones reported in the study.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer
+</p>
+
+
+<h3>Source</h3>
+
+<p>Harrer, M., Adam, S. H., Messner, E. M., Baumeister, H., Cuijpers, P., Bruffaerts, R., ... &amp; Ebert, D. D. (2020).
+Prevention of eating disorders at universities: A systematic review and meta‐analysis.
+<em>International Journal of Eating Disorders</em>, 53(6).
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

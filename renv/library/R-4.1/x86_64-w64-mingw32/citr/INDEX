@@ -1,0 +1,8 @@
+insert_citation         Invoke RStudio add-in to insert Markdown
+                        citations
+load_betterbiblatex_bib
+                        Load bibliography from Zotero
+md_cite                 Insert citation in Markdown format
+md_cite_zotero          Insert citation in Markdown format from Zotero
+query_bib               Query bibliography
+tidy_bib_file           Tidy bibliography file

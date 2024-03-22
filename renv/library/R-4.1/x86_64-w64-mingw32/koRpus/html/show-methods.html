@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Show methods for koRpus objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for show,kRp.lang-method {koRpus}"><tr><td>show,kRp.lang-method {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Show methods for koRpus objects</h2>
+
+<h3>Description</h3>
+
+<p>Show methods for S4 objects of classes
+<code><a href="../help/kRp.lang-class.html">kRp.lang</a></code>,
+<code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>,
+<code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code> or
+<code><a href="../help/kRp.TTR-class.html">kRp.TTR</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S4 method for signature 'kRp.lang'
+show(object)
+
+## S4 method for signature 'kRp.TTR'
+show(object)
+
+## S4 method for signature 'kRp.corp.freq'
+show(object)
+
+## S4 method for signature 'kRp.readability'
+show(object)
+
+## S4 method for signature 'kRp.text'
+show(object)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class <code>kRp.lang</code>, <code>kRp.readability</code>,
+<code>kRp.corp.freq</code>, or <code>kRp.TTR</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.lang-class.html">kRp.lang</a></code>,
+<code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>,
+<code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>,
+<code><a href="../help/kRp.TTR-class.html">kRp.TTR</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+  guess.lang("/home/user/data/some.txt", udhr.path="/home/user/data/udhr_txt/")
+
+## End(Not run)
+## Not run: 
+MTLD(tagged.txt)
+
+## End(Not run)
+## Not run: 
+flesch(tagged.txt)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

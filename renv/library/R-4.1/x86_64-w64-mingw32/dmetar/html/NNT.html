@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculate the number needed to treat (NNT)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for NNT {dmetar}"><tr><td>NNT {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculate the number needed to treat (NNT)</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the number needed to treat (<i>NTT</i>) using event data or
+effect sizes (such as Cohen's <i>d</i> or Hedges' <i>g</i>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+NNT(d, CER, event.e, n.e, event.c, n.c, names, method)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>d</code></td>
+<td>
+<p>A single numeric or concatenated vector of numerics representing the effect size expressed as
+Cohen's <i>d</i> or Hedges' <i>g</i>. If this is the only parameter specified in the function, the method by
+Kraemer and Kupfer is used automatically to calculate <i>NNT</i>s.</p>
+</td></tr>
+<tr valign="top"><td><code>CER</code></td>
+<td>
+<p>The control group event ratio. Furukawa's method (Furukawa &amp; Leucht, 2011) to calculate <code>NNT</code>s
+from <code>d</code> requires that the assumed response (&quot;event&quot;) ratio in the control group (<i>\frac{n_{responders}}{N_{total}}</i>)
+is specified. The CER can assume values from 0 to 1. If a value is specified for <code>CER</code>, Furukawa's method is
+used automatically. Argument <code>method</code> has to be set to <code>"KraemerKupfer"</code> to override this.</p>
+</td></tr>
+<tr valign="top"><td><code>event.e</code></td>
+<td>
+<p>Single number or numeric vector. The number of (favourable) events in the experimental group.</p>
+</td></tr>
+<tr valign="top"><td><code>n.e</code></td>
+<td>
+<p>Single number or numeric vector. The number participants in the experimental group.</p>
+</td></tr>
+<tr valign="top"><td><code>event.c</code></td>
+<td>
+<p>Single number or numeric vector. The number of (favourable) events in the control group.</p>
+</td></tr>
+<tr valign="top"><td><code>n.c</code></td>
+<td>
+<p>Single number or numeric vector. The number of participants in the control group.</p>
+</td></tr>
+<tr valign="top"><td><code>names</code></td>
+<td>
+<p>Optional. Character vector of equal length as the vector supplied to <code>d</code> or <code>event.e</code> containing
+study/effect size labels.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>The method to be used to calculate the NNT from <code>d</code>. Either <code>"KraemerKupfer"</code> for the
+method proposed by Kraemer and Kupfer (2006) or <code>"Furukawa"</code> for the Furukawa method (Furukawa &amp; Leucht, 2011).
+Please note that the Furukawa's method can only be used when <code>CER</code> is specified.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function calculates the number needed to treat (<i>NNT</i>) from effect sizes (Cohen's <i>d</i> and Hedges' <i>g</i>)
+or, alternatively, from raw event data.
+</p>
+<p>Two methods to calculate the <i>NTT</i> from <code>d</code> are implemented in this function.
+</p>
+
+<ul>
+<li><p> The method by <strong>Kraemer and Kupfer</strong> (2006),
+calculates <i>NTT</i> from the Area Under the Curve (<i>AUC</i>) defined as the probability that a patient in the treatment
+has an outcome preferable to one in the control. This method allows to calculate the NNT directly from <code>d</code> without
+any extra variables.
+</p>
+</li>
+<li><p> The method by <strong>Furukawa</strong> calculates the <i>NNT</i> from <code>d</code> using a reasonable estimate
+of <i>CER</i>, in this context the response rate in the control group.
+</p>
+</li></ul>
+
+<p>Furukawa's method has been shown to be superior in predicting
+the <i>NNT</i> compared to the Kraemer &amp; Kupfer method (Furukawa &amp; Leucht, 2011). If reasonable assumptions can be made concerning
+the <i>CER</i>, Furukawa's method should therefore be preferred.
+</p>
+<p>When event data is used for the function, the <i>CER</i> and <i>EER</i> (experimental group event rate) is calculated internally, and
+the standard definition of the <i>NTT</i>, <i>\frac{1}{EER-CER}</i>, is used.
+</p>
+<p>Please note that negative NNT values returned by the function refer to the number needed to harm (<i>NNH</i>), as the intervention
+is assumed to be inferior to the control group treatment based on the effect size data supplied to the function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer &amp; David Daniel Ebert
+</p>
+
+
+<h3>References</h3>
+
+<p>Harrer, M., Cuijpers, P., Furukawa, T.A, &amp; Ebert, D. D. (2019).
+<em>Doing Meta-Analysis in R: A Hands-on Guide</em>. DOI: 10.5281/zenodo.2551803. <a href="https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/smallstudyeffects.html">Chapter 9.1</a>.
+</p>
+<p>Furukawa, T. A., &amp; Leucht, S. (2011). How to obtain NNT from Cohen's d: comparison of two methods. <em>PloS one, 6</em>(4), e19070.
+</p>
+<p>Kraemer H.C., Kupfer D.J. (2006) Size of treatment effects and their importance
+to clinical research and practice. <em>Biol. Psychiatry 59</em>: 990–996.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../dmetar/help/se.from.p.html">se.from.p</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+# Example 1: Convert Cohen's d using the Kraemer &amp; Kupfer method
+d = c(-0.123, 0.234, 0.123, 1.234, 0.12)
+NNT(d)
+
+# Example 2: Convert Cohen's d using the Furukawa method
+d = c(-0.123, 0.234, 0.123, 1.234, 0.12)
+CER = c(0.42, 0.35, 0.26, 0.21, 0.23)
+NNT(d, CER)
+
+# Example 3: Convert event data
+NNT(event.e = 10, event.c = 20, n.e = 200, n.c = 200)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

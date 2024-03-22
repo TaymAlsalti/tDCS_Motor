@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Correct kRp.hyphen objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for correct.hyph {sylly}"><tr><td>correct.hyph {sylly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Correct kRp.hyphen objects</h2>
+
+<h3>Description</h3>
+
+<p>The method <code>correct.hyph</code> can be used to alter objects of class <code><a href="../help/kRp.hyphen-class.html">kRp.hyphen</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+correct.hyph(obj, word = NULL, hyphen = NULL, cache = TRUE)
+
+## S4 method for signature 'kRp.hyphen'
+correct.hyph(obj, word = NULL, hyphen = NULL, cache = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>An object of class <code><a href="../help/kRp.hyphen-class.html">kRp.hyphen</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>word</code></td>
+<td>
+<p>A character string,
+the (possibly incorrectly hyphenated) <code>word</code> entry to be replaced with <code>hyphen</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>hyphen</code></td>
+<td>
+<p>A character string,
+the new manually hyphenated version of <code>word</code>. Mustn't contain
+anything other than characters of <code>word</code> plus the hyphenation mark <code>"-"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cache</code></td>
+<td>
+<p>Logical, if <code>TRUE</code>,
+the given hyphenation will be added to the sessions' hyphenation cache.
+Existing entries for the same word will be replaced.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Although hyphenation should turn out to be rather accurate,
+the algorithm does ususally produce
+some errors. If you want to correct for these flaws, this method can be of help,
+because it might prevent you from
+introducing new errors. That is,
+it will do some sanitiy checks before the object is actually manipulated and returned.
+</p>
+<p>That is,
+<code>correct.hyph</code> checks whether <code>word</code> and <code>hyphen</code> are actually hyphenations of the
+same token before proceeding. If so,
+it will also recalculate the number of syllables and update the <code>syll</code>
+field.
+</p>
+<p>If both <code>word</code> and <code>hyphen</code> are <code>NULL</code>,
+<code>correct.hyph</code> will try to simply recalculate the syllable count
+for each word,
+by counting the hyphenation marks (and adding 1 to the number). This can be usefull if you changed hyphenation
+some other way, e.g. in a spreadsheet GUI,
+but don't want to have to correct the syllable count yourself as well.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of the same class as <code>obj</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+hyphenated.txt &lt;- correct.hyph(hyphenated.txt, "Hilfe", "Hil-fe")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sylly</em> version 0.1-6 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

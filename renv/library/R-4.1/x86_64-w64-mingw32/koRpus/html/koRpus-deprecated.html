@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Deprecated object classes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for koRpus-deprecated {koRpus}"><tr><td>koRpus-deprecated {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Deprecated object classes</h2>
+
+<h3>Description</h3>
+
+<p>These classes are no longer used by the <code>koRpus</code> package and will be removed in a later version.
+They are kept here for the time being so you can still load old objects and convert them into new objects using the
+<code>fixObject</code> method.
+</p>
+<p>These functions will be removed soon and should no longer ne used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+kRp.filter.wclass(...)
+
+kRp.text.paste(...)
+
+read.tagged(...)
+
+kRp.text.transform(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Parameters to be passed to the replacement of the function</p>
+</td></tr>
+</table>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>lang</code></dt><dd><p>A character string,
+naming the language that is assumed for the tokenized text in this object.</p>
+</dd>
+<dt><code>desc</code></dt><dd><p>Descriptive statistics of the tagged text.</p>
+</dd>
+<dt><code>TT.res</code></dt><dd><p>Results of the called tokenizer and POS tagger. The data.frame usually has eleven columns:
+</p>
+
+<dl>
+<dt><code>doc_id</code>:</dt><dd><p>Factor, optional document identifier.</p>
+</dd>
+<dt><code>token</code>:</dt><dd><p>Character, the tokenized text.</p>
+</dd>
+<dt><code>tag</code>:</dt><dd><p>Factor, POS tags for each token.</p>
+</dd>
+<dt><code>lemma</code>:</dt><dd><p>Character, lemma for each token.</p>
+</dd>
+<dt><code>lttr</code>:</dt><dd><p>Integer, number of letters.</p>
+</dd>
+<dt><code>wclass</code>:</dt><dd><p>Factor, word class.</p>
+</dd>
+<dt><code>desc</code>:</dt><dd><p>Factor, a short description of the POS tag.</p>
+</dd>
+<dt><code>stop</code>:</dt><dd><p>Logical, <code>TRUE</code> if token is a stopword.</p>
+</dd>
+<dt><code>stem</code>:</dt><dd><p>Character, stemmed token.</p>
+</dd>
+<dt><code>idx</code>:</dt><dd><p>Integer, index number of token in this document.</p>
+</dd>
+<dt><code>sntc</code>:</dt><dd><p>Integer, number of sentence in this document.</p>
+</dd>
+</dl>
+
+<p>This data.frame structure adheres to the &quot;Text Interchange Formats&quot; guidelines set out by rOpenSci[1].</p>
+</dd>
+<dt><code>freq.analysis</code></dt><dd><p>A list with information on the word frequencies of the analyzed text.</p>
+</dd>
+<dt><code>diff</code></dt><dd><p>A list with mostly atomic vectors,
+describing the amount of diffences between both text variants (percentage):
+</p>
+
+<dl>
+<dt><code>all.tokens</code>:</dt><dd><p>Percentage of all tokens, including punctuation,
+that were altered.</p>
+</dd>
+<dt><code>words</code>:</dt><dd><p>Percentage of altered words only.</p>
+</dd>
+<dt><code>all.chars</code>:</dt><dd><p>Percentage of all characters, including punctuation,
+that were altered.</p>
+</dd>
+<dt><code>letters</code>:</dt><dd><p>Percentage of altered letters in words only.</p>
+</dd>
+<dt><code>transfmt</code>:</dt><dd><p>Character vector documenting the transformation(s) done to the tokens.</p>
+</dd>
+<dt><code>transfmt.equal</code>:</dt><dd><p>Data frame documenting which token was changed in which transformational step. Only available if more than one transformation was done.</p>
+</dd>
+<dt><code>transfmt.normalize</code>:</dt><dd><p>A list documenting steps of normalization that were done to the object,
+one element per transformation.
+Each entry holds the name of the method, the query parameters,
+and the effective replacement value.</p>
+</dd>
+</dl>
+</dd>
+<dt><code>lex.div</code></dt><dd><p>Information on lexical diversity</p>
+</dd>
+</dl>
+
+
+<h3>S4 Class <code>kRp.tagged</code></h3>
+
+<p>This was used for objects returned by <code><a href="../help/treetag.html">treetag</a></code> or <code><a href="../help/tokenize.html">tokenize</a></code>.
+It was replaced by <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+</p>
+
+
+<h3>S4 Class <code>kRp.txt.freq</code></h3>
+
+<p>This was used for objects returned by <code><a href="../help/freq.analysis.html">freq.analysis</a></code>.
+It was replaced by <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+</p>
+
+
+<h3>S4 Class <code>kRp.txt.trans</code></h3>
+
+<p>This was used for objects returned by <code><a href="../help/textTransform.html">textTransform</a></code>,
+<code><a href="../help/clozeDelete.html">clozeDelete</a></code>,
+<code><a href="../help/cTest.html">cTest</a></code>, and <code><a href="../help/jumbleWords.html">jumbleWords</a></code>.
+It was replaced by <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+</p>
+
+
+<h3>S4 Class <code>kRp.analysis</code></h3>
+
+<p>This was used for objects returned by <code>kRp.text.analysis</code>.
+The function is also deprecated,
+functionality can be replicated by combining <code>treetag</code>,<code>freq.analysis</code> and <code>lex.div</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Text Interchange Formats (<a href="https://github.com/ropensci/tif">https://github.com/ropensci/tif</a>)
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

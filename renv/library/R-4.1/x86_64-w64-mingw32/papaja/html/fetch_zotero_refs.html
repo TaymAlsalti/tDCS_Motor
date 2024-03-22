@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Save a collection from a Zotero-Account to a BibTeX-file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for fetch_zotero_refs {papaja}"><tr><td>fetch_zotero_refs {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Save a collection from a Zotero-Account to a BibTeX-file</h2>
+
+<h3>Description</h3>
+
+<p>Downloads and saves a Zotero reference library (or a subset) and saves it as BibTeX file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+fetch_zotero_refs(
+  x,
+  bib_name,
+  API_key = NULL,
+  collection = NULL,
+  lib_type = "user"
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Character. Zotero user or group ID, see details.</p>
+</td></tr>
+<tr valign="top"><td><code>bib_name</code></td>
+<td>
+<p>Character. Name of the BibTeX-file references are saved to.</p>
+</td></tr>
+<tr valign="top"><td><code>API_key</code></td>
+<td>
+<p>Character. Zotero API key, see details.</p>
+</td></tr>
+<tr valign="top"><td><code>collection</code></td>
+<td>
+<p>Character. Optional ID of a collection in the Zotero library, see details.</p>
+</td></tr>
+<tr valign="top"><td><code>lib_type</code></td>
+<td>
+<p>Character. Specifies if the supplied ID is associated with a Zotero <code>user</code> or <code>group</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function retrieves references through the Zotero web API. <code>x</code> takes a Zotero user or group ID that can
+be retrieved from the Zotero.org user or group <a href="Feeds/API settings">Feeds/API settings</a>https://www.zotero.org/settings/keys.
+An authentication key (<code>API_key</code>) is required to access nonpublic Zotero libraries using the Zotero API.
+Authentication keys can also be generated in the Zotero.org user or group
+<a href="Feeds/API settings">Feeds/API settings</a>https://www.zotero.org/settings/keys.
+</p>
+<p>If the requested reference collection is larger than 100 records, multiple API calls are initiated because the
+number of retrieved records is limited to 100 per API call. Frequent API calls will result in a temporary access
+block. Thus, there is an (currently unknown) upper limit to the length of reference collections that can be
+retrieved through this function. It is generally advisable to comment out the use of this function during periods
+in which the R Markdown file is frequently rebuilt to limit the number of API calls and limit the number of references
+to those needed for the current document by setting up collections in your Zotero library.
+</p>
+<p>Collection keys (<code>collection</code>), i.e. identifiers of reference library subsets, can be retrieved by accessing
+them via a web browser. They keys are contained in the URL:
+</p>
+<p><code>https://www.zotero.org/&lt;USERNAME&gt;/items/collectionKey/&lt;COLLECTIONKEY&gt;</code>
+</p>
+<p>Zotero web API calls can be slow, especially for large reference collections. If available, this function will
+utilize the <span class="pkg">downloader</span>-package, which speeds up reference downloads considerably.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns <code>bib_name</code> invisibly.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Christoph Stahl, Frederik Aust
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../papaja/help/r_refs.html">r_refs</a></code>, <code><a href="../../papaja/help/cite_r.html">cite_r</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+NULL
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

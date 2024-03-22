@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Perform multimodel inference with a meta-regression model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for multimodel.inference {dmetar}"><tr><td>multimodel.inference {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Perform multimodel inference with a meta-regression model</h2>
+
+<h3>Description</h3>
+
+<p>This function performs multimodel inference to evaluate the importance of predictors
+with a meta-analytical meta-regression model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+multimodel.inference(TE, seTE, data, predictors, method='REML', test='knha',
+    eval.criterion='AICc', interaction=FALSE, seed=123)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>TE</code></td>
+<td>
+<p>The precalculated effect size for each study. Must be supplied as the name of the effect size
+column in the dataset (in quotation marks; e.g. <code>TE = "effectsize"</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>seTE</code></td>
+<td>
+<p>The precalculated standard error of the effect size for each study. Must be supplied as the name of the standard error
+column in the dataset (in quotation marks; e.g. <code>seTE = "se"</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> containing columns for the effect size, standard error and
+meta-regression predictors of each study/effect.</p>
+</td></tr>
+<tr valign="top"><td><code>predictors</code></td>
+<td>
+<p>A character vector specifying the predictors to be used
+for multimodel inference. Names of the predictors must be identical to the names of the columns
+in the <code>data.frame</code> supplied to <code>data</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>Meta-analysis model to use for pooling effect sizes. Use <code>'FE'</code> for the
+fixed-effect model. Different random-effect models are available: &quot;<code>DL</code>&quot;, &quot;<code>HE</code>&quot;, &quot;<code>SJ</code>&quot;,
+&quot;<code>ML</code>&quot;, &quot;<code>REML</code>&quot;, &quot;<code>EB</code>&quot;, &quot;<code>HS</code>&quot; or &quot;<code>GENQ</code>.
+If <code>'FE'</code> is used, the <code>test</code> argument is automatically set to <code>'z'</code>, as the Knapp-Hartung
+method is not meant to be used with fixed-effect models. Default is <code>'REML'</code>, and it is strongly advised to remain with
+this option to use a standard (mixed-effects) meta-regression model.</p>
+</td></tr>
+<tr valign="top"><td><code>test</code></td>
+<td>
+<p>Method to use to compute test statistics and confidence intervals. Default is <code>'knha'</code>
+which uses the Knapp-Hartung (Knapp &amp; Hartung, 2003) adjustment method. &quot;Conventional&quot; Wald-type tests and
+CIs are calculated by setting this argument to <code>'z'</code>. When <code>method='FE'</code>, this argument is
+set to <code>'z'</code> automatically as the Knapp-Hartung method was not intended to be used with fixed-effect models.</p>
+</td></tr>
+<tr valign="top"><td><code>eval.criterion</code></td>
+<td>
+<p>Evaluation criterion to sort the multiple models by. Can be either <code>'AICc'</code>
+(default; corrected Akaike's Information Criterion), <code>'AIC'</code> (Akaike's Information Criterion) or
+<code>'BIC'</code> (Bayesian Information Criterion).</p>
+</td></tr>
+<tr valign="top"><td><code>interaction</code></td>
+<td>
+<p>If set to <code>FALSE</code> (default), no interactions between predictors are considered. Setting this parameter to
+<code>TRUE</code> means that all interactions are modeled (interactions will only be modeled if the number of provided predictors is 4 or less).</p>
+</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+<p>Set a seed for the function. Default seed is <code>123</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Multimodel methods differ from stepwise regression methods as they do not try to successively build
+the “best” single (meta-regression) model explaining most of the variance. Instead, in this procedure,
+all possible combinations of a predefined selection of predictors are modeled, and evaluated using
+a criterion such as Akaike’s Information Criterion, which rewards simpler models.
+This enables a full examination of all possible models, and how they perform.
+A common finding using this procedure is that there are many different kinds of predictor
+combinations within a model which lead to a good fit. In multimodel inference, the estimated
+coefficients of predictors can then be synthesized across all possible models to infer how
+important certain predictors are overall.
+</p>
+<p>Multimodel Inference can be a useful way to obtain a comprehensive look on which predictors are
+more or less important for predicting differences in effect sizes. Despite avoiding some of the
+problems of stepwise regression methods, it should be noted that this method should still be rather
+seen as exploratory, and may be used when there is no prior knowledge on how predictors are
+related to effect sizes in the research field under study.
+</p>
+<p>The <code>multimodel.inference</code> function calls the <code><a href="../../metafor/help/rma.uni.html">rma.uni</a></code> function internally,
+results of which are then fed forward to an adapted version of the <code><a href="../../MuMIn/help/dredge.html">dredge</a></code> function
+internally for multimodel inference.
+Parts of the computations in this function are adapted from a vignette by Wolfgang Viechtbauer, which can be found
+<a href="http://www.metafor-project.org/doku.php/tips:model_selection_with_glmulti_and_mumin">here</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns four tables and a plot:
+</p>
+
+<ul>
+<li> <p><strong>Final Results (Summary Table)</strong>: Displays the number of fitted models, model formula,
+method to calculate test statistics and confidence intervals, interactions, and evaluation criterion used.
+</p>
+</li>
+<li> <p><strong>Best 5 Models</strong>: Displays the top five models in terms of the evaluation criterion used.
+Predictors are displayed as columns of the table, and models as rows. A number (weight) or <code>+</code>
+sign (for categorical predictors) indicates that a predictor/interaction term was used for the
+model, while empty cells indicate that the predictor was omitted in this model. Other metrics such as the
+<code>weight</code>, evaluation metric <code>delta</code> compared to the best model, log-Likelihood (<code>logLik</code>) and degrees of freedom
+are also displayed.
+</p>
+</li>
+<li> <p><strong>Multimodel Inference Coefficients</strong>: Displays the estimated coefficients and statistical significance
+of each regression term in the model.
+</p>
+</li>
+<li> <p><strong>Predictor Importance</strong>: Displays the estimated importance of each model term. The table is sorted from
+highest to lowest. A common rule of thumb is to consider a predictor as important when its importance value is above 0.8.
+</p>
+</li>
+<li> <p><strong>Predictor Importance Plot</strong>: A bar plot for the predictor importance data along with a reference line for the
+0.8 value often used as a crude threshold to characterize a predictor as important.
+</p>
+</li></ul>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer &amp; David Daniel Ebert
+</p>
+
+
+<h3>References</h3>
+
+<p>Harrer, M., Cuijpers, P., Furukawa, T.A, &amp; Ebert, D. D. (2019).
+<em>Doing Meta-Analysis in R: A Hands-on Guide</em>. DOI: 10.5281/zenodo.2551803. <a href="https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/smallstudyeffects.html">Chapter 9.1</a>
+</p>
+<p>Knapp, G., &amp; Hartung, J. (2003). Improved tests for a random effects meta-regression with a single covariate.
+<em>Statistics in Medicine, 22</em>, 2693–2710.
+</p>
+<p>Viechtbauer, W. (2019). <em>Model Selection using the glmulti and MuMIn Packages</em>. <a href="http://www.metafor-project.org/doku.php/tips:model_selection_with_glmulti_and_mumin">Link</a>.
+Last accessed 01-Aug-2019.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../MuMIn/help/dredge.html">dredge</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# Example 1: Perform multimodel inference with default settings
+data('MVRegressionData')
+library(metafor)
+mmi = multimodel.inference(TE = 'yi', seTE = 'sei', data = MVRegressionData,
+                           predictors = c('pubyear', 'quality',
+                                          'reputation', 'continent'))
+# Print summary
+summary(mmi)
+
+# Plot predictor importance
+plot(mmi)
+
+# Example 2: Model Interaction terms, set method to 'DL',
+# change evaluation criterion to bic
+multimodel.inference(TE = 'yi', seTE = 'sei', data = MVRegressionData,
+                     predictors = c('pubyear', 'quality',
+                                    'reputation', 'continent'),
+                     method='DL', eval.criterion = 'BIC', interaction = TRUE)
+
+# Example 3: Use only categorical predictors
+data('ThirdWave')
+multimodel.inference(TE = 'TE', seTE = 'seTE', data = ThirdWave,
+                     predictors = colnames(ThirdWave)[4:7], interaction = FALSE)
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

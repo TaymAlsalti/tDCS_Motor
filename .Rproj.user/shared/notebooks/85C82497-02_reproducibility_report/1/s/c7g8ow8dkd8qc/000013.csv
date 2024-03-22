@@ -1,0 +1,7 @@
+"0","# average group sample size
+mean((MA1$nc_ma + MA1$nt_ma) / 2)
+"
+"1","[1]"
+"1"," 13"
+"1","
+"

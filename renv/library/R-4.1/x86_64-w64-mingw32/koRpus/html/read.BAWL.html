@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Import BAWL-R data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for read.BAWL {koRpus}"><tr><td>read.BAWL {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Import BAWL-R data</h2>
+
+<h3>Description</h3>
+
+<p>Read the Berlin Affective Word List &ndash; Reloaded (V\&quot;o, Conrad, Kuchinke, Hartfeld,
+Hofmann &amp; Jacobs, 2009; [1]) into a valid object of class
+<code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+read.BAWL(csv, fileEncoding = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>csv</code></td>
+<td>
+<p>A character string, path to the BAWL-R in CSV2 format.</p>
+</td></tr>
+<tr valign="top"><td><code>fileEncoding</code></td>
+<td>
+<p>A character string naming the encoding of the file, if necessary.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>To use this function,
+you must first export the BAWL-R list into CSV format: Use comma for decimal values and semicolon as value separator
+(often referred to as CSV2). Once you have successfully imported the word list,
+you can use the object to perform frequency analysis.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>V\&quot;o, M. L.-H., Conrad, M., Kuchinke, L., Hartfeld, K., Hofmann, M.F. &amp; Jacobs,
+A.M. (2009).
+The Berlin Affective Word List Reloaded (BAWL-R). <em>Behavior Research Methods</em>,
+41(2), 534&ndash;538.
+doi: 10.3758/BRM.41.2.534
+</p>
+<p>[1] <a href="https://www.ewi-psy.fu-berlin.de/einrichtungen/arbeitsbereiche/allgpsy/Download/BAWL/index.html">https://www.ewi-psy.fu-berlin.de/einrichtungen/arbeitsbereiche/allgpsy/Download/BAWL/index.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>,
+<code><a href="../help/query.html">query</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+bawl.corp &lt;- read.BAWL(
+  file.path("~","mydata","valence","BAWL-R.csv")
+)
+
+# you can now use query() now to create subsets of the word list,
+# e.g., only nound with 5 letters and an valence rating of &gt;= 1
+bawl.stimulus &lt;- query(bawl.corp,
+  query=list(
+    list(wclass="noun"),
+    list(lttr=5),
+    list("EMO_MEAN"=1, rel="ge")
+  )
+)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

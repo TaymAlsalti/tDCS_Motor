@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculate I-squared values and variance distribution for...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for mlm.variance.distribution {dmetar}"><tr><td>mlm.variance.distribution {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculate I-squared values and variance distribution for multilevel meta-analysis models</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates values of <i>I^2</i> and the variance distribution for multilevel meta-analysis
+models fitted with <code><a href="../../metafor/help/rma.mv.html">rma.mv</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mlm.variance.distribution(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An object of class <code>rma.mv</code>. Must be a multilevel model with two random effects (three-level meta-analysis model).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function estimates the distribution of variance in a three-level meta-analysis
+model (fitted with the <code><a href="../../metafor/help/rma.mv.html">rma.mv</a></code> function). The share of variance attributable to
+sampling error, within and between-cluster heterogeneity is calculated,
+and an estimate of <i>I^2</i> (total and for Level 2 and Level 3) is provided. The function uses the formula by
+Cheung (2014) to estimate the variance proportions attributable to each model component and to derive the <i>I^2</i> estimates.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame containing the results. A plot summarizing the variance distribution and <i>I^2</i> values can be generated using <code>plot</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer &amp; David Daniel Ebert
+</p>
+
+
+<h3>References</h3>
+
+<p>Harrer, M., Cuijpers, P., Furukawa, T.A, &amp; Ebert, D. D. (2019).
+<em>Doing Meta-Analysis in R: A Hands-on Guide</em>. DOI: 10.5281/zenodo.2551803. <a href="https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/mlma.html">Chapter 12</a>.
+</p>
+<p>Cheung, M. W. L. (2014). Modeling dependent effect sizes with three-level meta-analyses: a structural equation modeling approach. <em>Psychological Methods, 19</em>(2), 211.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Use dat.konstantopoulos2011 from the "metafor" package
+library(metafor)
+
+# Build Multilevel Model (Three Levels)
+m = rma.mv(yi, vi, random = ~ 1 | district/school, data=dat.konstantopoulos2011)
+
+# Calculate Variance Distribution
+mlm.variance.distribution(m)
+
+# Use alias 'var.comp' and 'Chernobyl' data set
+data("Chernobyl")
+m2 = rma.mv(yi = z, V = var.z, data = Chernobyl, random = ~ 1 | author/es.id)
+res = var.comp(m2)
+
+# Print results
+res
+
+# Generate plot
+plot(res)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

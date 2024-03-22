@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Readability: Farr-Jenkins-Paterson Index</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for farr.jenkins.paterson {koRpus}"><tr><td>farr.jenkins.paterson {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Readability: Farr-Jenkins-Paterson Index</h2>
+
+<h3>Description</h3>
+
+<p>This is just a convenient wrapper function for <code><a href="../help/readability.html">readability</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+farr.jenkins.paterson(
+  txt.file,
+  hyphen = NULL,
+  parameters = c(const = -31.517, asl = 1.015, monsy = 1.599),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txt.file</code></td>
+<td>
+<p>Either an object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>,
+a character vector which must be be
+a valid path to a file containing the text to be analyzed,
+or a list of text features. If the latter, calculation
+is done by <code><a href="../help/readability.num.html">readability.num</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>hyphen</code></td>
+<td>
+<p>An object of class kRp.hyphen. If <code>NULL</code>,
+the text will be hyphenated automatically.</p>
+</td></tr>
+<tr valign="top"><td><code>parameters</code></td>
+<td>
+<p>A numeric vector with named magic numbers,
+defining the relevant parameters for the index, or <code>"PSK"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further valid options for the main function,
+see <code><a href="../help/readability.html">readability</a></code> for details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Calculates the Farr-Jenkins-Paterson index, a simplified version of Flesch Reading Ease.
+In contrast to <code><a href="../help/readability.html">readability</a></code>,
+which by default calculates all possible indices,
+this function will only calculate the index value.
+</p>
+<p>If <code>parameters="PSK"</code>, the revised parameters by Powers-Sumner-Kearl (1958) are used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Farr, J.N., Jenkins, J.J. &amp; Paterson,
+D.G. (1951). Simplification of Flesch Reading Ease formula. <em>Journal of Applied Psychology</em>, 35(5), 333&ndash;337.
+</p>
+<p>Powers, R.D, Sumner, W.A, &amp; Kearl,
+B.E. (1958). A recalculation of four adult readability formulas, <em>Journal of Educational Psychology</em>, 49(2), 99&ndash;105.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/flesch.html">flesch</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+farr.jenkins.paterson(tagged.text)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

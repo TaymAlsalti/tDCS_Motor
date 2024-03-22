@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Methods to correct koRpus objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for correct.tag {koRpus}"><tr><td>correct.tag {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Methods to correct koRpus objects</h2>
+
+<h3>Description</h3>
+
+<p>The method <code>correct.tag</code> can be used to alter objects of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+correct.tag(
+  obj,
+  row,
+  tag = NULL,
+  lemma = NULL,
+  check.token = NULL,
+  quiet = TRUE
+)
+
+## S4 method for signature 'kRp.text'
+correct.tag(
+  obj,
+  row,
+  tag = NULL,
+  lemma = NULL,
+  check.token = NULL,
+  quiet = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>An object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>row</code></td>
+<td>
+<p>Integer, the row number of the entry to be changed. Can be an integer vector
+to change several rows in one go.</p>
+</td></tr>
+<tr valign="top"><td><code>tag</code></td>
+<td>
+<p>A character string with a valid POS tag to replace the current tag entry.
+If <code>NULL</code> (the default) the entry remains unchanged.</p>
+</td></tr>
+<tr valign="top"><td><code>lemma</code></td>
+<td>
+<p>A character string naming the lemma to to replace the current lemma entry.
+If <code>NULL</code> (the default) the entry remains unchanged.</p>
+</td></tr>
+<tr valign="top"><td><code>check.token</code></td>
+<td>
+<p>A character string naming the token you expect to be in this row.
+If not <code>NULL</code>, <code>correct</code> will stop with an error if this values don't match.</p>
+</td></tr>
+<tr valign="top"><td><code>quiet</code></td>
+<td>
+<p>If <code>FALSE</code>, messages about all applied changes are shown.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Although automatic POS tagging and lemmatization are remarkably accurate,
+the algorithms do ususally produce
+some errors. If you want to correct for these flaws, this method can be of help,
+because it might prevent you from
+introducing new errors. That is,
+it will do some sanitiy checks before the object is actually manipulated and returned.
+</p>
+<p><code>correct.tag</code> will read the <code>lang</code> slot from the given object and check whether the <code>tag</code>
+provided is actually valid. If so,
+it will not only change the <code>tag</code> field in the object, but also update
+<code>wclass</code> and <code>desc</code> accordingly.
+</p>
+<p>If <code>check.token</code> is set it must also match <code>token</code> in the given row(s). Note that no check is done on the lemmata.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of the same class as <code>obj</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.text-class.html">kRp.text</a></code>, <code><a href="../help/treetag.html">treetag</a></code>,
+<code><a href="../help/kRp.POS.tags.html">kRp.POS.tags</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  tokenized.obj &lt;- correct.tag(tokenized.obj, row=6, tag="NN")
+} else {}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

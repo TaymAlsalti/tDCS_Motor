@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Add support for new languages</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for set.hyph.support {sylly}"><tr><td>set.hyph.support {sylly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Add support for new languages</h2>
+
+<h3>Description</h3>
+
+<p>You can use this function to add new languages to be used with <code>sylly</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+set.hyph.support(value)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>A named list that upholds exactly the structure defined above.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Language support in this package is designed to be extended easily. You could call it modular,
+although it's actually more &quot;environemntal&quot;, but nevermind.
+</p>
+<p>To add new language support, say for Xyzedish, you basically have to call this function
+once and provide respective hyphenation patterns. If you would like to re-use this language
+support, you should consider making it a package.
+</p>
+<p>If it succeeds,
+it will fill an internal environment with the information you have defined.
+<code>hyphen</code> will then know which language patterns are available as data files (which
+you must provide also). 
+</p>
+<p>You provide the meta data as a named list. It usually has one single entry to tell the new language
+abbreviation, e.g., <code>set.hyph.support(list("xyz"="xyz"))</code>. However,
+this will only work if a)
+the language support script is a part of the <code>sylly</code> package itself,
+and b) the hyphen pattern
+is located in its <code>data</code> subdirectory.
+</p>
+<p>For your custom hyphenation patterns to be found automatically,
+provide it as the value in the named
+list, e.g., <code>set.hyph.support(list("xyz"=hyph.xyz))</code>.
+This will directly add the patterns to <code>sylly</code>'s environment,
+so it will be found when
+hyphenation is requested for language <code>"xyz"</code>.
+</p>
+<p>If you would like to provide hyphenation as part of a third party language package,
+you must name the
+object <code>hyph.&lt;lang&gt;</code>, save it to your package's <code>data</code> subdirectory named
+<code>hyph.&lt;lang&gt;.rda</code>, and append <code>package="&lt;yourpackage&gt;"</code> to the named list; e.g.,
+<code>set.hyph.support(list("xyz"=c("xyz", package="koRpus.lang.xyz"))</code>. Only then
+<code>sylly</code> will look for the pattern object in your package,
+not its own <code>data</code> directory.
+</p>
+
+
+<h3>Hyphenation patterns</h3>
+
+<p>To be able to also do syllable count with the newly added language,
+you should add a hyphenation pattern
+file as well.
+Refer to the documentation of read.hyph.pat() to learn how to produce a pattern object from a downloaded
+hyphenation pattern file. Make sure you use the correct name scheme (e.g. &quot;hyph.xyz.rda&quot;) and good
+compression.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+set.hyph.support(
+  list("xyz"="xyz")
+)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sylly</em> version 0.1-6 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

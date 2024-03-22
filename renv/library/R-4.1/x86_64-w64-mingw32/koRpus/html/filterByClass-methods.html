@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Remove word classes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for filterByClass {koRpus}"><tr><td>filterByClass {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Remove word classes</h2>
+
+<h3>Description</h3>
+
+<p>This method strips off defined word classes of tagged text objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+filterByClass(txt, ...)
+
+## S4 method for signature 'kRp.text'
+filterByClass(
+  txt,
+  corp.rm.class = "nonpunct",
+  corp.rm.tag = c(),
+  as.vector = FALSE,
+  update.desc = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txt</code></td>
+<td>
+<p>An object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional options, currently unused.</p>
+</td></tr>
+<tr valign="top"><td><code>corp.rm.class</code></td>
+<td>
+<p>A character vector with word classes which should be removed. The default value
+<code>"nonpunct"</code> has special meaning and will cause the result of
+<code>kRp.POS.tags(lang, tags=c("punct","sentc"), list.classes=TRUE)</code> to be used.
+Another valid value is &quot;stopword&quot; to remove all detected stopwords.</p>
+</td></tr>
+<tr valign="top"><td><code>corp.rm.tag</code></td>
+<td>
+<p>A character vector with valid POS tags which should be removed.</p>
+</td></tr>
+<tr valign="top"><td><code>as.vector</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>,
+results will be returned as a character vector containing only the text parts
+which survived the filtering.</p>
+</td></tr>
+<tr valign="top"><td><code>update.desc</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>,
+the <code>desc</code> slot of the tagged object will be fully recalculated
+using the filtered text. If <code>FALSE</code>,
+the <code>desc</code> slot will be copied from the original object.
+Finally, if <code>NULL</code>, the <code>desc</code> slot remains empty.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>An object of the input class. If <code>as.vector=TRUE</code>, returns only a character vector.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.POS.tags.html">kRp.POS.tags</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  filterByClass(tokenized.obj)
+} else {}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

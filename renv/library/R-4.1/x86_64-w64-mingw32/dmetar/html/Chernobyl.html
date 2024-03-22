@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Ionizing Radiation from Chernobyl and Mutation Rates in...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for Chernobyl {dmetar}"><tr><td>Chernobyl {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Ionizing Radiation from Chernobyl and Mutation Rates in Humans dataset</h2>
+
+<h3>Description</h3>
+
+<p>This is a dataset containing correlations between exposure to ionized radiation due to the 1986 Chernobyl reactor disaster and
+mutation rates in humans.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data("Chernobyl")
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A <code>data.frame</code> with 8 columns.
+</p>
+
+<dl>
+<dt>author</dt><dd><p><code>character</code>. The study label containing the author and year of the study.</p>
+</dd>
+<dt>cor</dt><dd><p><code>numeric</code>. Untransformed Pearson correlation between radiation exposure and mutation rates.</p>
+</dd>
+<dt>n</dt><dd><p><code>numeric</code>. Sample size.</p>
+</dd>
+<dt>z</dt><dd><p><code>numeric</code>. Fisher-<i>z</i> transformed correlations.</p>
+</dd>
+<dt>se.z</dt><dd><p><code>numeric</code>. Standard error of the Fisher-<i>z</i> transformed correlations.</p>
+</dd>
+<dt>var.z</dt><dd><p><code>numeric</code>. Variance of the Fisher-<i>z</i> transformed correlations.</p>
+</dd>
+<dt>radiation</dt><dd><p><code>character</code>. Overall amount of exposure in the study sample.</p>
+</dd>
+<dt>es.id</dt><dd><p><code>character</code>. Variable representing study membership.</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>This data set is based on studies assessing mutations in humans exposed to radioactive fallout of the Chernobyl reactor
+incident, as identified in Møller &amp; Mousseau (2015). Several studies report more than one estimate of the association between
+radiation exposure and mutation rate, which generates a nested data structure (effect sizes are nested in studies). A variable
+<code>es.id</code> was added to the data set, coding the clustered data structure. The dataset contains the untransformed
+correlation (<code>cor</code>) and sample size, as well as the Fisher-<i>z</i> transformed correlation, along with their standard error
+and variance. The <i>z</i> and variance value may be used in three-level meta-analysis models implemented via the <code><a href="../../metafor/help/rma.mv.html">rma.mv</a></code> function
+in the <code>metafor</code> package.
+</p>
+<p>Please note that the values in this dataset are not exactly identical to the ones in Møller &amp; Mousseau (2015), and results may therefore
+differ to the ones the reported in the paper.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer
+</p>
+
+
+<h3>Source</h3>
+
+<p>Møller, A. P., &amp; Mousseau, T. A. (2015). Strong Effects of Ionizing Radiation from Chernobyl on Mutation Rates. <em>Scientific Reports</em>, 5, 8363.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Summary methods for koRpus objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for summary {koRpus}"><tr><td>summary {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Summary methods for koRpus objects</h2>
+
+<h3>Description</h3>
+
+<p>Summary method for S4 objects of classes
+<code><a href="../help/kRp.lang-class.html">kRp.lang</a></code>,
+<code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>,
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code>, or
+<code><a href="../help/kRp.TTR-class.html">kRp.TTR</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+summary(object, ...)
+
+## S4 method for signature 'kRp.lang'
+summary(object)
+
+## S4 method for signature 'kRp.TTR'
+summary(object, flat = FALSE)
+
+## S4 method for signature 'kRp.readability'
+summary(object, flat = FALSE)
+
+## S4 method for signature 'kRp.text'
+summary(object, index = NA, feature = NULL, flat = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class, <code>kRp.lang</code>, <code>kRp.readability</code>, 
+<code>kRp.text</code>, or <code>kRp.TTR</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further options, depending on the object class.</p>
+</td></tr>
+<tr valign="top"><td><code>flat</code></td>
+<td>
+<p>Logical, if <code>TRUE</code> and <code>feature="lex_div"</code> or <code>"readability"</code>,
+a named vector of main
+results is returned. For objects containig more than one <code>doc_id</code>,
+defaults to <code>TRUE</code> automatically and
+returns a data frame with named rows.</p>
+</td></tr>
+<tr valign="top"><td><code>index</code></td>
+<td>
+<p>Either a vector indicating which rows should be considered as transformed for the statistics,
+or the name of a particular transformation that was previously done to the object,
+if more than one transformation was applied.
+If <code>NA</code>, all rows where <code>"equal"</code> is <code>FALSE</code> are used.
+Only valid for objects providing a <code>diff</code> feature.</p>
+</td></tr>
+<tr valign="top"><td><code>feature</code></td>
+<td>
+<p>A character string naming a feature present in the object,
+to trigger a summary regarding that feature.
+Currently only <code>"freq"</code>, <code>"lex_div"</code>, and <code>"readability"</code> are implemented.</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.lang-class.html">kRp.lang</a></code>,
+<code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>,
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code>,
+<code><a href="../help/kRp.TTR-class.html">kRp.TTR</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+summary(guess.lang("/home/user/data/some.txt", udhr.path="/home/user/data/udhr_txt/"))
+
+## End(Not run)
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  ld.results &lt;- lex.div(tokenized.obj, char=c())
+  summary(ld.results)
+  summary(ld.results, flat=TRUE)
+} else {}
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  rdb.results &lt;- readability(tokenized.obj, index="fast")
+  summary(rdb.results)
+  summary(rdb.results, flat=TRUE)
+} else {}
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  # this will look more useful when you
+  # can use treetag() instead of tokenize()
+  summary(tokenized.obj)
+} else {}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

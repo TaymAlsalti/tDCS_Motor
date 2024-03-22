@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A method to get information out of koRpus objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for query {koRpus}"><tr><td>query {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A method to get information out of koRpus objects</h2>
+
+<h3>Description</h3>
+
+<p>The method <code>query</code> returns query information from objects of classes <code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code> and
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+query(obj, ...)
+
+## S4 method for signature 'kRp.corp.freq'
+query(
+  obj,
+  var = NULL,
+  query,
+  rel = "eq",
+  as.df = TRUE,
+  ignore.case = TRUE,
+  perl = FALSE,
+  regexp_var = "word"
+)
+
+## S4 method for signature 'kRp.text'
+query(
+  obj,
+  var,
+  query,
+  rel = "eq",
+  as.df = TRUE,
+  ignore.case = TRUE,
+  perl = FALSE,
+  regexp_var = "token"
+)
+
+## S4 method for signature 'data.frame'
+query(
+  obj,
+  var,
+  query,
+  rel = "eq",
+  as.df = TRUE,
+  ignore.case = TRUE,
+  perl = FALSE,
+  regexp_var = "token"
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>An object of class <code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>,
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code>, or <code>data.frame</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Optional arguments, see above.</p>
+</td></tr>
+<tr valign="top"><td><code>var</code></td>
+<td>
+<p>A character string naming a variable in the object (i.e., colname). If set to
+<code>"regexp"</code>, <code>grepl</code> is called on the column specified by <code>regexp_var</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>query</code></td>
+<td>
+<p>A character vector (for words), regular expression,
+or single number naming values to be matched in the variable.
+Can also be a vector of two numbers to query a range of frequency data,
+or a list of named lists for multiple queries (see
+&quot;Query lists&quot; section in details).</p>
+</td></tr>
+<tr valign="top"><td><code>rel</code></td>
+<td>
+<p>A character string defining the relation of the queried value and desired results.
+Must either be <code>"eq"</code> (equal, the default), <code>"gt"</code> (greater than),
+<code>"ge"</code> (greater of equal),
+<code>"lt"</code> (less than) or <code>"le"</code> (less or equal). If <code>var="word"</code>,
+is always interpreted as <code>"eq"</code></p>
+</td></tr>
+<tr valign="top"><td><code>as.df</code></td>
+<td>
+<p>Logical, if <code>TRUE</code>, returns a data.frame, otherwise an object of
+the input class. Ignored if <code>obj</code> is a data frame already.</p>
+</td></tr>
+<tr valign="top"><td><code>ignore.case</code></td>
+<td>
+<p>Logical, passed through to <code>grepl</code> if <code>var="regexp"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>perl</code></td>
+<td>
+<p>Logical, passed through to <code>grepl</code> if <code>var="regexp"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>regexp_var</code></td>
+<td>
+<p>A character string naming the column to query if <code>var="regexp"</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><em>kRp.corp.freq:</em> Depending on the setting of the <code>var</code> parameter,
+will return entries with a matching character (<code>var="word"</code>),
+or all entries of the desired frequency (see the examples). A special case is the need for a range of frequencies,
+which can be achieved by providing a nomerical vector of two values as the <code>query</code> value,
+for start and end of
+the range, respectively. In these cases,
+if <code>rel</code> is set to <code>"gt"</code> or <code>"lt"</code>,
+the given range borders are excluded, otherwise they will be included as true matches.
+</p>
+<p><em>kRp.text:</em> <code>var</code> can be any of the variables in slot <code>tokens</code>. If <code>rel="num"</code>,
+a vector with the row numbers in which the query was found is returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Depending on the arguments, might include whole objects, lists, single values etc.
+</p>
+
+
+<h3>Query lists</h3>
+
+<p>You can combine an arbitrary number of queries in a simple way by providing a list of named lists to the
+<code>query</code> parameter, where each list contains one query request. In each list,
+the first element name represents the
+<code>var</code> value of the request,
+and its value is taken as the <code>query</code> argument. You can also assign <code>rel</code>, 
+<code>ignore.case</code> and <code>perl</code> for each request individually, and if you don't,
+the settings of the main query call are 
+taken as default (<code>as.df</code> only applies to the final query). The filters will be applied in the order given,
+i.e., the
+second query will be made to the results of the first.
+</p>
+<p>This method calls <code><a href="../../base/help/subset.html">subset</a></code>,
+which might actually be even more flexible if you need more control.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>, <code><a href="../../base/help/subset.html">subset</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  en_corp &lt;- read.corp.custom(
+    tokenized.obj,
+    caseSens=FALSE
+  )
+
+  # look up frequencies for the word "winner"
+  query(en_corp, var="word", query="winner")
+
+  # show all entries with a frequency of exactly 3 in the corpus
+  query(en_corp, "freq", 3)
+
+  # now, which tokens appear more than 40000 times in a million?
+  query(en_corp, "pmio", 40000, "gt")
+
+  # example for a range request: tokens with a log10 between 4.2 and 4.7
+  # (including these two values)
+  query(en_corp, "log10", c(4.2, 4.7))
+  # (and without them)
+  query(en_corp, "log10", c(4.2, 4.7), "gt")
+
+  # example for a list of queries: get words with a frequency between
+  # 10000 and 25000 per million and at least four letters
+  query(en_corp, query=list(
+    list(pmio=c(10000, 25000)),
+    list(lttr=4, rel="ge"))
+  )
+
+  # get all instances of "the" in a tokenized text object
+  query(tokenized.obj, "token", "the")
+} else {}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: APA compatible ggplot2 theme</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for theme_apa {papaja}"><tr><td>theme_apa {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>APA compatible ggplot2 theme</h2>
+
+<h3>Description</h3>
+
+<p>A ggplot2 theme with a white panel background, no grid lines, large axis and legend titles,
+and increased text padding for better readability.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+theme_apa(base_size = 12, base_family = "", box = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>base_size</code></td>
+<td>
+<p>Numeric. Base font size; other font sizes and margins are adjusted relative
+to this.</p>
+</td></tr>
+<tr valign="top"><td><code>base_family</code></td>
+<td>
+<p>Character. Base font family.</p>
+</td></tr>
+<tr valign="top"><td><code>box</code></td>
+<td>
+<p>Logical. Indicates whether to draw a box around the plot.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This theme is an adaptation of <code><a href="../../ggplot2/help/theme_bw.html">theme_bw</a></code>. In ggplot2, themes set the
+general aspect of the plot such as the color of the background, gridlines, the size and colour
+of fonts.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ ## Not run: 
+   # Copied from ?ggtheme
+   p &lt;- ggplot(mtcars) + geom_point(aes(x = wt, y = mpg,
+     colour = factor(gear))) + facet_wrap(~ am)
+   p
+   p + theme_apa()
+ 
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

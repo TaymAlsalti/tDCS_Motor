@@ -1,0 +1,1250 @@
+---
+title: Reproducibility report
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+
+```{r setup, echo = TRUE, message = FALSE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = TRUE,
+	error = FALSE
+)
+
+windowsFonts(Times = windowsFont("Times New Roman"))
+options(scipen = 999, digits = 3)
+
+library("tidyverse")
+library("kableExtra")
+library("DT")
+library("metafor")
+library("MAd")
+library("meta")
+library("dmetar") # not available on CRAN as of Nov 2023, pulled from GitHub: https://dmetar.protectlab.org/
+
+```
+
+```{css, echo = FALSE}
+body {
+  counter-reset: counter-rchunks;
+}
+
+div.main-container {
+  padding-left: 3.5em;
+}
+
+pre.r {
+  counter-increment: counter-rchunks;
+  position: relative;
+  overflow: visible;
+}
+
+pre.r::before {
+  content: '[' counter(counter-rchunks) ']:';
+  display: inline-block;
+  position: absolute;
+  left: -3.5em;
+  color: rgb(48, 63, 159);
+}
+
+/* Whole document: */
+body{
+  font-family: Calibri;
+  font-size: 11pt;
+}
+/* Headers */
+h1{
+  font-size: 18pt;
+  text-align: center;
+  font-weight: bold
+}
+h2{
+  font-size: 16.5pt;
+  text-indent: 2em
+}
+h3{
+  font-size: 14pt;
+  text-indent: 4em
+}
+h4{
+  font-size: 12.5pt;
+  text-indent: 6em
+}
+```
+
+
+# Meta-analysis 1
+
+```{r}
+MA1 <- readRDS("data/preprocessed/MA1.rds")
+  
+# average group sample size
+mean((MA1$nc_ma + MA1$nt_ma) / 2)
+```
+
+
+
+## Reproduce primary SMDs
+3 meta-analytic models were fit:
+
+1. MAM1: Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs (e.g., Cohen’s $d$ of tDCS vs. Sham at post intervention).
+2. MAM2: Using the SMDs reproduced strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least 2 other primary SMDs + SMDs that could be successfully reproduced (i.e., reproduced SMD = reported SMD) following a procedure which __either__ does not entirely correspond to what the meta-analysts report having adopted __or__ does not (necessarily) produce an SMD that is comparable to what would result from following the procedure apparently adopted for at least 2 other primary SMDs
+3. MAM3: Using the reported SMDs only (reproduce fitting the MA model using values reported in the MA only)
+
+Between-groups studies which reported sample sizes, means and SDs (SEs/CIs)
+```{r}
+MA1 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd") %>%
+  mutate(d = abs(d)) %>% 
+  # relocate to facilitate inspection
+  relocate(c(id_comparison, d, smd_ma), .after = dv_ps)
+
+MA1 %>% 
+  select(-c(3, 4, 6, 27:28)) %>%
+  mutate_if(is.numeric, round, digits = 2) %>%
+  kable() %>% kable_styling(full_width = F)
+```
+The SMDs that could not be reproduced or approximated (those based on values from figures can only be approximated due to variations in how values were extracted from figures):  (4/17 comparisons from between-groups studies). 
+Reproduced SMDs 16, 17, 18, and 20 deviate from the reported ones beyond what would be expected as a result of rounding or differences in how values were extracted from figures. For SMDs 16 and 20, other values could have been used:
+
+For SMD 16, another set of means and SDs could have been used:
+```{r}
+compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[16]]
+```
+Reproduces reported SMD successfully.
+
+SMD 20 had corresponding $p$-value:
+```{r}
+p_to_d1(MA1$p_ps[[20]], MA1$nt_ps[[20]], MA1$nc_ps[[20]])[1]
+p_to_d2(MA1$p_ps[[20]], MA1$nt_ps[[20]], MA1$nc_ps[[20]])[1]
+```
+
+
+The SMD based on the two tailed $p$ value successfully reproduces the reported SMD.
+
+__Crossover studies which reported sample sizes, means and SDs (SEs/CIs)__
+
+Since the meta-analysts listed the sample size of both the treatment and control group as = $N$ = the number of participants, I use N as the sample size of both groups even though there aren't two groups:
+```{r}
+MA1_co <- MA1 %>% filter(is.na(nc_ps))
+MA1_co <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1_co, denom = "pooled.sd")
+
+MA1_co %>% 
+  select(-c(3, 4, 6, 27:28)) %>%
+  mutate_if(is.numeric, round, digits = 2) %>%
+  # datatable()
+  kable() %>% kable_styling(full_width = F)
+```
+
+Reproduced SMDs 12, 13, 21 deviate from the reported ones beyond what would be expected as a result of rounding or differences in how values were extracted from figures. For SMDs 12 and 13, other values could have been used:
+SMDs 12 and 13 had another set of means and SDs:
+```{r}
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[12]]
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[13]]
+```
+
+Still not reproducible. SMD 13 does reproduce the Cohen's $d$ reported in the primary study, though. 
+
+## Overview of SMDs post double checking irreproducible SMDs
+Data extraction was correct for all SMDs and no further data were extracted (see data sheets column "comments" for sources of data).
+
+1. Faithfully reproducible
+2. Faithfully approximated 
+3. Faithfully reproducible
+4. Faithfully approximated
+5. Faithfully reproducible
+6. Faithfully reproducible
+7. Faithfully reproducible
+8. irreproducible
+9. irreproducible
+10. approximated
+11. approximated
+12. irreproducible. SMD based on the first set of means and SDs will be used for MA model 2  (according to definition above) since the control values here are the baseline (0) values which corresponds more or less to the meta-analysts' description of their procedure "baseline: Ctrl".
+13. irreproducible. SMD based on the first set will be used for MA model 2 since the control values here are the baseline (0) values which corresponds more or less to the meta-analysts' description of their procedure "baseline: Ctrl".
+14. successfully reproduced
+15. approximated
+16. irreproducible using the values purported to have been used by the meta-analysts "3J-ROM(ctDCS on cH during OT at retention: Rx vs sham during OT at retention: Ctrl)", successfully reproduced using "Proportional change in 3J-ROM" values. The SMD based on the latter values will be used for MA model 2 .
+17. irreproducible. 
+18. irreproducible.
+19. successfully reproduced but not according to the information given in the MA. the values used are for changes in JHFT time from baseline whereas the meta-analysts report using "Time in JHFT".
+20. successfully reproduced using a $p$-value based on difference in medians test. 
+21. irreproducible.
+
+## MAM1 preparation
+```{r}
+# SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$smd_re1 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d
+
+
+
+# SMDs which could not be reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$smd_re1[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d[[21]]
+
+# SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+
+MA1$smd_re1[[2]] <- NA
+
+MA1$smd_re1[[19]] <- NA
+
+MA1$smd_re1[[20]] <- NA
+
+# SMDs which could not be reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+MA1$smd_re1[[12]] <- NA
+
+MA1$smd_re1[[13]] <- NA
+  
+# make numeric and positive
+MA1$smd_re1 <- MA1$smd_re1 %>% as.numeric() %>% abs()
+
+# relocate to check if everything's fine
+MA1 <- MA1 %>% relocate(c(id_comparison, smd_re1, smd_ma), .after = dv_ps)
+```
+
+
+## MAM2 preparation
+```{r}
+# SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$smd_re2 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d
+
+
+
+# SMDs which could not be reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$smd_re2[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d[[21]]
+
+# SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+
+MA1$smd_re2[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d[[2]]
+
+
+MA1$smd_re2[[16]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[16]]
+
+MA1$smd_re2[[19]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d[[19]]
+
+MA1$smd_re2[[20]] <- p_to_d2(MA1$p_ps[[20]], MA1$nt_ps[[20]], MA1$nc_ps[[20]])[1]
+
+# SMDs which could not be reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+MA1$smd_re2[[12]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d[[12]]
+
+MA1$smd_re2[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$d[[13]]
+  
+# make numeric and positive
+MA1$smd_re2 <- MA1$smd_re2 %>% as.numeric() %>% abs()
+
+# relocate to check if everything's fine
+MA1 <- MA1 %>% relocate(smd_re2, .after = smd_re1)
+```
+
+## Proportion of successfully reproduced primary SMDs strictly following information given in the MA
+
+reproducible to the second decimal place
+```{r}
+MA1 <- transform(MA1, rep_1_sec_dec = ifelse(round(smd_re1, digits = 2) == smd_ma, 1, 0))
+sum(MA1$rep_1_sec_dec, na.rm = TRUE)
+sum(MA1$rep_1_sec_dec, na.rm = TRUE)/21 * 100
+```
+
+reproducible to the first decimal place
+```{r}
+MA1 <- transform(MA1, rep_1_fir_dec = ifelse(round(smd_re1, digits = 1) == round(smd_ma, digits = 1), 1, 0))
+sum(MA1$rep_1_fir_dec, na.rm = TRUE)
+sum(MA1$rep_1_fir_dec, na.rm = TRUE)/21 * 100
+```
+
+
+## Proportion of successfully reproduced primary SMDs brute force
+
+reproducible to the second decimal place
+```{r}
+MA1 <- transform(MA1, rep_2_sec_dec = ifelse(round(smd_re2, digits = 2) == smd_ma, 1, 0))
+sum(MA1$rep_2_sec_dec, na.rm = TRUE)
+sum(MA1$rep_2_sec_dec, na.rm = TRUE)/21 * 100
+```
+
+reproducible to the first decimal place
+```{r}
+MA1 <- transform(MA1, rep_2_fir_dec = ifelse(round(smd_re2, digits = 1) == round(smd_ma, digits = 1), 1, 0))
+sum(MA1$rep_2_fir_dec, na.rm = TRUE)
+sum(MA1$rep_2_fir_dec, na.rm = TRUE)/21 * 100
+
+MA1 <- MA1 %>% relocate(c(id_comparison, rep_1_sec_dec, rep_2_sec_dec, rep_1_fir_dec, rep_2_fir_dec, smd_re1, smd_re2, smd_ma), .after = id_ps)
+```
+
+
+
+## Reproduce variances of the primary SMDs for MA model 1
+`MAd`'s `compute_ds()` and `p_to_d1` functions automatically calculate the corresponding sampling/sampling variances. In cases where not enough data were available, the square of the standard error extracted from the funnel plot in the MA will be used.
+```{r}
+# SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$v_re1 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d
+
+MA1$v_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[2]]
+
+# SMDs which could not be reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$v_re1[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[21]]
+
+# SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+# MA1$v_re1[[16]] <- NA
+
+MA1$v_re1[[19]] <- NA
+
+MA1$v_re1[[20]] <- NA
+
+# SMDs which could not be reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+MA1$v_re1[[12]] <- NA
+
+MA1$v_re1[[13]] <- NA
+  
+# make numeric
+MA1$v_re1 <- as.numeric(MA1$v_re1)
+
+# relocate to check if everything's fine
+MA1$v_ma <- MA1$se_ma^2
+MA1 <- MA1 %>% relocate(c(id_comparison, v_re1, v_ma), .after = dv_ps)
+```
+
+
+## Reproduce variances of the primary SMDs for MA model 2
+```{r}
+# SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$v_re2 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d
+
+MA1$v_re2[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[2]]
+
+# SMDs which could not be reproduced using the first set of means and SDs, in accordance with information in MA
+MA1$v_re2[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[21]]
+
+# SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+MA1$v_re2[[16]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$var.d[[16]]
+
+MA1$v_re2[[19]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[19]]
+
+MA1$v_re2[[20]] <- p_to_d2(MA1$p_ps[[20]], MA1$nt_ps[[20]], MA1$nc_ps[[20]])[2]
+
+# SMDs which could not be reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+MA1$v_re2[[12]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[12]]
+
+MA1$v_re2[[13]] <- MA1$smd_re2[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA1, denom = "pooled.sd")$var.d[[13]]
+
+  
+# make numeric
+MA1$v_re2 <- as.numeric(MA1$v_re2)
+
+# relocate to check if everything's fine
+MA1$v_ma <- MA1$se_ma^2
+MA1 <- MA1 %>% relocate(c(id_comparison, v_re2, v_ma), .after = dv_ps)
+```
+
+## Reproduce the pooled SMD
+MA model 1
+```{r}
+ma1 <- metagen(TE = smd_re1,
+              seTE = sqrt(v_re1),
+              studlab = id_comparison,
+              data = MA1,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+windowsFonts(A = windowsFont("Times New Roman"))
+
+png("figures/fig3_mam1.png", units = "in", width = 7.2, height = 6, res = 300)
+forest.meta(ma1,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
+```
+
+MA model 2
+```{r}
+ma2 <- metagen(TE = smd_re2,
+              seTE = sqrt(v_re2),
+              studlab = id_comparison,
+              data = MA1,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+png("figures/fig3_mam2.png", units = "in", width = 7.2, height = 6, res = 300)
+forest.meta(ma2,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
+```
+
+MA model 3
+```{r}
+ma3 <- metagen(TE = smd_ma,
+              seTE = se_ma,
+              studlab = id_comparison,
+              data = MA1,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+png("figures/fig3_mam3.png", units = "in", width = 7.2, height = 6, res = 300)
+forest.meta(ma3,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
+```
+
+
+# Meta-analysis 2
+
+
+## Load dataset & preprocess data
+```{r}
+MA2 <- read_excel("data/preprocessed/Data_ps_raw.xlsx", sheet = "MA2")
+
+
+# remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to convert to SDs
+MA2[] <- lapply(MA2, gsub, pattern = '/', replacement = '', fixed = TRUE)
+MA2[] <- lapply(MA2, gsub, pattern = '*', replacement = '', fixed = TRUE)
+
+# make values numeric
+MA2 <- MA2 %>% mutate_at(vars(starts_with('sd')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('mt')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('mc')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('smd')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('n')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('ci')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('p_')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('t_')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('F_')), as.numeric)
+MA2 <- MA2 %>% mutate_at(vars(starts_with('se')), as.numeric)
+
+# Convert upper bounds of SE bars extracted from figures to SDs
+MA2[10, "sdc_ps.1"] <- (MA2[10, "sdc_ps.1"] - MA2[10, "mc_ps.1"]) * sqrt(13)
+MA2[10, "sdt_ps.1"] <- (MA2[10, "sdt_ps.1"] - MA2[10, "mt_ps.1"]) * sqrt(13)
+
+MA2[11, "sdc_ps.1"] <- (MA2[11, "sdc_ps.1"] - MA2[11, "mc_ps.1"]) * sqrt(13)
+MA2[11, "sdt_ps.1"] <- (MA2[11, "sdt_ps.1"] - MA2[11, "mt_ps.1"]) * sqrt(13)
+
+MA2[12, "sdc_ps.1"] <- (MA2[12, "sdc_ps.1"] - MA2[12, "mc_ps.1"]) * sqrt(6)
+MA2[12, "sdt_ps.1"] <- (MA2[12, "sdt_ps.1"] - MA2[12, "mt_ps.1"]) * sqrt(7)
+
+MA2[18, "sdc_ps.1"] <- (MA2[18, "sdc_ps.1"] - MA2[18, "mc_ps.1"]) * sqrt(13)
+
+
+# Convert lower bounds of SE bars extracted from figures to SDs
+MA2[13, "sdc_ps.1"] <- (MA2[13, "sdc_ps.1"] + MA2[13, "mc_ps.1"]) * sqrt(25)
+MA2[13, "sdt_ps.1"] <- (MA2[13, "sdt_ps.1"] + MA2[13, "mt_ps.1"]) * sqrt(25)
+
+MA2[18, "sdt_ps.1"] <- (MA2[18, "sdt_ps.1"] + MA2[18, "mt_ps.1"]) * sqrt(13)
+```
+
+```{r}
+# average group sample size
+mean((MA2$nc_ma + MA2$nt_ma) / 2)
+```
+
+## Reproduce primary SMDs
+Between-groups studies which reported sample sizes, means and SDs (SEs/CIs)
+```{r}
+#MA2 <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2, denom = "pooled.sd")
+# relocate to facilitate inspection
+#MA2 <- MA2 %>% relocate(c(d, g, smd_ma), .after = dv_ps)
+```
+
+For PSs that reported means and SDs (no extraction from figure necessary), all reported SMDs were approximated better by Cohen's $d$s than Hedges' $g$s. I will thus assume the authors used Cohen's $d$s:
+
+```{r}
+MA2 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2, denom = "pooled.sd")
+
+# relocate to facilitate inspection
+MA2 <- MA2 %>% relocate(c(id_comparison, d, smd_ma), .after = dv_ps)
+```
+
+
+Reproduced SMDs 6, 7, 9, 12, 14, 15 deviate from the reported ones beyond what would be expected as a result of rounding or differences in how values were extracted from figures. For SMDs 6, 7, 14, and 15, other values could have reasonably been used:
+
+SMDs 6 and 7 had corresponding $p$-values:
+```{r}
+# one-tailed p-value + sample sizes to d
+p_to_d1(0.925, 6, 5)[1]
+p_to_d1(0.897, 6, 5)[1]
+
+# two-tailed p-value + sample sizes to d
+p_to_d2(0.925, 6, 5)[1]
+p_to_d2(0.897, 6, 5)[1]
+```
+Since these are even further from the ones based on means and SDs, data extraction was double checked for correctness (see below).
+
+
+For SMDs 14 and 15, two other sets of means and SDs could have been used:
+```{r}
+# Set 2
+compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[14]]
+compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[15]]
+
+# Set 3
+compute_ds(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA2, denom = "pooled.sd")$d[[14]]
+compute_ds(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA2, denom = "pooled.sd")$d[[15]]
+```
+Values of set 2 are much closer, but not quite identical.
+
+
+Crossover studies which reported sample sizes, means and SDs (SEs/CIs)
+Since the meta-analysts listed the sample size of both the treatment and control group as = $N$ = the number of participants, I use N as the sample size of both groups even though there aren't two groups:
+```{r}
+MA22 <- MA2 %>% filter(is.na(nc_ps))
+MA22 <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA22, denom = "pooled.sd")
+```
+Reproduced SMDs 1, 2, 4, 5, 13, 20 deviate from the reported ones beyond what would be expected as a result of rounding or differences in how values were extracted from figures. For SMDs 1, 2, 4, 5, and 20, other values could have reasonably been used:
+
+SMD 1 had two other sets of means and SDs and a corresponding $p$ value:
+```{r}
+# Set 2
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[1]]
+
+
+# Set 3
+compute_ds(n_ps, mt_ps.3, sdt_ps.3, n_ps, mc_ps.3, sdc_ps.3, data = MA2, denom = "pooled.sd")$d[[1]]
+
+# p-value
+p_to_d1(MA2$p_ps[[1]], MA2$n_ps[[1]], MA2$n_ps[[1]])[1]
+p_to_d2(MA2$p_ps[[1]], MA2$n_ps[[1]], MA2$n_ps[[1]])[1]
+```
+The $d$ based on the one-tailed $p$-values is closest.
+
+SMD 2 had a corresponding $p$ value:
+```{r}
+p_to_d1(MA2$p_ps[[2]], MA2$n_ps[[2]], MA2$n_ps[[2]])[1]
+p_to_d2(MA2$p_ps[[2]], MA2$n_ps[[2]], MA2$n_ps[[2]])[1]
+```
+Closer.
+
+SMDs 4, 5, and 20 had another set of means and SDs:
+```{r}
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[4]]
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[5]]
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[20]]
+```
+Nope.
+
+Studies which did not report means and/or SDs (SEs/CIs)
+For SMD 8, only means were reported. Computing an SMD is thus not possible. For SMD 19 no means or SDs were reported but a potentially suitable $p$-value:
+```{r}
+p_to_d1(MA2$p_ps[[19]], MA2$n_ps[[19]], MA2$n_ps[[19]])[1]
+p_to_d2(MA2$p_ps[[19]], MA2$n_ps[[19]], MA2$n_ps[[19]])[1]
+```
+The one-tailed one is close enough. 
+
+For SMD 3, an SMD was reported in the primary study which was close to the one reported in the MA.
+
+
+## Reproduce primary SMDs -- post double-checking data-extraction for irreproducible SMDs
+Overview of the results of double-checking data extraction for each of the 20 primary SMDs:
+
+1. Data extraction correct, primary SMD irreproducible. The SMD based on the $p$-value is closer to the reported one but will not be used for reproducing the pooled SMD because the $p$-value is for the comparison tDCS_post vs. tDCS_pre and not tDCS_post vs. sham_post (which is supposed to be the outcome). The SMD based on the second set of means and SDs will be used because it's closest to the reported one even though the means and SDs are raw and not "change in PPT".
+2. Data extraction correct, primary SMD irreproducible. The SMD based on the $p$-value is closer to the reported one but will not be used for reproducing the pooled SMD because the $p$-value is for the comparison in the improvement from baseline between tDCS condition, not "JTT (sham vs. ctDCS at post)" (which is supposed to be the outcome). The reproduced SMD based on the means and SDs will be used for the pooled SMD.
+3. The SMD reported in the primary study will be used to reproduce the pooled SMD. The SMD is for improvement of tDCS group from baseline ==> model 2
+4. Data extraction correct, primary SMD irreproducible. The SMD based on the first set of means and SDs will be used because it's the percentage of change means and SDs, which is supposed to be the outcome used in the MA.
+5. Data extraction correct, primary SMD irreproducible. The SMD based on the second set of means and SDs will be used because they are derived by separating the N = 9 into two groups n = 6 and 3, respectively, which is how the meta-analysts report having done it.
+6. Since the means and SDs from the first set are for changes in the outcome and not raw, I extracted raw means and SDs from figures. SMDs based on these values will be used for the pooled SMD. The SMD is approximated
+7. Since the means and SDs from the first set are for changes in the outcome and not raw, I extracted raw means and SDs from figures. SMDs based on these values will be used for the pooled SMD. The SMD is irreproducible.
+8. successfully reproduced using a $p$ value for the comparison between the 3 groups cathodal, anodal and sham at post, will be used for MA model 2
+9. Data extraction correct, primary SMD irreproducible. successfully reproduced using a $p$ value for the comparison between the 3 groups cathodal, anodal and sham at post, will be used for MA model 2
+10. SMD can be considered as reproducible since the difference is probably due to variation in how the means and SDs were extracted from the figure. NOPE ACCORDING TO CLASSIFICATION SCHEME
+11. Same as 10, but negative since the scale used is negatively coded.
+12. I made a mistake in extracting sample sizes. The SMD remains irreproducible after correction.
+13. Data extraction correct, primary SMD irreproducible.
+14. Data extraction correct, primary SMD irreproducible. SMDs based on set 2 are closest to the reported SMDs but these are follow up values not post. Thus the values of the first set will be used for reproducing the pooled SMD.
+15. Data extraction correct, primary SMD irreproducible. SMDs based on set 2 are closed to the reported SMDs but these are follow up values not post. Thus the values of the first set will be used for reproducing the pooled SMD.
+16. Data extraction correct, primary SMD irreproducible. Almost the same as the reported SMD but negative.
+17. Reproducible.
+18. Same as 10, but negative since the variable is reaction time.
+19. Approximated by using a $p$ value for tDCS vs. sham post comparison. Cathodal had a negative effect.
+20. Data extraction correct, primary SMD irreproducible. SMD based on the second set of means and SDs will be used since it's the post values.
+
+
+Reproduce SMDs 6 & 7 using values extracted from figures:
+```{r}
+# Convert upper bounds of SD bars extracted from figures to SDs
+MA2[6, "sdc_ps.2"] <- (MA2[6, "sdc_ps.2"] - MA2[6, "mc_ps.2"])
+MA2[6, "sdt_ps.2"] <- (MA2[6, "sdt_ps.2"] - MA2[6, "mt_ps.2"])
+
+MA2[7, "sdc_ps.2"] <- (MA2[7, "sdc_ps.2"] - MA2[7, "mc_ps.2"])
+MA2[7, "sdt_ps.2"] <- (MA2[7, "sdt_ps.2"] - MA2[7, "mt_ps.2"])
+
+# Compute Cohen's ds
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[6]]
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2, denom = "pooled.sd")$d[[7]]
+```
+
+
+Reproduce SMDs 8 & 9 using $p$-values:
+```{r}
+p_to_d2(MA2$p_ps[[8]], MA2$nc_ps[[8]], MA2$nt_ps[[8]])[1]
+p_to_d2(MA2$p_ps[[9]], MA2$nc_ps[[9]], MA2$nt_ps[[9]])[1]
+```
+## Collate reproduced primary SMDs for MA model 1
+```{r}
+MA2$smd_re1[[1]] <- NA
+
+MA2$smd_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[2,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[3]] <- NA
+
+MA2$smd_re1[[4]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[4,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[5]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[5,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[6]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[6,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[7]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[7,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[8]] <- NA
+
+MA2$smd_re1[[9]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[9,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[10]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[10,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[11]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[11,], denom = "pooled.sd")$d %>% abs()
+
+MA2$smd_re1[[12]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[12,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[13,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[14]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[14,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[15]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[15,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[16]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[16,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[17,], denom = "pooled.sd")$d
+
+MA2$smd_re1[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[18,], denom = "pooled.sd")$d %>% abs()
+
+MA2$smd_re1[[19]] <- -p_to_d1(MA2$p_ps[[19]], MA2$n_ps[[19]], MA2$n_ps[[19]])[1]
+
+MA2$smd_re1[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[20,], denom = "pooled.sd")$d
+
+# make numeric
+MA2$smd_re1 <- MA2$smd_re1 %>% as.numeric()
+
+# relocate to check if everything's fine
+MA2 <- MA2 %>% relocate(c(id_comparison, smd_re1, smd_ma), .after = dv_ps)
+```
+
+
+
+
+## Collate reproduced primary SMDs for MA model 2
+```{r}
+MA2$smd_re2[[1]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[1,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[2,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[3]] <- MA2$smd_ps[[3]]
+
+MA2$smd_re2[[4]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[4,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[5]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[5,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[6]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[6,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[7]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[7,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[8]] <- -p_to_d2(MA2$p_ps[[8]], MA2$nc_ps[[8]], MA2$nt_ps[[8]])[1]
+
+MA2$smd_re2[[9]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[9,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[10]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[10,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[11]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[11,], denom = "pooled.sd")$d %>% abs()
+
+MA2$smd_re2[[12]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[12,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[13,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[14]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[14,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[15]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[15,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[16]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[16,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[17,], denom = "pooled.sd")$d
+
+MA2$smd_re2[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[18,], denom = "pooled.sd")$d %>% abs()
+
+MA2$smd_re2[[19]] <- -p_to_d1(MA2$p_ps[[19]], MA2$n_ps[[19]], MA2$n_ps[[19]])[1]
+
+MA2$smd_re2[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[20,], denom = "pooled.sd")$d
+
+# make numeric
+MA2$smd_re2 <- MA2$smd_re2 %>% as.numeric()
+
+# relocate to check if everything's fine
+MA2 <- MA2 %>% relocate(smd_re2, .after = smd_re1)
+```
+
+
+## Reproduce variances of the primary SMDs for MA model 1
+```{r}
+MA2$v_re1[[1]] <- NA
+
+MA2$v_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[2,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[3]] <- NA
+
+MA2$v_re1[[4]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[4,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[5]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[5,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[6]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[6,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[7]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[7,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[8]] <- NA
+
+MA2$v_re1[[9]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[9,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[10]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[10,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[11]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[11,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[12]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[12,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[13,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[14]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[14,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[15]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[15,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[16]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[16,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[17,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[18,], denom = "pooled.sd")$var.d
+
+MA2$v_re1[[19]] <- p_to_d1(MA2$p_ps[[19]], MA2$n_ps[[19]], MA2$n_ps[[19]])[2]
+
+MA2$v_re1[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[20,], denom = "pooled.sd")$var.d
+
+# make numeric
+MA2$v_re1 <- MA2$v_re1 %>% as.numeric()
+
+# relocate to check if everything's fine
+MA2$v_ma <- MA2$se_ma^2
+
+MA2 <- MA2 %>% relocate(c(id_comparison, v_re1, v_ma), .after = dv_ps)
+```
+
+## Reproduce variances of the primary SMDs for MA model 2
+```{r}
+MA2$v_re2[[1]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[1,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[2,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[3]] <- ((MA2$n_ps[[3]] + MA2$n_ps[[3]]) / (MA2$n_ps[[3]]*MA2$n_ps[[3]])) + (MA2$smd_ps[[3]]^2 / (2 * (MA2$n_ps[[3]] + MA2$n_ps[[3]])))
+
+MA2$v_re2[[4]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[4,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[5]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[5,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[6]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[6,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[7]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA2[7,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[8]] <- p_to_d2(MA2$p_ps[[8]], MA2$nc_ps[[8]], MA2$nt_ps[[8]])[2]
+
+MA2$v_re2[[9]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[9,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[10]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[10,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[11]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[11,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[12]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[12,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[13,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[14]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[14,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[15]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[15,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[16]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[16,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA2[17,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA2[18,], denom = "pooled.sd")$var.d
+
+MA2$v_re2[[19]] <- p_to_d1(MA2$p_ps[[19]], MA2$n_ps[[19]], MA2$n_ps[[19]])[2]
+
+MA2$v_re2[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA2[20,], denom = "pooled.sd")$var.d
+
+# make numeric
+MA2$v_re2 <- MA2$v_re2 %>% as.numeric()
+```
+
+## Reproduce the pooled SMD
+MA model 1
+```{r}
+ma1 <- metagen(TE = smd_re1,
+              seTE = sqrt(v_re1),
+              studlab = id_comparison,
+              data = MA2,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+windowsFonts(A = windowsFont("Times New Roman"))
+
+png("figures/fig4_mam1.png", units = "in", width = 7.2, height = 6, res = 300)
+forest.meta(ma1,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
+```
+
+MA model 2
+```{r}
+ma2 <- metagen(TE = smd_re2,
+              seTE = sqrt(v_re2),
+              studlab = id_comparison,
+              data = MA2,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+png("figures/fig4_mam2.png", units = "in", width = 7.2, height = 6, res = 300)
+forest.meta(ma2,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
+```
+
+MA model 3
+```{r}
+ma3 <- metagen(TE = smd_ma,
+              seTE = se_ma,
+              studlab = id_comparison,
+              data = MA2,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+png("figures/fig4_mam3.png", units = "in", width = 7.2, height = 6, res = 300)
+forest.meta(ma3,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "d", "SE"))
+```
+
+
+
+
+# Meta-analysis 3
+
+
+
+## Load dataset & preprocess data
+```{r}
+MA3 <- read_excel("data/preprocessed/Data_ps_raw.xlsx", sheet = "MA3")
+
+# make values numeric
+MA3 <- MA3 %>% mutate_at(vars(starts_with('sd')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('mt')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('mc')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('smd')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('n')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('ci')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('p_')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('t_')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('F_')), as.numeric)
+MA3 <- MA3 %>% mutate_at(vars(starts_with('si')), as.numeric)
+```
+
+```{r}
+# average group sample size
+mean((MA3$nc_ma + MA3$nt_ma) / 2, na.rm = TRUE)
+```
+
+## Reproduce primary SMDs
+This MA only included RCTs. 1 out of the 6 studies included was a conference abstract which only reported the total sample size. The 5 others reported group sample sizes, 3 reported raw means and SDs, one reported a potentially usable $t$-value. Hedges' $g$ was used. 
+Studies which reported means and SDs
+```{r}
+MA3 <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3, denom = "pooled.sd")
+
+# relocate to facilitate inspection
+MA3 <- MA3 %>% relocate(c(id_comparison, g, smd_ma), .after = dv_ps)
+```
+SMD 4 was reproduced. SMD 2 was approximated but in the other direction. SMD 5 quite close. Data extraction will be double-checked.
+
+Studies which did not report means and/or SDs
+```{r}
+t_to_d(MA3$t_ps[[6]], MA3$nt_ps[[6]], MA3$nc_ps[[6]])[1]
+```
+Nope.
+
+
+
+
+
+## Reproduce primary SMDs -- post double-checking data-extraction for irreproducible SMDs
+1. 
+```{r}
+MA3$d <- p_to_d2(0.01, MA3$nt_ps[[1]], MA3$nc_ps[[1]])[1]
+MA3$vd <- p_to_d2(0.01, MA3$nt_ps[[1]], MA3$nc_ps[[1]])[2]
+compute_gs(d, vd, nt_ps, nc_ps, MA3)$g[1]
+```
+
+2. 
+```{r}
+compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$g
+```
+```{r}
+compute_dgs(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA3[2,], denom = "pooled.sd")$g
+```
+
+```{r}
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+
+compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$g
+```
+
+```{r}
+MA3$mt_ps.3[[2]] <- (MA3$mt_ps.1[[2]] + MA3$mt_ps.2[[2]]) / 2
+MA3$sdt_ps.3[[2]] <- (MA3$sdt_ps.1[[2]] + MA3$sdt_ps.2[[2]]) / 2
+
+compute_dgs(nt_ps*2, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$g
+```
+
+```{r}
+compute_dgs(nt_ps*2, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$g
+```
+
+```{r}
+compute_dgs(nt_ps*2, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA3[2,], denom = "pooled.sd")$g
+```
+
+3.
+```{r}
+MA3$d <- p_to_d2(0.01, MA3$n_ps[[3]], MA3$n_ps[[3]])[1]
+MA3$vd <- p_to_d2(0.01, MA3$n_ps[[3]], MA3$n_ps[[3]])[2]
+compute_gs(d, vd, n_ps, n_ps, MA3)$g[3]
+```
+
+5.based on second set
+```{r}
+compute_dgs(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = MA3[5,], denom = "pooled.sd")$g
+```
+nope
+
+take average
+```{r}
+MA3$mc_ps.3 <- (MA3$mc_ps.1 + MA3$mc_ps.2) / 2
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdc_ps.3 <- (MA3$sdc_ps.1 + MA3$sdc_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA3[5,], denom = "pooled.sd")$g
+```
+yup
+
+6.
+```{r}
+MA3$d <- p_to_d2(0.169, MA3$nc_ps[[6]], MA3$nt_ps[[6]])[1]
+MA3$vd <- p_to_d2(0.169, MA3$nc_ps[[6]], MA3$nt_ps[[6]])[2]
+compute_gs(d, vd, nt_ps, nc_ps, MA3)$g[6]
+```
+yup
+
+Overview of the results of double-checking data extraction for each of the 20 primary SMDs:
+1. SMD 1 could be reproduced using a $p$ value (given as a range <0.01) for the comparison between the control and treatment medians at post. It will be used for MMA2.
+2. Best approximated by taking the first set of means and SDs (SMA) and doubling the sample size for the treatment group (USED FOR MMA2). It was negative because the variable is reaction times. The variation without doubling the sample size and by averaging the two sets will be used for MMA 1 since it corresponds to other reproducible SMDs. 
+3. Same as 1 
+4. reproducible based on means and SDs of change percentages from pre to post 
+5. SMD 5 was approximated well by averaging sets 1 and 2 and computing the SMD based on the averaged values. 
+6. SMD 6 could be reproduced using a $p$ value for the comparison between the control and treatment mean change from baseline. 
+
+
+## Collate reproduced primary SMDs for MA model 1
+```{r}
+# 1
+MA3$smd_re1[[1]] <- NA
+
+# 2
+
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+MA3$smd_re1[[2]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$g %>% abs()
+
+# 3
+MA3$smd_re1[[3]] <- NA
+
+# 4
+MA3$smd_re1[[4]] <- NA
+
+#5 
+MA3$mc_ps.3 <- (MA3$mc_ps.1 + MA3$mc_ps.2) / 2
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdc_ps.3 <- (MA3$sdc_ps.1 + MA3$sdc_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+MA3$smd_re1[[5]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA3[5,], denom = "pooled.sd")$g
+
+#6
+MA3$smd_re1[[6]] <- NA
+
+# make numeric
+MA3 <- MA3 %>% mutate_at(vars(starts_with('smd')), as.numeric)
+
+# relocate to facilitate inspection
+MA3 <- MA3 %>% relocate(c(smd_re1, smd_ma, id_comparison),  .after = dv_ps)
+```
+
+
+
+## Collate reproduced primary SMDs for MA model 2
+```{r}
+# 1
+MA3$d <- p_to_d2(MA3$p_ps[[1]], MA3$nt_ps[[1]], MA3$nc_ps[[1]])[1]
+MA3$vd <- p_to_d2(MA3$p_ps[[1]], MA3$nt_ps[[1]], MA3$nc_ps[[1]])[2]
+MA3$smd_re2[[1]] <- compute_gs(d, vd, nt_ps, nc_ps, MA3)$g[1]
+
+# 2
+MA3$smd_re2[[2]] <- compute_dgs(nt_ps*2, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$g %>% abs()
+
+# 3
+MA3$d <- p_to_d2(MA3$p_ps[[3]], MA3$n_ps[[3]], MA3$n_ps[[3]])[1]
+MA3$vd <- p_to_d2(MA3$p_ps[[3]], MA3$n_ps[[3]], MA3$n_ps[[3]])[2]
+MA3$smd_re2[[3]] <- compute_gs(d, vd, n_ps, n_ps, MA3)$g[3]
+
+# 4
+MA3$smd_re2[[4]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[4,], denom = "pooled.sd")$g
+
+#5 
+MA3$mc_ps.3 <- (MA3$mc_ps.1 + MA3$mc_ps.2) / 2
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdc_ps.3 <- (MA3$sdc_ps.1 + MA3$sdc_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+MA3$smd_re2[[5]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA3[5,], denom = "pooled.sd")$g
+
+#6
+MA3$d <- p_to_d2(MA3$p_ps[[6]], MA3$nc_ps[[6]], MA3$nt_ps[[6]])[1]
+MA3$vd <- p_to_d2(MA3$p_ps[[6]], MA3$nc_ps[[6]], MA3$nt_ps[[6]])[2]
+MA3$smd_re2[[6]] <- compute_gs(d, vd, nt_ps, nc_ps, MA3)$g[6]
+
+# make numeric
+MA3 <- MA3 %>% mutate_at(vars(starts_with('smd')), as.numeric)
+
+# relocate to facilitate inspection
+MA3 <- MA3 %>% relocate(smd_re2,  .after = smd_re1)
+```
+
+
+## Reproduce variances of the primary SMDs for MA model 1
+```{r}
+# 1
+MA3$v_re1[[1]] <- NA
+
+# 2
+MA3$v_re1[[2]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$var.g
+
+# 3
+MA3$v_re1[[3]] <- NA
+
+# 4
+MA3$v_re1[[4]] <- NA
+
+#5 
+MA3$mc_ps.3 <- (MA3$mc_ps.1 + MA3$mc_ps.2) / 2
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdc_ps.3 <- (MA3$sdc_ps.1 + MA3$sdc_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+MA3$v_re1[[5]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA3[5,], denom = "pooled.sd")$var.g
+
+#6
+MA3$v_re1[[6]] <- NA
+```
+
+
+
+## Reproduce variances of the primary SMDs for MA model 2
+```{r}
+# 1
+MA3$d <- p_to_d2(0.01, MA3$nt_ps[[1]], MA3$nc_ps[[1]])[1]
+MA3$vd <- p_to_d2(0.01, MA3$nt_ps[[1]], MA3$nc_ps[[1]])[2]
+MA3$v_re2[[1]] <- compute_gs(d, vd, nt_ps, nc_ps, MA3)$var.g[1]
+
+# 2
+MA3$v_re2[[2]] <- compute_dgs(nt_ps*2, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[2,], denom = "pooled.sd")$var.g
+
+# 3
+MA3$d <- p_to_d2(0.01, MA3$n_ps[[3]], MA3$n_ps[[3]])[1]
+MA3$vd <- p_to_d2(0.01, MA3$n_ps[[3]], MA3$n_ps[[3]])[2]
+MA3$v_re2[[3]] <- compute_gs(d, vd, n_ps, n_ps, MA3)$var.g[3]
+
+# 4
+MA3$v_re2[[4]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = MA3[4,], denom = "pooled.sd")$var.g
+
+#5 
+MA3$mc_ps.3 <- (MA3$mc_ps.1 + MA3$mc_ps.2) / 2
+MA3$mt_ps.3 <- (MA3$mt_ps.1 + MA3$mt_ps.2) / 2
+MA3$sdc_ps.3 <- (MA3$sdc_ps.1 + MA3$sdc_ps.2) / 2
+MA3$sdt_ps.3 <- (MA3$sdt_ps.1 + MA3$sdt_ps.2) / 2
+MA3$v_re2[[5]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = MA3[5,], denom = "pooled.sd")$var.g
+
+#6
+MA3$d <- p_to_d2(0.169, MA3$nc_ps[[6]], MA3$nt_ps[[6]])[1]
+MA3$vd <- p_to_d2(0.169, MA3$nc_ps[[6]], MA3$nt_ps[[6]])[2]
+MA3$v_re2[[6]] <- compute_gs(d, vd, nt_ps, nc_ps, MA3)$var.g[6]
+
+# make numeric
+MA3 <- MA3 %>% mutate_at(vars(starts_with('v_')), as.numeric)
+```
+
+
+## Compute sampling variances and SEs based on the reported CIs
+
+```{r}
+MA3$v_ma <- ((MA3$ciu_ma - MA3$smd_ma) / 1.96)^2
+MA3$se_ma <- ((MA3$ciu_ma - MA3$smd_ma) / 1.96)
+
+# compare with reproduced variances
+MA3 <- MA3 %>% relocate(c(v_re1, v_re2, v_ma), .after = smd_ma)
+```
+
+
+## Reproduce the pooled SMD
+MA model 1
+```{r}
+ma1 <- metagen(TE = smd_re1,
+              seTE = sqrt(v_re1),
+              studlab = id_comparison,
+              data = MA3,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+windowsFonts(A = windowsFont("Times New Roman"))
+
+png("figures/fig5_mam1.png", units = "in", width = 7.2, height = 3, res = 300)
+forest.meta(ma1,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "g", "SE"))
+```
+
+MA model 2
+```{r}
+ma2 <- metagen(TE = smd_re2,
+              seTE = sqrt(v_re2),
+              studlab = id_comparison,
+              data = MA3,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+png("figures/fig5_mam2.png", units = "in", width = 7.2, height = 3, res = 300)
+forest.meta(ma2,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "g", "SE"))
+```
+
+MA model 3
+```{r}
+ma3 <- metagen(TE = smd_ma,
+              seTE = se_ma,
+              studlab = as.character(id_comparison),
+              data = MA3,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA.
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+png("figures/fig5_mam3.png", units = "in", width = 7.2, height = 3, res = 300)
+forest.meta(ma3,
+           fontfamily = "A",
+           print.tau2 = TRUE,
+           leftlabs = c("SMD No.", "g", "SE"))
+```
+
+# New plot here
+```{r}
+saveRDS(MA, "MA1.rds")
+
+
+MA1 <- MA1 %>% mutate(across(starts_with("id"), as.character)) %>% select(starts_with(c("id", "smd")))
+MA2 <- MA2 %>% mutate(across(starts_with("id"), as.character)) %>% select(starts_with(c("id", "smd")))
+MA3 <- MA3 %>% mutate(across(starts_with("id"), as.character)) %>% select(starts_with(c("id", "smd")))
+
+MA_all <- MA1 %>% 
+  bind_rows(MA2) %>% 
+  bind_rows(MA3) %>% 
+  select(1:6)
+
+saveRDS(MA_all, "MA_all.rds")
+MA_all <- readRDS("MA_all.rds") %>% 
+  mutate(dif = smd_re1 - smd_ma,
+         abs_dif = abs(smd_re1 - smd_ma))
+
+
+```
+
+```{r}
+mean(MA_all$dif, na.rm = T)
+max(MA_all$dif, na.rm = T)
+min(MA_all$dif, na.rm = T)
+mean(MA_all$abs_dif, na.rm = T)
+max(MA_all$abs_dif, na.rm = T)
+min(MA_all$abs_dif, na.rm = T)
+
+```
+
+
+
+
+```{r}
+ggplot(MA_all, aes(smd_ma, round(smd_re1, 2))) +
+  geom_abline(slope = 1, linetype = "dotted") +
+  geom_point(aes(color = id_ma, shape = id_ma), size = 2.25) +
+  theme_classic(base_family = "Times", base_size = 12)+
+  labs(
+    x = "Reported primary SMD",
+    y = "Faithfully reproduced primary SMD",
+    color = "Meta-analysis ID",
+    shape = "Meta-analysis ID"
+  ) +
+annotate("text", x = 0, y = 1.80, size = 4, label = "Underestimates pooled SMD", family = "Times") +
+annotate("text", x = 1, y = -.5, size = 4, label = "Overestimates pooled SMD", family = "Times") +
+scale_colour_manual(values = c("#009e73", "#0072b2", "#e69f00")) + theme(aspect.ratio=1)
+
+```
+
+```{r}
+ggplot(MA_all, aes(smd_ma, round(smd_re2, 2))) +
+  geom_abline(slope = 1, linetype = "dotted") +
+  geom_point(aes(color = id_ma, shape = id_ma), size = 2.25) +
+  theme_classic(base_family = "Times", base_size = 12)+
+  labs(
+    x = "Reported primary SMD",
+    y = "Faithfully & brute-force reproduced primary SMD",
+    color = "Meta-analysis ID",
+    shape = "Meta-analysis ID"
+  ) +
+annotate("text", x = 0, y = 1.80, size = 4, label = "Underestimates pooled SMD", family = "Times") +
+annotate("text", x = 1, y = -.5, size = 4, label = "Overestimates pooled SMD", family = "Times") +
+scale_colour_manual(values = c("#009e73", "#0072b2", "#e69f00")) + theme(aspect.ratio=1)
+```
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create a 'Word' document object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for read_docx {officer}"><tr><td>read_docx {officer}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create a 'Word' document object</h2>
+
+<h3>Description</h3>
+
+<p>read and import a docx file as an R object
+representing the document. When no file is specified, it
+uses a default empty file.
+</p>
+<p>Use then this object to add content to it and create Word files
+from R.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+read_docx(path = NULL)
+
+## S3 method for class 'rdocx'
+print(x, target = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>path</code></td>
+<td>
+<p>path to the docx file to use as base document.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an rdocx object</p>
+</td></tr>
+<tr valign="top"><td><code>target</code></td>
+<td>
+<p>path to the docx file to write</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>unused</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>rdocx</code>.
+</p>
+
+
+<h3>Methods (by generic)</h3>
+
+
+<ul>
+<li> <p><code>print</code>: write docx to a file. It returns the path of the result
+file.
+</p>
+</li></ul>
+
+
+<h3>styles</h3>
+
+<p><code>read_docx()</code> uses a Word file as the initial document.
+This is the original Word document from which the document
+layout, paragraph styles, or table styles come.
+</p>
+<p>You will be able to add formatted text, change the paragraph
+style with the R api but also use the styles from the
+original document.
+</p>
+<p>See <code style="white-space: pre;">body_add_*</code> functions to add content.
+</p>
+
+
+<h3>Illustrations</h3>
+
+<p><img src="../help/figures/read_docx_doc_1.png" width=80% />
+</p>
+<p><img src="../help/figures/read_docx_doc_2.png" width=80% />
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="../../officer/help/body_add_par.html">body_add_par</a>, <a href="../../officer/help/body_add_plot.html">body_add_plot</a>, <a href="../../officer/help/body_add_table.html">body_add_table</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(officer)
+
+pinst &lt;- plot_instr({
+  z &lt;- c(rnorm(100), rnorm(50, mean = 5))
+  plot(density(z))
+})
+
+doc_1 &lt;- read_docx()
+doc_1 &lt;- body_add_par(doc_1, "This is a table", style = "heading 2")
+doc_1 &lt;- body_add_table(doc_1, value = mtcars, style = "table_template")
+doc_1 &lt;- body_add_par(doc_1, "This is a plot", style = "heading 2")
+doc_1 &lt;- body_add_plot(doc_1, pinst)
+docx_file_1 &lt;- print(doc_1, target = tempfile(fileext = ".docx"))
+
+template &lt;- system.file(package = "officer",
+  "doc_examples", "landscape.docx")
+doc_2 &lt;- read_docx(path = template)
+doc_2 &lt;- body_add_par(doc_2, "This is a table", style = "heading 2")
+doc_2 &lt;- body_add_table(doc_2, value = mtcars)
+doc_2 &lt;- body_add_par(doc_2, "This is a plot", style = "heading 2")
+doc_2 &lt;- body_add_plot(doc_2, pinst)
+docx_file_2 &lt;- print(doc_2, target = tempfile(fileext = ".docx"))
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>officer</em> version 0.4.1 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

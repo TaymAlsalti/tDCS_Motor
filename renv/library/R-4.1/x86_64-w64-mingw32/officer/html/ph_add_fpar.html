@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: append fpar</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for ph_add_fpar {officer}"><tr><td>ph_add_fpar {officer}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>append fpar</h2>
+
+<h3>Description</h3>
+
+<p>append <code>fpar</code> (a formatted paragraph) in a placeholder
+The function let you add a new formatted paragraph (<code><a href="../../officer/help/fpar.html">fpar</a></code>)
+to an existing content in an existing shape, existing paragraphs
+will be preserved.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ph_add_fpar(
+  x,
+  value,
+  type = "body",
+  id = 1,
+  id_chr = NULL,
+  ph_label = NULL,
+  level = 1,
+  par_default = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>fpar object</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>placeholder type</p>
+</td></tr>
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>placeholder index (integer) for a duplicated type. This is to be used when a placeholder
+type is not unique in the layout of the current slide, e.g. two placeholders with type 'body'. To
+add onto the first, use <code>id = 1</code> and <code>id = 2</code> for the second one.
+Values can be read from <code><a href="../../officer/help/slide_summary.html">slide_summary</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>id_chr</code></td>
+<td>
+<p>deprecated.</p>
+</td></tr>
+<tr valign="top"><td><code>ph_label</code></td>
+<td>
+<p>label associated to the placeholder. Use column
+<code>ph_label</code> of result returned by <code><a href="../../officer/help/slide_summary.html">slide_summary</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+<p>paragraph level</p>
+</td></tr>
+<tr valign="top"><td><code>par_default</code></td>
+<td>
+<p>specify if the default paragraph formatting
+should be used.</p>
+</td></tr>
+</table>
+
+
+<h3>Usage</h3>
+
+<p>If your goal is to add formatted text in a new shape, use <code><a href="../../officer/help/ph_with.html">ph_with</a></code>
+with a <code><a href="../../officer/help/block_list.html">block_list</a></code> instead of this function.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function will be deprecated in a next release because it is not
+efficient and make users write complex code. Use instead <code><a href="../../officer/help/fpar.html">fpar()</a></code> to build
+formatted paragraphs.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../officer/help/fpar.html">fpar</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>officer</em> version 0.4.1 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

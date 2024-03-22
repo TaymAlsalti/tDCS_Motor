@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: rotate cell text</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for rotate {flextable}"><tr><td>rotate {flextable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>rotate cell text</h2>
+
+<h3>Description</h3>
+
+<p>apply a rotation to cell text. The text direction can
+be &quot;lrtb&quot; which mean from left to right and top to bottom (the default direction).
+In some cases, it can be useful to be able
+to change the direction, when the table headers are huge for example, header labels can
+be rendered as &quot;tbrl&quot; (top to bottom and right to left) corresponding to a 90 degrees rotation
+or &quot;btlr&quot; corresponding to a 270 degrees rotation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+rotate(x, i = NULL, j = NULL, rotation, align = "center", part = "body")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a flextable object</p>
+</td></tr>
+<tr valign="top"><td><code>i</code></td>
+<td>
+<p>rows selection</p>
+</td></tr>
+<tr valign="top"><td><code>j</code></td>
+<td>
+<p>columns selection</p>
+</td></tr>
+<tr valign="top"><td><code>rotation</code></td>
+<td>
+<p>one of &quot;lrtb&quot;, &quot;tbrl&quot;, &quot;btlr&quot;. Note that &quot;btlr&quot; is ignored
+when output is HTML.</p>
+</td></tr>
+<tr valign="top"><td><code>align</code></td>
+<td>
+<p>vertical alignment of paragraph within cell,
+one of &quot;center&quot; or &quot;top&quot; or &quot;bottom&quot;.</p>
+</td></tr>
+<tr valign="top"><td><code>part</code></td>
+<td>
+<p>partname of the table (one of 'all', 'body', 'header', 'footer')</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>When function <code>autofit</code> is used, the rotation will be
+ignored. In that case, use <a href="../../flextable/help/dim_pretty.html">dim_pretty</a> and <a href="../../flextable/help/width.html">width</a> instead
+of <a href="../../flextable/help/autofit.html">autofit</a>.
+</p>
+
+
+<h3>Illustrations</h3>
+
+<p><img src="../help/figures/fig_rotate_1.png" width=50% />
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other sugar functions for table style: 
+<code><a href="../../flextable/help/align.html">align</a>()</code>,
+<code><a href="../../flextable/help/bg.html">bg</a>()</code>,
+<code><a href="../../flextable/help/bold.html">bold</a>()</code>,
+<code><a href="../../flextable/help/color.html">color</a>()</code>,
+<code><a href="../../flextable/help/empty_blanks.html">empty_blanks</a>()</code>,
+<code><a href="../../flextable/help/fontsize.html">fontsize</a>()</code>,
+<code><a href="../../flextable/help/font.html">font</a>()</code>,
+<code><a href="../../flextable/help/highlight.html">highlight</a>()</code>,
+<code><a href="../../flextable/help/italic.html">italic</a>()</code>,
+<code><a href="../../flextable/help/line_spacing.html">line_spacing</a>()</code>,
+<code><a href="../../flextable/help/padding.html">padding</a>()</code>,
+<code><a href="../../flextable/help/valign.html">valign</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(flextable)
+
+ft &lt;- flextable(head(iris))
+
+# measure column widths but only for the body part
+w_body &lt;- dim_pretty(ft, part = "body")$widths
+# measure column widths only for the header part and get the max
+# as height value for rotated text
+h_header &lt;- max( dim_pretty(ft, part = "header")$widths )
+
+ft &lt;- rotate(ft, j = 1:4, rotation="btlr",part="header")
+ft &lt;- rotate(ft, j = 5, rotation="tbrl",part="header")
+
+ft &lt;- valign(ft, valign = "center", part = "header")
+ft &lt;- flextable::align(ft, align = "center", part = "all")
+
+# Manage header height
+ft &lt;- height(ft, height = h_header * 1.1, part = "header")
+# ... mainly because Word don't handle auto height with rotated headers
+ft &lt;- hrule(ft, i = 1, rule = "exact", part = "header")
+
+ft
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>flextable</em> version 0.6.10 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

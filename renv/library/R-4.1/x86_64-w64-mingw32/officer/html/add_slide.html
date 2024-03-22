@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: add a slide</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for add_slide {officer}"><tr><td>add_slide {officer}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>add a slide</h2>
+
+<h3>Description</h3>
+
+<p>add a slide into a pptx presentation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+add_slide(x, layout = "Title and Content", master = "Office Theme")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>an rpptx object</p>
+</td></tr>
+<tr valign="top"><td><code>layout</code></td>
+<td>
+<p>slide layout name to use</p>
+</td></tr>
+<tr valign="top"><td><code>master</code></td>
+<td>
+<p>master layout name where <code>layout</code> is located</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../officer/help/print.rpptx.html">print.rpptx()</a></code>, <code><a href="../../officer/help/read_pptx.html">read_pptx()</a></code>, <code><a href="../../officer/help/plot_layout_properties.html">plot_layout_properties()</a></code>, <code><a href="../../officer/help/ph_with.html">ph_with()</a></code>, <code><a href="../../officer/help/layout_summary.html">layout_summary()</a></code>
+</p>
+<p>Other functions slide manipulation: 
+<code><a href="../../officer/help/move_slide.html">move_slide</a>()</code>,
+<code><a href="../../officer/help/on_slide.html">on_slide</a>()</code>,
+<code><a href="../../officer/help/remove_slide.html">remove_slide</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+my_pres &lt;- read_pptx()
+layout_summary(my_pres)
+my_pres &lt;- add_slide(my_pres,
+  layout = "Two Content", master = "Office Theme")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>officer</em> version 0.4.1 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

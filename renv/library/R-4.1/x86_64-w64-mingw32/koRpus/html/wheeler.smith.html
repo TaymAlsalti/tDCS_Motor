@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Readability: Wheeler-Smith Score</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for wheeler.smith {koRpus}"><tr><td>wheeler.smith {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Readability: Wheeler-Smith Score</h2>
+
+<h3>Description</h3>
+
+<p>This is just a convenient wrapper function for <code><a href="../help/readability.html">readability</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+wheeler.smith(txt.file, hyphen = NULL, parameters = c(syll = 2), ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txt.file</code></td>
+<td>
+<p>Either an object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>,
+a character vector which must be be
+a valid path to a file containing the text to be analyzed,
+or a list of text features. If the latter, calculation
+is done by <code><a href="../help/readability.num.html">readability.num</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>hyphen</code></td>
+<td>
+<p>An object of class kRp.hyphen. If <code>NULL</code>,
+the text will be hyphenated automatically.</p>
+</td></tr>
+<tr valign="top"><td><code>parameters</code></td>
+<td>
+<p>A numeric vector with named magic numbers,
+defining the relevant parameters for the index.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further valid options for the main function,
+see <code><a href="../help/readability.html">readability</a></code> for details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function calculates the Wheeler-Smith Score. In contrast to
+<code><a href="../help/readability.html">readability</a></code>,
+which by default calculates all possible indices,
+this function will only calculate the index value.
+</p>
+<p>If <code>parameters="de"</code>, the calculation stays the same, but grade placement
+is done according to Bamberger &amp; Vanecek (1984), that is for german texts.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bamberger, R. &amp; Vanecek,
+E. (1984). <em>Lesen&ndash;Verstehen&ndash;Lernen&ndash;Schreiben</em>. Wien: Jugend und Volk.
+</p>
+<p>Wheeler, L.R. &amp; Smith,
+E.H. (1954). A practical readability formula for the classroom teacher in the primary grades. <em>Elementary English</em>,
+31, 397&ndash;399.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+  wheeler.smith(tagged.text)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

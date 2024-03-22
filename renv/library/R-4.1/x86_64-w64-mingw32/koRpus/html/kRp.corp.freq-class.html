@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: S4 Class kRp.corp.freq</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for kRp.corp.freq,-class {koRpus}"><tr><td>kRp.corp.freq,-class {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>S4 Class kRp.corp.freq</h2>
+
+<h3>Description</h3>
+
+<p>This class is used for objects that are returned by <code><a href="../help/read.corp.LCC.html">read.corp.LCC</a></code> and <code><a href="../help/read.corp.celex.html">read.corp.celex</a></code>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The slot <code>meta</code> simply contains all information from the &quot;meta.txt&quot; of the LCC[1] data and remains
+empty for data from a Celex[2] DB.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>meta</code></dt><dd><p>Metadata on the corpora (see details).</p>
+</dd>
+<dt><code>words</code></dt><dd><p>Absolute word frequencies. It has at least the following columns:
+</p>
+
+<dl>
+<dt><code>num</code>:</dt><dd><p>Some word ID from the DB, integer</p>
+</dd>
+<dt><code>word</code>:</dt><dd><p>The word itself</p>
+</dd>
+<dt><code>lemma</code>:</dt><dd><p>The lemma of the word</p>
+</dd>
+<dt><code>tag</code>:</dt><dd><p>A part-of-speech tag</p>
+</dd>
+<dt><code>wclass</code>:</dt><dd><p>The word class</p>
+</dd>
+<dt><code>lttr</code>:</dt><dd><p>The number of characters</p>
+</dd>
+<dt><code>freq</code>:</dt><dd><p>The frequency of that word in the corpus DB</p>
+</dd>
+<dt><code>pct</code>:</dt><dd><p>Percentage of appearance in DB</p>
+</dd>
+<dt><code>pmio</code>:</dt><dd><p>Appearance per million words in DB</p>
+</dd>
+<dt><code>log10</code>:</dt><dd><p>Base 10 logarithm of word frequency</p>
+</dd>
+<dt><code>rank.avg</code>:</dt><dd><p>Rank in corpus data, <code><a href="../../base/html/rank.html">rank</a></code> ties method &quot;average&quot;</p>
+</dd>
+<dt><code>rank.min</code>:</dt><dd><p>Rank in corpus data, <code><a href="../../base/html/rank.html">rank</a></code> ties method &quot;min&quot;</p>
+</dd>
+<dt><code>rank.rel.avg</code>:</dt><dd><p>Relative rank, i.e. percentile of <code>"rank.avg"</code></p>
+</dd>
+<dt><code>rank.rel.min</code>:</dt><dd><p>Relative rank, i.e. percentile of <code>"rank.min"</code></p>
+</dd>
+<dt><code>inDocs</code>:</dt><dd><p>The absolute number of documents in the corpus containing the word</p>
+</dd>
+<dt><code>idf</code>:</dt><dd><p>The inverse document frequency</p>
+</dd>
+</dl>
+
+<p>The slot might have additional columns, depending on the input material.</p>
+</dd>
+<dt><code>desc</code></dt><dd><p>Descriptive information. It contains six numbers from the <code>meta</code> information,
+for convenient accessibility:
+</p>
+
+<dl>
+<dt><code>tokens</code>:</dt><dd><p>Number of running word forms</p>
+</dd>
+<dt><code>types</code>:</dt><dd><p>Number of distinct word forms</p>
+</dd>
+<dt><code>words.p.sntc</code>:</dt><dd><p>Average sentence length in words</p>
+</dd>
+<dt><code>chars.p.sntc</code>:</dt><dd><p>Average sentence length in characters</p>
+</dd>
+<dt><code>chars.p.wform</code>:</dt><dd><p>Average word form length</p>
+</dd>
+<dt><code>chars.p.word</code>:</dt><dd><p>Average running word length</p>
+</dd>
+</dl>
+
+<p>The slot might have additional columns, depending on the input material.</p>
+</dd>
+<dt><code>bigrams</code></dt><dd><p>A data.frame listing all tokens that co-occurred next to each other in the corpus:
+</p>
+
+<dl>
+<dt><code>token1</code>:</dt><dd><p>The first token</p>
+</dd>
+<dt><code>token2</code>:</dt><dd><p>The second token that appeared right next to the first</p>
+</dd>
+<dt><code>freq</code>:</dt><dd><p>How often the co-occurrance was present</p>
+</dd>
+<dt><code>sig</code>:</dt><dd><p>Log-likelihood significance of the co-occurrende</p>
+</dd>
+</dl>
+</dd>
+<dt><code>cooccur</code></dt><dd><p>Similar to <code>bigrams</code>,
+but listing co-occurrences anywhere in one sentence:
+</p>
+
+<dl>
+<dt><code>token1</code>:</dt><dd><p>The first token</p>
+</dd>
+<dt><code>token2</code>:</dt><dd><p>The second token that appeared in the same sentence</p>
+</dd>
+<dt><code>freq</code>:</dt><dd><p>How often the co-occurrance was present</p>
+</dd>
+<dt><code>sig</code>:</dt><dd><p>Log-likelihood significance of the co-occurrende</p>
+</dd>
+</dl>
+</dd>
+<dt><code>caseSens</code></dt><dd><p>A single logical value,
+whether the frequency statistics were calculated case sensitive
+or not.</p>
+</dd>
+</dl>
+
+
+<h3>Contructor function</h3>
+
+<p>Should you need to manually generate objects of this class (which should rarely be the case),
+the contructor function 
+<code>kRp_corp_freq(...)</code> can be used instead of
+<code>new("kRp.corp.freq", ...)</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] <a href="https://wortschatz.uni-leipzig.de/en/download/">https://wortschatz.uni-leipzig.de/en/download/</a>
+[2] <a href="http://celex.mpi.nl">http://celex.mpi.nl</a>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

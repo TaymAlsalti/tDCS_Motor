@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Import LCC data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for read.corp.LCC {koRpus}"><tr><td>read.corp.LCC {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Import LCC data</h2>
+
+<h3>Description</h3>
+
+<p>Read data from LCC[1] formatted corpora (Quasthoff, Richter &amp; Biemann, 2006).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+read.corp.LCC(
+  LCC.path,
+  format = "flatfile",
+  fileEncoding = "UTF-8",
+  n = -1,
+  keep.temp = FALSE,
+  prefix = NULL,
+  bigrams = FALSE,
+  cooccurence = FALSE,
+  caseSens = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>LCC.path</code></td>
+<td>
+<p>A character string,
+either path to a .tar/.tar.gz/.zip file in LCC format (flatfile),
+or the path to the directory with the unpacked archive.</p>
+</td></tr>
+<tr valign="top"><td><code>format</code></td>
+<td>
+<p>Either &quot;flatfile&quot; or &quot;MySQL&quot;, depending on the type of LCC data.</p>
+</td></tr>
+<tr valign="top"><td><code>fileEncoding</code></td>
+<td>
+<p>A character string naming the encoding of the LCC files. Old zip archives used &quot;ISO_8859-1&quot;.
+This option will only influence the reading of meta information,
+as the actual database encoding is derived from
+there.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>An integer value defining how many lines of data should be read if <code>format="flatfile"</code>. Reads all at -1.</p>
+</td></tr>
+<tr valign="top"><td><code>keep.temp</code></td>
+<td>
+<p>Logical. If <code>LCC.path</code> is a tarred/zipped archive,
+setting <code>keep.temp=TRUE</code> will keep
+the temporarily unpacked files for further use. By default all temporary files will be removed when
+the function ends.</p>
+</td></tr>
+<tr valign="top"><td><code>prefix</code></td>
+<td>
+<p>Character string,
+giving the prefix for the file names in the archive. Needed for newer LCC tar archives
+if they are already decompressed (autodetected if <code>LCC.path</code> points to the tar archive directly).</p>
+</td></tr>
+<tr valign="top"><td><code>bigrams</code></td>
+<td>
+<p>Logical, whether infomration on bigrams should be imported.
+This is <code>FALSE</code> by default, because it might make the objects quite large.
+Note that this will only work in <code>n = -1</code> because otherwise the tokens cannot be looked up.</p>
+</td></tr>
+<tr valign="top"><td><code>cooccurence</code></td>
+<td>
+<p>Logical, like <code>bigrams</code>,
+but for information on co-occurences of tokens in a sentence.</p>
+</td></tr>
+<tr valign="top"><td><code>caseSens</code></td>
+<td>
+<p>Logical,
+if <code>FALSE</code> forces all frequency statistics to be calculated regardless of the tokens' case.
+Otherwise, if the imported database supports it,
+you will get different frequencies for the same tokens in different
+cases (e.\,g., &quot;one&quot; and &quot;One&quot;).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The LCC database can either be unpacked or still a .tar/.tar.gz/.zip archive. If the latter is the case,
+then
+all necessary files will be extracted to a temporal location automatically,
+and by default removed again
+when the function has finished reading from it.
+</p>
+<p>Newer LCC archives no longer feature the <code>*-meta.txt</code> file,
+resulting in less meta informtion in the object.
+In these cases, the total number of tokens is calculated as the sum of types' frequencies.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Please note that MySQL support is not implemented yet.
+</p>
+
+
+<h3>References</h3>
+
+<p>Quasthoff, U., Richter, M. &amp; Biemann,
+C. (2006). Corpus Portal for Search in Monolingual Corpora, In
+<em>Proceedings of the Fifth International Conference on Language Resources and Evaluation</em>,
+Genoa, 1799&ndash;1802.
+</p>
+<p>[1] <a href="https://wortschatz.uni-leipzig.de/en/download/">https://wortschatz.uni-leipzig.de/en/download/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.corp.freq-class.html">kRp.corp.freq</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+# old format .zip archive
+my.LCC.data &lt;- read.corp.LCC(
+  file.path("~","mydata","corpora","de05_3M.zip")
+)
+# new format tar archive
+my.LCC.data &lt;- read.corp.LCC(
+  file.path("~","mydata","corpora","rus_web_2002_300K-text.tar")
+)
+# in case the tar archive was already unpacked
+my.LCC.data &lt;- read.corp.LCC(
+  file.path("~","mydata","corpora","rus_web_2002_300K-text"),
+  prefix="rus_web_2002_300K-"
+)
+freq.analysis(
+  tokenized.obj,
+  corp.freq=my.LCC.data
+)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

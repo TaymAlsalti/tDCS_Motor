@@ -1,0 +1,1183 @@
+---
+title             : "A Methodological Evaluation of Meta-Analyses in tDCS - Motor Learning Research"
+shorttitle        : "M-A Methods in tDCS - Motor Learning Research"
+
+author: 
+  - name          : "Taym Alsalti"
+ #   affiliation   : "1"
+ #   corresponding : yes    # Define only one corresponding author
+ #   address       : "Postal address"
+ #   email         : "my@email.com"
+ #   role:         # Contributorship roles (e.g., CRediT, https://casrai.org/credit/)
+ #     - Conceptualization
+ #     - Writing - Original Draft Preparation
+ #     - Writing - Review & Editing
+ # - name          : "Ernst-August Doelle"
+ #   affiliation   : "1,2"
+ #   role:
+ #     - Writing - Review & Editing
+ 
+
+affiliation:
+  - id            : ""
+    institution   : "Freie Universität Berlin"
+#  - id            : "2"
+#    institution   : "Konstanz Business School"
+#
+#authornote: |
+#  Add complete departmental affiliations for each author here. Each new line herein must be indented, #like this line.
+
+
+#  Enter author note here.
+
+abstract: |
+  With transcranial direct-current stimulation’s (tDCS) rising popularity both in motor learning research and as a commercial product, it is becoming increasingly important that the quality of evidence on its effectiveness be evaluated. Special attention should be paid to meta-analyses, as they usually have a larger impact on research and clinical practice than other types of studies. There is evidence for several methodological issues in the tDCS motor learning literature such as limited reproducibility, largely untested replicability, and marked hetereogeneity in the technical paramaters employed. These issues inevitably impact the quality of the meta-analyses synthesising these studies, which display methodological problems of their own. The aim of this project was to evaluate the methodological quality of meta-analyses estimating the effect of tDCS on motor learning with respect to three main aspects: reporting quality, reproducibility, and publication bias control. Akin to previous reviews with similar aims, we show that the methods and results sections of meta-analyses are severely underreported, which compromises the ability to judge the soundness of the methodogloical procedure adopted as well as its reproducibility. Furthermore, only one of the three meta-analyses reported having taken non-statistical approaches to control for publication bias and all three used older statistical methods which are known to produce results of limited validity. These results reemphasise the need to evaluate the quality of meta-analyses as they have the largest impact on research, clinical practice, and even consumer behaviour. 
+  
+#keywords            : "keywords"
+#wordcount           : "X"
+ 
+bibliography        : ["references.bib"]
+ 
+floatsintext        : yes # place figures and tables in the text rather than at the end
+figsintext          : yes # Figures and tables in text
+figurelist          : no # Create list of figure captions
+tablelist           : no # list of table captions
+footnotelist        : no # list of footnotes
+linenumbers         : no # Add line numbers in the margins
+mask                : no # Omit identifying information from the title page
+draft               : no # Add “DRAFT” watermark to every page
+
+documentclass       : "apa6"
+classoption         : "man"
+output              : papaja::apa6_pdf
+header-includes:
+  - \usepackage{setspace}
+  - \usepackage{enumitem}
+  - \AtBeginEnvironment{tabular}{\singlespacing}
+  - \AtBeginEnvironment{tabular}{\footnotesize}
+  - \AtBeginEnvironment{lltable}{\singlespacing}
+  - \AtBeginEnvironment{tablenotes}{\singlespacing}
+  - \captionsetup[table]{font={stretch=1}}
+  - \captionsetup[figure]{font={stretch=1}}
+  - \captionsetup[table]{skip=10pt}
+  - \setlist{nolistsep}
+  - \setlist{nosep}
+  - \usepackage{subfig}
+  - \usepackage{float}
+---
+```{r setup, include = FALSE}
+library("papaja") # pulled from GitHub on the 23rd of October 2021
+library("kableExtra")
+
+options(tinytex.verbose = TRUE)
+```
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.pos = 'H')
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+---
+nocite: |
+    @ahnReviewMetaAnalysesEducation2012, @aytugRevealedConcealedTransparency2012,   @dieckmannEmpiricalAssessmentMetaAnalytic2009, @hohnEmpiricalReviewResearch2020,   @kepesMetaanalyticReviewsOrganizational2013, @pageEvaluationsUptakeImpact2017,   @polaninTransparencyReproducibilityMetaAnalyses2020,   @pussegodaSystematicReviewAdherence2017, @schalkenReportingQualitySystematic2017, @sterlingPublicationDecisionsTheir1959
+---
+# Introduction
+## Transcranial direct-current stimulation
+Transcranial direct-current stimulation (tDCS) refers to a non-invasive brain stimulation technique which involves delivering constant, low current to the brain via electrodes fixed on the scalp [@gazzanigaMethodsCognitiveNeuroscience2018]. tDCS is believed to be capable of both temporarily and permanently altering brain function by increasing or decreasing excitability in targeted cortical regions depending on the type of stimulation implemented [@staggPhysiologicalBasisTranscranial2011]. Positive current delivered via the anodal electrode causes neurons just beneath the region stimulated to depolarise, that is, to increase their excitability, rendering them more likely to start off an action potential. Neurons targeted by negative stimulation, on the other hand, become hyperpolerised, i.e., less likely to "fire" [@gazzanigaMethodsCognitiveNeuroscience2018]. An important third type of stimulation is sham stimulation, which involves delivering an initial brief current that quickly fades off, leaving an inactive electrode for the remainder of the experiment. Sham stimulation is used as the control condition in experimental settings. tDCS is known to be safe and to cause negligible side-effects, if any [@nitscheTranscranialDirectCurrent2008; @gianniTDCSRandomizedControlled2021].
+
+The typical set-up of a tDCS protocol involves no more than a handful of inexpensive components and relatively simple steps [@gebodhTranscranialDirectCurrent2019; @woodsTechnicalGuideTDCS2016]. A standard tDCS device consists of an anodal (positively charged) and a cathodal (negatively charged) electrode attached to a battery-powered device which controls the type and intensity of the current as well as the duration of the stimulation. To ensure that the administered current actually reaches the target area, a few measures are usually taken to minimise resistance between the skin and the active electrodes. This includes using a sponge and an electrolyte-based contact medium such as gel and any materials necessary to make sure the electrodes remain fixed in their positions. Electroencephalography (EEG) or magnetic resonance imaging (MRI) is sometimes used to more accurately locate the region of interest or to monitor the physiological effects of tDCS in real time [@nitscheTranscranialDirectCurrent2008; @woodsTechnicalGuideTDCS2016]. More recent variations of tDCS used for at-home clinical interventions are even simpler [@riggsAtHomeTranscranialDirect2018].
+\vspace{-1mm}
+
+When considering these advantages, tDCS's rapidly increasing popularity over the last two decades is not surprising [@buchEffectsTDCSMotor2017]. In clinical research, its efficacy for treating or attenuating depression [@brunoniTranscranialDirectCurrent2016], memory deficits in Alzheimer's patients [@bennabiTranscranialDirectCurrent2014], pain [@luedtkeTranscranialDirectCurrent2012],  schizophrenia [@liuEffectsTranscranialElectrical2021], and others, has been investigated. Interest in tDCS was not restricted to clinical settings: studies on healthy subjects have been conducted to test its effects on cognitive abilities such as language and memory [@horvathQuantitativeReviewFinds2015], affective states [@austinPrefrontalElectricalStimulation2016], and motor skills, such as surgery [@hungEfficacyTranscranialDirect2021a] and musical performance [@rosenAnodalTDCSRight2016].
+
+Indeed, tDCS has become so established as a research tool that it is already approved for clinical use (with some restrictions) in several countries around the world [@fregniRegulatoryConsiderationsClinical2015]. Furthermore, an ever-richer variety of commercial tDCS products has become available on the market [@davisRegulationConsumerTDCS2016; @wexlerWhoUsesDirecttoConsumer2018; @zettlerTDCSResearchWorld2017], prompting experts [@wurzmanOpenLetterConcerning2016] to voice concerns over the increasing prevalence of this "do-it-yourself" use of tDCS. Out of the 449 such at-home tDCS consumers surveyed by @wexlerWhoUsesDirecttoConsumer2018, 52% (237) did so for enhancement purposes. It appears likely that this "hype" surrounding tDCS products is partly due to considerable media coverage [@steenbergenUnfocusFocUs2016; @dubljevicRisingTideTDCS2014].
+
+## tDCS and motor learning
+One increasingly prevalent implementation of tDCS is to improve motor learning, that is, the acquisition of new motor skills or the improvement of existing ones. Here, complexity is compounded by the multifacetedness of motor skills and the variety of ways to measure them [@buchEffectsTDCSMotor2017]. They can range from the most mundane daily activities like walking or doing the dishes to finer skills that can require years to master such as playing a musical instrument or performing surgery. tDCS is most often used as a supplement to specialised training [@buchEffectsTDCSMotor2017]. The two main types of improvement that can occur are referred to as "online learning" (improvement over short time periods such as within a single training session or a day) and consolidated learning (over several hours, days, or training sessions).
+
+Experimental paradigms aiming to evaluate such patterns of improvement typically take the following form [@reisNoninvasiveCorticalStimulation2009; @buchEffectsTDCSMotor2017]: following baseline measurements of different outcomes on the first day, study participants undergo a series of training sessions in a specific motor task (e.g., squeezing a hand-held force transducer to move the cursor on the computer screen quickly and accurately between a starting position and a target position). The participants receive tDCS (or sham, depending on group and time point) during this training. Performance is measured subsequently (online) and/or 1 to several weeks or months later (consolidation/retention).
+Measuring motor learning is a complex task, too, as motor skills require an optimisation of a speed-accuracy trade-off. Different tasks and measurement instruments take this into account in different ways depending on context. For example, some tasks involve instructing participants to focus on either speed or accuracy. Another approach is to stick to neutral instructions and instead explicitly model this trade-off, as done by @reisNoninvasiveCorticalStimulation2009:
+$$ 
+\textrm{skill} = \frac{1-\textrm{error rate}}{\textrm{error rate}(\ln(\textrm{duration})^b)}
+\tag{1}
+$$
+Where $b$ is a fixed constant.
+
+\newpage
+## Issues in tDCS research
+Although tDCS might hold promise for those and other applications, treating tDCS's positive effects as an established fact is deemed by experts in the field as premature [@buchEffectsTDCSMotor2017]. The technique's apparent simplicity might lead researchers to disregard aspects which are crucial to obtaining reliable results [@gebodhTranscranialDirectCurrent2019; @woodsTechnicalGuideTDCS2016]. When conducting a tDCS experiment, the researcher must select the type of stimulation, electrode size, shape and material; the duration of the stimulation; the location of the electrodes; and the current intensity, all of which are factors that have a substantial impact on stimulation efficacy. 
+
+The wide range of different possible tDCS settings appears to be well utilised by researchers as there is evidence of considerable heterogeneity in the literature with respect to tDCS-related parameters, tasks, and outcomes [@buchEffectsTDCSMotor2017]. tDCS research also appears to suffer from the same methodological problems as neighbouring fields in the behavioural and cognitive (neuro)sciences, such as suboptimal reproducibility, untested replicability, underpowered studies [@minarikImportanceSampleSize2016], and publication bias [@buttonPowerFailureWhy2013]. These issues make it difficult to evaluate the evidence or reach conclusions based on it. They also hamper cumulative science as it is difficult to synthesise the results of studies for the purpose of a meta-analysis when they vary too much in quality and methodological approach [@borensteinCriticismsMetaanalysis2009]. 
+
+## Meta-analysis
+Meta-analysis refers to a method of quantitatively synthesising the results of a set of studies while weighing individual studies differently depending on certain criteria [@borensteinEffectSizesMetaanalyses2019]. The most common measure used for weighing effect sizes derived from primary studies is the sampling variance, which is largely dependent on the study's sample size. For example, should one wish to estimate the effect on an intervention based on multiple studies with a control group, a common procedure would be to calculate a standardised mean difference (SMD) in the form of a Cohen's $d$:
+$$
+d={\frac {{\bar{x}}_{t}-{\bar{x}}_{c}}{s}} 
+\tag{2}
+$$
+$$
+s={\sqrt {\frac {(n_{t}-1)s_{t}^{2}+(n_{c}-1)s_{c}^{2}}{n_{t}+n_{c}-2}}}
+\tag{3}
+$$
+Where ${\bar{x}}_{t}$ is the mean of the treatment group, ${\bar{x}}_{c}$ is the mean of the control group, $s$ is the pooled standard deviation, $n_{t}$ and $n_{c}$ are the sample sizes of the treatment and control groups, respectively, and $s_{t}$ and $s_{c}$ are the standard deviations of the treatment and control groups, respectively.
+
+The next step would be to calculate the inverse-variance weight $w=\frac{1}{v_i}$ for each $d$, where the sampling variance $v_i$ is conventionally calculated via:
+$$
+v_i={\frac{n_{t}+n_{c}}{n_{t}n_{c}}}v
+\tag{4}
+$$
+Where $v$ represents the pooled variance of the two groups. One can then calculate the pooled Cohen's $d$ using the primary $d$s and their corresponding weights:
+$$
+\bar{d}={\frac{\sum_{i=1}^{k}w_id_i}{\sum_{i=1}^{k}w_i}}
+\tag{5}
+$$
+This would be a so-called fixed-effects meta-analytic model, under which one assumes the primary effect sizes to stem from a single common true effect size [@konstantopoulosStatisticallyAnalyzingEffect2019]. On the other hand, the true effect effect size is itself random and has its own distribution under a random-effects model. Computationally, the only difference between a fixed-effects and a random-effects model is that for the purpose of the latter, the sampling variances $v^*_i$ are formed by adding to the fixed-effects sampling variance a between-study variance component $\tau^2$. There are about a dozen different methods to estimate the between-study heterogeneity, see @veronikiMethodsEstimateBetweenstudy2016 for an overview.
+
+Meta-analysis studies merit special scrutiny and should be invariably executed to the highest standards as they are usually cited more frequently than primary studies about the same topics, are commonly assumed to provide the most accurate estimate of an effect, and have a large impact on theory development as well as policy and clinical practice [@gopalakrishnanSystematicReviewsMetaanalysis2013; @gotzscheDataExtractionErrors2007; @ioannidisMassProductionRedundant2016; @lakensExaminingReproducibilityMetaAnalyses2017; @morgantiImpactMetaanalysesClinical2007]. However, meta-analyses can and often _do_ suffer from methodological problems which go beyond those of the primary studies they synthesise [@ioannidisMassProductionRedundant2016]. Here, we focused on the issues of reporting quality, reproducibility, and publication bias control.
+\vspace{-5mm}
+
+## Reporting quality
+One crucial issue is reporting completeness describing the used methods and the results. Researchers must make a great number of decisions at multiple stages of a study's timeline. These decisions impact the outcome of the study to various degrees and only by providing a full, justified account of which path was taken at each fork can other researchers evaluate the soundness of the methodological approach [@botvinik-nezerVariabilityAnalysisSingle2020; @gelmanGardenForkingPaths2013; @hyattQuandaryCovaryingBrief2020a; @simmonsFalsePositivePsychologyUndisclosed2011]. Meta-analysts in particular are faced with a plethora of different decisions with regards to which databases to search and using which strings; primary study selection and exclusion; data extraction; statistical methods, among others [@adaImpactMetaanalyticDecisions2012a; @geyskensReviewEvaluationMetaAnalysis2009; @guzzoMetaanalysisAnalysis1987; @nieminenMetaanalyticDecisionsReliability2011; @schalkenReportingQualitySystematic2017; @valentineHowManyStudies2010; @voracekWhichDataMetaanalyze2019]. Although the extent to which these "researcher degrees of freedom" [@simmonsFalsePositivePsychologyUndisclosed2011] impact the conclusions of the meta-analysis is not a completely uncontroversial issue^[One review of meta-analyses in the organisational sciences found that 21 different analytical decisions have a negligible impact on the pooled ES estimate [@aguinisMetaAnalyticChoicesJudgment2011]], there is consensus regarding the importance of transparently reporting these decisions [@aguinisDebunkingMythsUrban2011], as it is difficult to assess the quality and trustworthiness of that which one does not have access to [@pagePRISMA2020Statement2021]. 
+
+Hundreds of different sets of reporting guidelines have been developed for different types of studies conducted across various fields [@ReportingGuidelinesEQUATOR] including several for meta-analyses, for example, the Cochrane Handbook [@higginsCochraneHandbookSystematic2019], Preferred Reporting Items for Systematic Reviews and Meta-Analyses [PRISMA, @moherImprovingQualityReports2000; @moherPreferredReportingItems2009; @pagePRISMA2020Statement2021], Meta-Analysis Reporting Standards (MARS, American Psychological Association, n.d.), with PRISMA being the most widely known and adopted [@pageEvaluationsUptakeImpact2017]. 
+
+PRISMA's predecessor, The Quality of Reports of Meta-analyses Statement [QUOROM, @moherImprovingQualityReports2000], was developed in response to a rapidly rising number of meta-analyses with widely varying degrees of reporting completeness. The statement proceeded from a conference held to discuss these issues surrounding research synthesis, especially randomised controlled trials (RCTS). Its aim was to provide meta-analysts with help to better report their studies.
+This help came in the form of a flow diagram of the different stages of a meta-analysis and a checklist. The checklist includes 18 items about how the different sections of the meta-analytic study should look like. 
+
+The updated versions of the reporting guidelines [rebranded as PRISMA to encompass reviews without quantitative synthesis, @moherPreferredReportingItems2009; @pagePRISMA2020Statement2021] elaborated on both the checklist and the flow chart (see Figure 1 for the 2009 edition). Here we focused on the 2009 version of PRISMA as we expected most meta-analyses we evaluated to be published after 2009 but before 2020.
+\newpage
+```{r fig1, fig.cap = 'PRISMA flow chart of the meta-analytical process. Adapted as is from Moher et al. (2009).', out.width = "85%", fig.align="center"}
+knitr::include_graphics("figures/prisma.png")
+```
+
+The 2009 PRISMA (henceforth simply PRISMA) checklist included 27 items (see Table 1), with 12 of them pertaining to methods and 7 to results. We paid special attention to items 6 to 9 and 17 as they pertain to important methodological aspects (study selection) and are not covered by our evaluation of reproducibility.
+
+\newpage
+\singlespacing
+```{r table1}
+table1  <- data.frame(
+  'Item_number' = 1:27,
+  'Section' = c(
+    "Title", "Abstract", "Introduction", "Introduction", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Methods", "Results", "Results", "Results", "Results", "Results", "Results", "Results", "Discussion", "Discussion", "Discussion", "Funding"
+  ),
+  'Original_description_of_item' = c(
+"Identify the report as a systematic review, meta-analysis, or both.", 
+"Provide a structured summary including, as applicable: background; objectives; data sources; study eligibility criteria, participants, and interventions; study appraisal and synthesis methods; results; limitations; conclusions and implications of key findings; systematic review registration number.", 
+"Describe the rationale for the review in the context of what is already known.", 
+"Provide an explicit statement of questions being addressed with reference to participants, interventions, comparisons, outcomes, and study design (PICOS).", 
+"Indicate if a review protocol exists, if and where it can be accessed (e.g., Web address), and, if available, provide registration information including registration number.", 
+"Specify study characteristics (e.g., PICOS, length of follow-up) and report characteristics (e.g., years considered, language, publication status) used as criteria for eligibility, giving rationale.", 
+"Describe all information sources (e.g., databases with dates of coverage, contact with study authors to identify additional studies) in the search and date last searched.", 
+"Present full electronic search strategy for at least one database, including any limits used, such that it could be repeated.", 
+"State the process for selecting studies (i.e., screening, eligibility, included in systematic review, and, if applicable, included in the meta-analysis).", 
+"Describe method of data extraction from reports (e.g., piloted forms, independently, in duplicate) and any processes for obtaining and confirming data from investigators.", 
+"List and define all variables for which data were sought (e.g., PICOS, funding sources) and any assumptions and simplifications made.", 
+"Describe methods used for assessing risk of bias of individual studies (including specification of whether this was done at the study or outcome level), and how this information is to be used in any data synthesis.", 
+"State the principal summary measures (e.g., risk ratio, difference in means).", 
+"Describe the methods of handling data and combining results of studies, if done, including measures of consistency (e.g., 12) for each meta-analysis.", 
+"Specify any assessment of risk of bias that may affect the cumulative evidence (e.g., publication bias, selective reporting within studies).", 
+"Describe methods of additional analyses (e.g., sensitivity or subgroup analyses, meta-regression), if done, indicating which were pre-specified.", 
+"Give numbers of studies screened, assessed for eligibility, and included in the review, with reasons for exclusions at each stage, ideally with a flow diagram.", 
+"For each study, present characteristics for which data were extracted (e.g., study size, PICOS, follow-up period) and provide the citations.", 
+"Present data on risk of bias of each study and, if available, any outcome level assessment (see item 12).", 
+"For all outcomes considered (benefits or harms), present, for each study: (a) simple summary data for each intervention group (b) effect estimates and confidence intervals, ideally with a forest plot.", 
+"Present results of each meta-analysis done, including confidence intervals and measures of consistency.", 
+"Present results of any assessment of risk of bias across studies (see Item 15).", 
+"Give results of additional analyses, if done (e.g., sensitivity or subgroup analyses, meta-regression [see Item 16]).", 
+"Summarize the main findings including the strength of evidence for each main outcome; consider their relevance to key groups (e.g., healthcare providers, users, and policy makers).", 
+"Discuss limitations at study and outcome level (e.g., risk of bias), and at review-level (e.g., incomplete retrieval of identified research, reporting bias).", 
+"Provide a general interpretation of the results in the context of other evidence, and implications for future research. ",
+"Describe sources of funding for the systematic review and other support (e.g., supply of data); role of funders for the systematic review."
+))
+kable(table1,
+      format = "latex", 
+      booktabs = TRUE,
+      col.names = gsub("[_]", " ", names(table1)),
+      caption = "PRISMA (Moher et al., 2009) checklist.",
+      longtable = TRUE,
+      linesep = "") %>%
+      kable_styling(font_size = 10) %>% 
+      kable_styling(latex_options = c("repeat_header"),          repeat_header_continued = "") %>%
+      column_spec(1, width = "5em") %>%
+      column_spec(2, width = "5em") %>%
+      column_spec(3, width = "32em")
+```
+\doublespacing
+
+Although QUOROM and other reporting guidelines have been available for over two decades, meta-scientific evaluations of adherence to PRISMA and other guidelines have shown that reporting standards of meta-analyses are generally suboptimal and that these guidelines are rarely fully adhered to (see Table 2 for an overview of such studies). For example, the most extensive review of adherence to PRISMA [@pageEvaluationsUptakeImpact2017], which aggregated the results of 57 meta-scientific reviews (which included a total of 6487 systematic reviews) with this research question, found that 11 items were adhered to by less than 67% of the systematic reviews. These include item 5 (methods: protocol and pre-registration, <10% of systematic reviews), item 8 (methods: search, <50%), item 11 (methods: data items, <65%), item 12 (methods: risk of bias in individual studies, <67%), item 15 (methods: risk of bias across studies, <50%), item 16 (methods: additional analyses, <50%), among others. Items 6 (methods: eligibility criteria), 7 (methods: information sources), 9 (methods: study selection), and 17 (results: study selection) were adhered to in ~85%, ~85%, ~67%, and ~72% of the systematic reviews.
+
+\renewcommand{\arraystretch}{2}
+\singlespacing
+```{r table2, echo=FALSE}
+table2 <- data.frame('Review' = c("Organisational sciences: Aytug et al. (2012); Kepes et al. (2013); Schalken & Rietbergen (2017)", "Educational science: Ahn et al. (2012)", "Psychological science: Dieckmann et al. (2009); Hohn et al. (2020); Polanin et al. (2020)", "Biomedical sciences: Page & Moher (2017); Pussegoda et al. (2017)"),
+                   "Methods" = c("Reviewed the reporting quality and adherence to MARS guidelines of meta-analyses.", "Reviewed the methodological quality of meta-analyses.", "Reviewed the quality of reporting and methods used in meta-analyses, respectively.", "Summarised the findings of meta-research reviews on the adherence of systematic reviews and meta-analyses to reporting guidelines."),
+                   "Conclusions" = c("Inadequate reporting and adherence to guidelines.", '"[the meta-analyses] followed general recommendations fairly well in problem formulation and data collection, but much improvement is needed in data evaluation and analysis."', "Considerable variability in transparency and methods used. Still insufficient despite improvements over the years.", "Reporting of several PRISMA items is suboptimal. Reporting quality varied substantially across items of 4 well known sets of reporting guidelines."))
+kable(table2,
+      format = "latex", 
+      booktabs = TRUE, 
+      caption = "Studies on reporting quality and adherence to reporting standards.",
+      longtable = TRUE,
+      linesep = "") %>%
+      column_spec(1, width = "11em") %>%
+      column_spec(2, width = "13em") %>%
+      column_spec(3, width = "13em")
+```
+\doublespacing
+
+## Reproducibility
+A related issue is that the less information a meta-analyst provides about their analytical procedures, the harder it is to reproduce their meta-analysis [@aguinisDebunkingMythsUrban2011; @gotzscheDataExtractionErrors2007; @lakensExaminingReproducibilityMetaAnalyses2017; @maassenReproducibilityIndividualEffect2020]. Reproducibility (and relatedly, replicability) remain a hot topic in the behavioural and biomedical sciences, with various fuzzy or inconsistent definitions still floating around [@goodmanWhatDoesResearch2016; @plesserReproducibilityVsReplicability2018]. Both terms have been somewhat indiscriminately used to refer to the ability to obtain the same results of a given study by repeating its described procedure. One widely adopted way to distinguish them is by defining reproducibility as the ability to obtain the numerical findings of the original work using their methods (and if applicable, data pre-processing and analysis code) and the original data. (Direct) replication, on the other hand, refers to repeating the entire study using _new data_. [@bromanRecommendationsFundingAgencies2017]. 
+
+This definition, however, does not do full justice to the nuances of the concept of reproducibility. Importantly, it fails to account for the different types of reproducibility and emphasises one type in particular: _results reproducibility_ [@goodmanWhatDoesResearch2016]. Two further types can be differentiated: _methods reproducibility_, which refers to "the provision of enough detail about study procedures and data so the same procedures could, in theory or in actuality, be exactly repeated" [@goodmanWhatDoesResearch2016, p. 2], and _inferential reproducibility_, which describes the ability to draw "qualitatively similar conclusions from either an independent replication of a study or a reanalysis of the original study" [@goodmanWhatDoesResearch2016, p. 4]. For example, a study might report its methods extensively enough for it to be easily reproducible methodologically, but for which one obtains different results from the original upon a reproduction attempt. This could occur due to erroneous descriptions of methods or mistakes in the implementation of the described methods.
+
+Similarly, inferential reproducibility can depend on the magnitude of the effect reported in a given study as two interpreters of the same results might be in stark disagreement regarding the inferences which can be drawn from them. A $p$-value of 0.04, for example, might have an entirely different "significance" for a hard frequentist than for a more Bayes-inclined researcher. Another limitation to the definition above is its implication of a dichotomous nature of reproducibility. Especially with regards to methods and inferential reproducibility, it is somewhat imprudent to think of reproducibility as a binary feature since there are many factors (see methodological decisions discussed above) that might play a role in deeming a study reproducible or not [@bromanRecommendationsFundingAgencies2017]. Concretely, although it is possible to construct a framework which allows one to make an unambiguous yes or no decision when the results of a study are reproducible [e.g., see @steinerCausalReplicationFramework2019], methods reproducibility is better served by considering it as a function of how much information is provided about the methodological procedure.  
+
+Applied to meta-analysis, evaluating all types of reproducibility involves attempting to repeat 1. study search, 2. study screening and selection, 3. data extraction, 4. computing ES estimates for each primary study included (primary ES), 5. computing the main pooled ES estimate (pooled ES), and often 6. computing "corrected" pooled ESs, 7. computing multiple pooled ESs based on study characteristics and/or conducting subgroup analyses [@cooperHandbookResearchSynthesis2009]. Here, the issue of reproducibility acquires yet another layer of complexity: reproducibility with regards to elements 3 to 7 depends not only on what is reported in the meta-analysis, but also what is reported in the included primary studies. How hard it is to reproduce a primary ES, for example, is a function of the amount and precision of the information the meta-analysts reported about how they computed the ES _and_ the degree to which this information corresponds to data that is accessible in the primary study. 
+
+Several reviews testing the reproducibility of meta-analyses have been conducted [@gotzscheDataExtractionErrors2007; @lakensExaminingReproducibilityMetaAnalyses2017; @maassenReproducibilityIndividualEffect2020, see Table 3]^[Three further relevant reviews in the biomedical sciences were identified after the study was done and could not have influenced our approach: two evaluating the methodological reproducibility of meta-analyses [i.e., without attempting to actually reproduce them, @wayantEvaluationReproducibleResearch2019; @pageReproducibleResearchPractices2018] and one testing the reproducibility of entire meta-analyses [i.e., including study search and screening, @fordErrorsConductSystematic2010]. These reviews, too, reached the conclusion that meta-analysis reproducibility is mostly limited.]. They emphasised somewhat different methodological aspects (e.g., complete reporting vs. computational correctness) but were uniform in their focus on reproducing data extraction and ES computation (both primary and pooled). Their conclusions about the reproducibility of meta-analyses were, although of varyingly grave consequences, also similar: the reproducibility of meta-analyses was severely limited due to under-reporting of methods and results as well as errors.
+Despite the growing popularity of tDCS and the ensuing increase in number of meta-analyses estimating its effect on motor learning, no evaluation of the reporting quality or reproducibility of meta-analyses in this field has been conducted as far as we are aware.
+
+\singlespacing
+```{r table3, echo=FALSE, warning=FALSE}
+table3 <- data.frame(Review = c("Gøtzsche et al. (2007)", "Lakens et al. (2017)", "Maassen et al. (2020)"),
+                   Methods = c("Attempted to reproduce some of the SMDs reported in 27 biomedical meta-analyses with the objective of testing whether whether SMDs in meta-analyses are accurate. Contacted authors of meta-analyses to acquire unreported information.", "Attempted to reproduce all primary ESs as well as the pooled ES reported in 20 psychological meta-analyses. More emphasis on transparent reporting of methods and results than on correctness of analysis: classified meta-analyses that did not report primary ESs for each included study as not reproducible.", "Attempted to reproduce 500 primary ESs reported in 33 psychological meta-analyses. Only included meta-analyses that reported primary ESs for each included primary study. Distinguished between irreproducibility of a primary ES due to lack of information and irreproducibility due to incorrect calculations."),
+                   Findings = c('"In total, 17 meta-analyses (63%) had errors for at least 1 of the 2 trials examined. For the 10 meta-analyses with errors of at least 0.1, we checked the data from all the trials and conducted our own meta-analysis, using the authors’ methods. Seven of these 10 meta-analyses were erroneous (70%); 1 was subsequently retracted, and in 2 a significant difference disappeared or appeared."',
+'- "Five of the 20 randomly selected meta-analyses we attempted to reproduce could not be reproduced at all […]"
+
+- "[…] differences between the reported and reproduced ES or sample size were common"',
+"234 out of the 500 primary ESs could not be reproduced."),
+                   Reasons_for_Reproducibility = c('"Common problems were erroneous number of patients, means, SDs [standard deviations], and sign for the effect estimate."',
+'“[meta-analyses could not be reproduced] due to lack of access to raw data, no details about the ESs extracted from each study, or a lack of information about how ESs were coded',
+'54 out of the 234 could not be reproduced due to lack of necessary information (e.g., standard deviations in primary study not reported), 74 were incorrect (reproduced ES different to reported), 96 were “ambiguous”, that is, “it was unclear what procedure was followed by the meta-analysts.”'
+))
+kable(table3,
+      format = "latex", 
+      booktabs = TRUE, 
+      col.names = gsub("[_]", " ", names(table3)), 
+      caption = "Studies on reproducibility of meta-analyses.",
+      longtable = TRUE,
+      linesep = "") %>%
+      kable_styling(font_size = 10) %>% 
+      kable_styling(latex_options = c("repeat_header"),             repeat_header_continued = "") %>%
+      column_spec(1, width = "5em") %>%
+      column_spec(2, width = "12.5em") %>%
+      column_spec(3, width = "12.5em") %>%
+      column_spec(4, width = "12.5em")
+```
+\doublespacing
+
+## Publication bias control
+Beyond transparency in reporting and any effect it may have on reproducibility, a further issue that merits consideration when evaluating the methodology of meta-analyses is how the meta-analysts dealt with publication bias. Publication bias, that is, the tendency of researchers to suppress findings that do not go their way ("negative" results) and journals to selectively publish studies that report significant results, has been known to distort the scientific literature for over six decades, having been first discussed in 1959 by Sterling. It remains a major concern, especially in the "softer" social sciences [@fanelliPositiveResultsIncrease2010], where the proportion of studies reporting "positive" results is markedly higher than in the physical sciences. This remarkably elevated rate of positive results combined with the meagre average power of studies in the behavioural and neurosciences give a clear indication of the presence of publication bias [@buttonPowerFailureWhy2013; @szucsEmpiricalAssessmentPublished2017; @szucsSampleSizeEvolution2020]. 
+
+Since this apparent overrepresentation of positive results can (and often does) inflate the ES estimates of meta-analyses in a certain direction [@borensteinPublicationBias2009; @veveaPublicationBias2019; @friesePHackingPublicationBias2020], meta-analysis reporting guidelines such as PRISMA have consistently recommended reporting any attempts to account for publication bias [@moherImprovingQualityReports2000; @moherPreferredReportingItems2015; @pagePRISMA2020Statement2021]. Meta-analysts have at their disposal several measures they can take to mitigate the ubiquitous effects of publication bias. Locating as many unpublished studies as possible is likely to be the most effective method and searching repositories of potentially unpublished results are mandatory (e.g., ClinicalTrials.gov) when conducting a Cochrane systematic review (Higgins et al., 2019). Other such non-statistical approaches to minimising the effect of publication bias include searching pre-print and theses repositories, contacting authors of relevant studies to inquire about potentially file-drawered studies, not restricting the study search to articles written in English, etc.. 
+
+This endeavour proving fruitless, the meta-analyst may next (or in addition) attempt to detect the presence of publication bias and/or adjust the meta-analytic ES estimate for it statistically. Many procedures for this purpose have been developed in the last three decades displaying varying performance in general and under certain conditions [for extensive reviews/comparisons of these methods see @carterCorrectingBiasPsychology2019; @harrerDoingMetaAnalysisHandsOn2021;  @marks-anglinSmallstudyEffectsCurrent2020; @mcshaneAdjustingPublicationBias2016;  @renkewitzHowDetectPublication2019; @veveaPublicationBias2019]. In the following, we will briefly introduce the methods used either in the meta-analyses we reviewed or by us.
+
+These statistical methods can be divided into two main categories: small-study effects-based and $p$-values-based. Small-study effect methods have been available for more than two decades and are very widely used [at least among the ~50% of meta-analyses which conduct such analyses pageEvaluationsUptakeImpact2017; @veveaPublicationBias2019; @borensteinPublicationBias2009; @harrerDoingMetaAnalysisHandsOn2021]. In essence, they are based on the often observed positive correlation between the ES derived from a primary study and the ES's standard error (SE, which can be seen as the inverse of the study's total sample size, $N$). This association between $N$ and ES should not exist, theoretically, but does due to many potential reasons, one of which being publication bias. The main assumption here is that large studies mostly get published (and thus become easily findable by meta-analysts) regardless of their outcome, whereas small studies only get published when they are significant, which can (due to the small $N$) only happen when the ES is large. Some popular examples of methods in this category include: 
+
+* Trim-and-fill [@duvalTrimFillSimple2000]: a simple non-parametric method which is based on an earlier, purely graphical, procedure, the funnel plot [@lightSummingScienceReviewing1984].
+The trim-and-fill method attempts to correct for bias-induced asymmetry in the funnel plot by 1. _trimming_ an arbitrary number $k$ of small studies with large ESs, usually the $k$ rightmost studies on the funnel plot, 2. computing the pooled ES based on this new set of studies, 3. imputing for each trimmed study a _filled_ study which mirrors it on the other side of the pooled ES computed in the previous step (i.e., identical SE, filled ES $=$ trimmed ES $-$ pooled ES from step 2), 4. computing the pooled ES based on both the original studies and the trimmed ones. Example results of this procedure are depicted in Figure 2.
+
+```{r fig2, fig.cap = 'Funnel plot of simulated data illustrating asymmetry and the trim-and-fill method. The red dots represent the observed studies, the green dots the filled studies. The red and green lines are the fixed-effect pooled ES estimates of the observed studies only and the observed plus the filled studies, respectively.', out.width = "60%", fig.align="center"}
+knitr::include_graphics("figures/fig1.png")
+```
+\vspace{-6mm}
+
+* Begg and Mazumdar's [-@beggOperatingCharacteristicsRank1994] rank correlation approach is another non-parametric test of funnel plot asymmetry. It involves calculating a normalised version of Kendall's Tau between the deviations of individual ESs from their fixed-effects pooled mean and their sampling variances. This statistic (the normalised Tau) is then tested for significance in reference to the standard normal distribution under the null hypothesis that no association between the effect and variance exists [@veveaPublicationBias2019].
+
+* Egger's test [@eggerBiasMetaanalysisDetected1997] parametrically checks for funnel plot asymmetry by regressing the ratio of ES to SE on the inverse of SE: 
+
+$$
+\frac{\hat\theta_k}{\hat\sigma_{\hat\theta_k}} = \beta_0 + \beta_1 \frac{1}{\hat\sigma_{\hat\theta_k}}
+\tag{6}
+$$
+\begin{itemize} \item[] Where $\hat\theta_k$ is the ES estimate of the $k$th primary study, $\hat\sigma_{\hat\theta_k}$ is the corresponding SE, and $\beta_0$ and $\beta_1$ are the intercept and the regression coefficient, respectively. The resulting intercept indicates asymmetry if it is significantly larger than zero. This is assumed to occur when, due to bias, small studies with very large ESs are overrepresented, whereas the intercept (the expected scaled ES value as SE goes to infinity) should theoretically equal zero. \end{itemize}
+* PET-PEESE [@stanleyMetaregressionApproximationsReduce2014; @stanleyMetaRegressionMethods2008] is a more recent method that is gaining in popularity. Similarly to Egger's test, both the precision-effect test (PET) and precision-effect estimate with standard error (PEESE) regress the ES on a proxy of its precision, namely the standard error in the case of PET, 
+$$
+\hat\theta_k =  \beta_0 + \beta_1\hat\sigma_{\hat\theta_k}
+\tag{7}
+$$
+and the variance in the case of PEESE. 
+$$
+\hat\theta_k =  \beta_0 + \beta_1\hat\sigma_{\hat\theta_k}^2
+\tag{8}
+$$
+However, the theoretical idea motivating this manoeuvre is quite different: here it is assumed that, because the intercept resulting from either one of these two regression analyses represents the ES when the sample variance (or SE) equals zero, this intercept should estimate the true ES.
+
+The most prominent $p$-value based method is Rosenthal's [-@rosenthalFileDrawerProblem1979] Fail-Safe $N$ method. Its purpose is to compute the number of additional studies reporting non-significant results needed to make the $p$-value corresponding to the pooled ES no longer significant. This "traditional" procedure remains one of the most widely employed for detecting publication bias despite several explicit recommendations against its use [e.g., @borensteinPublicationBias2009; @higginsCochraneHandbookSystematic2019; @rothsteinPublicationBiasMetaanalysis2005]. Due to its many limitations of both mathematical and theoretical nature, the Fail-Safe $N$ is "[...] now generally regarded as valueless" [@veveaPublicationBias2019, p. 390].
+
+Two more recent $p$-value based methods are the so called $p$-curve [@simonsohnPCurveEffectSize2014; @simonsohnPcurveKeyFiledrawer2014; @simonsohnBetterPcurvesMaking2015] and $p$-uniform [@vanassenMetaanalysisUsingEffect2015]. $p$-uniform is based on the notion that conditional $p$-values are uniformly distributed given a fixed true ES. $p$-curve analysis derives its logic from the fact that $p$-values are uniformly distributed when the true effect equals zero (the null hypothesis is true), and right skewed when there is a true effect (the null hypothesis is false). Importantly, this also applies to the range of $p$-values commonly defined as the region of significance in a given research field, e.g., $(0 < p < 0.05)$ in the behavioural, social, and biomedical sciences. Significant $p$-values stemming from a biased pool of studies should, on the contrary, exhibit a left-skewed distribution. 
+
+This left skewness is commonly attributed to selective reporting and publishing of effects whose $p$-values are over the significance threshold regardless of their magnitude. Such bodies of research are considered to possess little or no _evidential value_ [@simonsohnPcurveKeyFiledrawer2014] as one assumes most of their significant effects to be the product of a combination of $p$-hacking^["trying multiple analyses to obtain statistical significance" [@simonsohnPcurveKeyFiledrawer2014, p. 534]] and selective reporting/publication bias. $p$-curve analysis therefore involves testing for evidential value in a set of ESs by conducting 6 statistical tests on the subset containing exclusively significant ESs: one binomial test of right skewness, two parametric tests of right skewness, one binomial tests of flatness, and two parametric tests of flatness. There are two parametric tests each as the second one is conducted on half the curve only, i.e., the interval $(0,0.025)$, in order to account for "ambitious $p$-hacking". The adjusted ES estimate produced by the analysis is, however, based on the full curve.
+
+The last class of publication bias assessment tools, selections models, cannot be exclusively assigned to either category as they are a very versatile methods which allow their user to model _any_ process assumed to generate bias in the meta-analytic estimates [@harrerDoingMetaAnalysisHandsOn2021; @veveaPublicationBias2019]. The main purpose of these models is to adjust the observed pooled ES estimate by merging two  functions: one describing the distribution of ESs in the absence of bias and the other describing the mechanism by which ESs are assumed to be selected for reporting or publication. Selection models have also been around for decades, although they have enjoyed much less use as they are considerably more complex conceptually and have been barely implemented in commercial point and click software [@veveaPublicationBias2019]. 
+
+One relatively simple variety is the three-parameter selection model [@mcshaneAdjustingPublicationBias2016], which, as the name suggests, only estimates three parameters: the true average effect $\mu$, the between-study variance $\tau^2$, and the  likelihood of obtaining non-significant ES in relation to obtaining a significant one, $\omega_2%$. What is fixed is the cut-off value $\alpha_1$, which is usually the significance threshold for a one-sided $p$-value, 0.025. The relative likelihood of obtaining a $p$-value in  this interval ($0<\alpha_1<0.025$), $\omega_1%$, is set to one. Hence, if the estimated $\omega_2$ is close to one, the adjusted pooled ES estimate will deviate little from the one based on a standard random-effects model as this would indicate a similar likelihood of obtaining a non-significant ES to obtaining a significant one. Otherwise, the significant ESs will be downweighted if $\omega_2 < 1$ and upweighted if $\omega_2 > 1$, which diminishes or augments the pooled ES estimate, respectively. 
+
+Fail-Safe $N$'s shortcomings were already mentioned. However, this should not be taken to mean that it is the only method with limitations. In fact, Fail-Safe $N$'s meaninglessness is one of the very few things the publication bias assessment literature appears to be in agreement about [@carterCorrectingBiasPsychology2019; @harrerDoingMetaAnalysisHandsOn2021]. The methods vary considerably in their assumptions and hence under what conditions they perform well. The different developers of such methods disagree _strongly_ about which conditions are realistic in which disciplines and to what degree this should inform the methods' construction. For example, Simonsohn [-@simonsohn59PETPEESENot2017], one of the developers of the $p$-curve, deems PET-PEESE to be worse than homoeopathy as it (PET-PEESE) can be actively harmful whereas homoeopathy is simply ineffective. @veveaPublicationBias2019^[Vevea being a developer of two selection model varieties [@veveaGeneralLinearModel1995; @veveaPublicationBiasResearch2005]], on the other hand, see the $p$-curve and $p$-uniform methods as reinventions of the wheel and as "[...] modified versions of simplistic early weight-function models" (p.392). @duvalNonparametricTrimFill2000^[The developers of the trim-and-fill method, which is widely regarded as being of little use for correcting bias, although potentially useful as a sensitivity analysis [@simonsohnPCurveEffectSize2014; @morenoAssessmentRegressionbasedMethods2009a; @hilgardOverstatedEvidenceShortterm2017; @vanassenMetaanalysisUsingEffect2015; @carterCorrectingBiasPsychology2019].] quote DuMouchel and Harris (1997) as writing in reference to selection models: "attempts to assess publication bias beyond simple graphs like the funnel plot seem to involve a tour de force of modeling, and as such are bound to run up against resistance from those who are not statistical modeling wonks" (p. 95). 
+
+Given this intricate state of affairs when it comes to statistical methods of publication bias assessment and correction, it should have become clear that as of yet, there is neither a single method nor a single set of methods which can be recommended as an all-purpose tool [@harrerDoingMetaAnalysisHandsOn2021; @veveaPublicationBias2019]. Simulations studies have shown that no single method outperforms all the others under all conditions [@carterCorrectingBiasPsychology2019]. Another point on which a consensus seems to prevail is that these methods should be used as sensitivity analyses, both with respect to a single method (e.g., by varying the assumptions used) and with respect to which and how many tests one uses [@carterCorrectingBiasPsychology2019; @mcshaneAdjustingPublicationBias2016; @veveaPublicationBias2019]. We are not aware of studies investigating how publication bias is accounted for in tDCS-motor learning research.
+
+## Research questions
+In sum, 4 principal premises motivated our work: 1. tDCS appears to be remarkably popular as a research tool in basic and clinical research as well as in form of commercial gadgets, 2. meta-analyses of tDCS’s effect on motor learning might be substantially impacting research and clinical practice and/or tDCS's uptake as a commercial product, 3. meta-analyses are often of suboptimal methodological quality, which compromises their credibility and informativeness, 4. no methodological evaluation of meta-analyses in tDCS-motor learning research has been conducted as of yet. Our aim was thus to provide such an evaluation while partitioning the concept of methodological quality of a meta-analysis into 3 main aspects:
+
+1. Reporting quality: did the meta-analysis adhere to the PRISMA reporting guidelines? Which items were neglected, if any?
+2. Reproducibility: how hard is it to reproduce the pooled ES estimate reported in the meta-analysis, if at all, based on the information provided therein? Which necessary pieces of information were missing, if any? If enough information was provided to reproduce the methods, does the reproduced pooled ES equal the reported pooled ES?
+3. Consideration of publication bias: Did the meta-analysis report attempts to minimise the effects of publication bias? Which statistical or non-statistical methods were used? By conducting a publication bias analysis of our own, do we arrive at the same conclusion regarding the presence of publication bias as the meta-analysts?
+
+Secondary methodological aspects we evaluated included:
+
+1. Had the meta-analysis been pre-registered? If yes, did the pre-registration protocol adhere to meta-analysis pre-registration protocol reporting guidelines PRISMA-P [@moherPreferredReportingItems2015]? Pre-registering the hypotheses and data analysis plan is essential for distinguishing between confirmatory and exploratory findings [@nosekPreregistrationRevolution2018]. In the context of reviews and meta-analyses, pre-registration protocols “[…] act as a guard against arbitrary decision making during review conduct, enable readers to assess for the presence of selective reporting against completed reviews, and, when made publicly available, reduce duplication of efforts and potentially prompt collaboration” [@shamseerPreferredReportingItems2015, p. 1].
+2. Did the meta-analysis discuss outliers? How was the presence of outliers addressed?
+Extreme ES values may affect the validity and robustness of meta-analytic results and there is a general consensus that meta-analyses should examine the presence of outliers and to what extent they influence conclusions [@viechtbauerOutlierInfluenceDiagnostics2010].
+\vspace{-6mm}
+
+# Methods
+Although our methodological approach mostly followed the plan pre-defined in the thesis proposal (accessible on the thesis' Open Science Framework [OSF] project [osf.io/uagvf/](https://osf.io/uagvf/)), there were important deviations from the plan, especially with respect to reproducibility testing. A document listing these deviations can also be found on the OSF project. For data wrangling, analysis and visualisation, we used `R` [Version 4.1.2, @R-base] and the packages `dmetar` [Version 0.0.9000, @R-dmetar], `dplyr` [Version 1.0.7, @R-dplyr], `forcats` [Version 0.5.1, @R-forcats], `ggplot2` [Version 3.3.5, @R-ggplot2], `MAd` [Version 0.8.2.1, @R-MAd], `Matrix` [Version 1.3.4, @R-Matrix], `meta` [Version 5.1.0, @R-meta], `metafor` [Version 3.0.2, @R-metafor], `purrr` [Version 0.3.4, @R-purrr], `readr` [Version 2.1.0, @R-readr], `readxl` [Version 1.3.1, @R-readxl], `stringr` [Version 1.4.0, @R-stringr], `tibble` [Version 3.1.6, @R-tibble], and `tidyr` [Version 1.1.4, @R-tidyr]. 
+
+The package `renv` [Version 0.14.0, @usheyRenvProjectEnvironments2021a] was used to ensure long-term reproducibility of our analyses. This thesis was written using RMarkdown and the associated packages `papaja` [Version 0.1.0.9997, @R-papaja], `kableExtra` [Version 1.3.4, @R-kableExtra], `knitr` [Version 1.36, @xieKnitrComprehensiveTool2014; @xieDynamicDocumentsKnitr2015; @xieKnitrGeneralpurposePackage2021]. Both writing and analysis were done using RStudio [Version 2021.9.1.372, @rstudioteamRStudioIntegratedDevelopment2021]. Data were extracted from figures using WebPlotDigitizer [[apps.automeris.io/wpd/](https://apps.automeris.io/wpd/), @rohatgiWebPlotDigitizer2021]. A video demonstration of how we extracted data from figures is available on the OSF project.
+
+## Sample of meta-analyses
+Three meta-analyses [@hungEfficacyTranscranialDirect2021; @kangTranscranialDirectCurrent2016a; @kangTranscranialDirectCurrent2018] were selected based on the following eligibility criteria: 
+
+* Meta-analysis studies which quantitatively synthesise multiple (at least 3) primary studies on the effects of tDCS on motor learning. 
+* No restriction on primary outcomes (e.g., how speed or accuracy were measured), designs of primary studies (e.g., randomised vs. crossover designs), or participants (e.g., clinical or healthy subjects) in the primary studies were imposed.
+
+Exclusion criteria: 
+
+*	Reviews of any type without a quantitative synthesis
+*	Primary studies
+*	Reviews which did not report a "main" meta-analysis, but rather multiple meta-analyses of subgroups of studies.
+
+All three meta-analyses were found via quick, non-systematic Google Scholar or Web of Science searches.
+
+## Data extraction
+### Elements extracted
+There were two types of elements extracted: 
+
+1. Primary study level variables (e.g., sample sizes, means and SDs), were extracted from both the primary studies and the meta-analyses.
+2. Meta-analysis level variables (e.g., pooled SMD, publication bias control related variables). 
+
+Both data sheets are also available on the OSF project page. They can be found by navigating to the GitHub thesis branch in the folder "data_thesis" under the names "Data_ps_raw_updated" and "Data_ma_raw", respectively. The codebook explaining column headers in the data sheets is also accessible on the OSF project (folder "Post_data_extraction").
+
+### Data extraction procedure
+Data for all non-reproducibility-related variables were extracted directly to Google Sheets (no specialised data extraction software was used). The data extraction procedure for the purpose of testing reproducibility differed substantially from the rest and is described below. 
+
+## Procedure, coding, and data analysis
+### Reporting quality
+The adherence of each meta-analysis to the PRISMA reporting guidelines [@liberatiPRISMAStatementReporting2009; @moherPreferredReportingItems2009] were checked. Concretely, for each of the 27 PRISMA items, we coded whether the meta-analysis reported the relevant information as recommended, regardless of whether the meta-analysis reported having adhered to any reporting guidelines. Besides coding whether the meta-analysis had been pre-registered, we checked whether the pre-registration protocol adhered to the PRISMA-P reporting guidelines (Moher et al., 2015; Shamseer et al., 2015) for such protocols, provided that the meta-analysis had been pre-registered and published later than 2015.
+
+### Reproducibility
+We based our treatment of meta-analysis reproducibility on the definition and principles of reproducibility put forward by the American Statistical Association (Broman et al., 2017): a meta-analysis is reproducible if its authors provided enough information to go through all the necessary procedures (search, screening, data extraction, calculation of primary ESs, calculation of the pooled ES...) to arrive at the same results. However, although we acknowledge the importance of all these steps, we, like Gøtzsche et al. (2007), Lakens et al. (2017), and Maassen et al. (2020), focused on data extraction and calculation of ES estimates. 
+
+Since reproducing the primary ESs is a necessary step towards reproducing the pooled SMD, we constructed a scheme for classifying their reproducibility status. The two variables in this scheme are A. whether the primary ES could be successfully reproduced or approximated numerically^[An ES estimate was considered successfully reproduced (or reproducible) if the reproduced ES equalled the one reported in the meta-analysis at the second decimal (e.g., 0.3324543 = 0.33) and approximated if the reproduced ES equalled the reported one at the first decimal (e.g., 0.1767492 $\approx$ 0.22).] (results reproducibility) and B. whether the procedure we followed in reproducing the ES strictly corresponded to the information given in the meta-analysis or to the procedure apparently adopted for at least two other ESs included in the meta-analysis (methods reproducibility). 
+
+Table 4 depicts the classification system in which we use SMD (for standardised mean difference) instead of ES since SMD was the only measure of ES employed in the meta-analyses we evaluated. "Procedure" here includes such analytic decisions as using $p$-values or test statistics in combination with sample sizes to estimate the SMD for a given primary study, using the raw means and SDs instead of means and SDs of changes in the outcome from baseline or vice versa, using follow-up means and SDs instead of post means and SDs, etc.. The second variable in the classification system was thus mainly adopted to capture cases where there was a discrepancy between how the meta-analysts reported having computed a primary ES and how they actually computed it.
+
+\singlespacing
+```{r table4, echo=FALSE}
+table4 <- data.frame("." = c("Strictly following information given in the meta-analysis or a standard procedure apparently adopted for at least two other successfully reproduced SMDs", "Following a procedure which either does not entirely correspond to the procedure the meta-analysts report having adopted OR does not (necessarily) produce an SMD that is comparable to what would result from following the procedure apparently adopted for at least two other successfully reproduced SMDs"),
+                   "Reproduced_SMD_equalled_or_approximated_reported_SMD" = c("1. Faithfully reproducible SMD", "3. Brute-force reproducible SMD"),
+                   "Reproduced_SMD_neither_equalled_nor_approximated_reported_SMD" = c('2. Faithfully irreproducible SMD', '4. Brute-force irreproducible SMD')
+)
+kable(table4,
+      format = "latex", 
+      booktabs = TRUE, 
+      col.names = gsub("[_]", " ", names(table4)), 
+      caption = "Reproducibility classification scheme.",
+      longtable = TRUE,
+      linesep = "") %>%
+  kable_styling(font_size = 10) %>%
+  column_spec(1, width = "18em") %>%
+  column_spec(2, width = "12em") %>%
+  column_spec(3, width = "12em") %>%
+  kable_styling(latex_options = "HOLD_position") %>% 
+  row_spec(1, hline_after = TRUE)
+```
+\doublespacing
+
+It is important to re-emphasise our distinction between "reproduced" and "reproducible". "Reproduced" simply means we calculated something and compared it with the original, whereas "reproducible" SMDs were those which were successfully reproduced computationally. Thus, "faithfully" and "brute-force" refer to whether we found data in the corresponding primary study that could be used at all and "reproducible" and "irreproducible" to whether the SMD resulting from our calculation matches (or approximates) the original. In other words, if a given SMD is methodologically irreproducible given the data reported in the primary study, then its faithful reproducibility cannot be tested and would have to be excluded when calculating the pooled SMD (see information about the different meta-analytic models we fit below). Furthermore, if we classify an SMD as "faithfully irreproducible", this does not imply that it is necessarily also brute-force irreproducible because in most cases, we did not collect further values to test brute-force reproducibility if the values we chose to test faithful reproducibility very clearly corresponded to the meta-analysts' description of their procedure. 
+
+Reproducibility testing was an iterative process which involved several rounds of data extraction. The initial round of data extraction and testing reproducibility did not yield a lot of reproducible SMDs as most primary studies did not report the values necessary to directly compute an SMD and/or its sampling variance (e.g., for a between groups Cohen's $d$ this would be the group means, SDs and sample sizes). Therefore, a less strict data extraction procedure was adopted, which involved the following steps:
+
+1. For each primary SMD, we first looked for the raw means and SDs of the outcome reported as having been used by the meta-analysts. If the primary study reported multiple sets of means and SDs which can be seen as corresponding to the outcome described in the meta-analysts (e.g., the outcome in the meta-analysis for a given primary study is "Fugl-Myer Test" but the primary study reports values for "Fugl-Myer Test - upper limbs" and "Fugl-Myer Test - full"), all sets were extracted.
+2. If no means and SDs for the relevant outcome were reported in the primary study, means and SDs were extracted from figures. If no figures were reported which contained means and SDs (or SEs or confidence intervals [CIs]), $p$ and/or $t$-values for tests on the relevant outcome were extracted, which in combination with $n$s can be converted to SMDs. 
+3. Based on all extracted values, we computed each primary SMD using the estimator (Cohen’s $d$ or Hedges’ $g$) reported as having been used by the meta-analysts. If this information was not given in the meta-analysis, we tried both formulas and for further analysis used the one which consistently approximated the reported SMDs better.
+4. If none of the values extracted reproduced a given SMD, we double checked the correctness of the data extracted and, in some cases, extracted more values from the primary study (à la brute-force) and computed the SMD based on those.
+5. We computed the sampling variances based on the SMDs and the corresponding $n$s.
+6. For each meta-analysis, we fit three meta-analytic models (MAMs): 1. Based on the faithfully reproduced SMDs. 2. Based on the faithfully reproduced SMDs plus brute-force reproduced. 3. Based on the SMDs and sampling variances reported in the meta-analysis^[Sampling variances were not reported in any of the three meta-analyses. They were calculated based on SEs extracted from funnel plots in the case of the first two meta-analyses and based on CIs for the third meta-analysis]. This was done to test for analytical reproducibility of the pooled SMD and to find out which between-study heterogeneity estimator was used.
+
+The concrete procedure for data extraction thus differed for each single primary study. A detailed description of all values we extracted and how we analysed them is provided in the data analysis notebook, also available on our OSF project page.
+
+### Publication bias control
+The non-statistical approaches to accounting for publication bias that we coded were:
+
+1. Searched clinical trial registries (e.g., ClinicalTrials.org) 
+2. Searched thesis and dissertation repositories (e.g., ProQuest)
+3. Did not restrict their search to studies written in English
+4. Contacted known researchers in the field to inquire about unpublished results
+5. Contacted authors of included studies to ask for raw data or unpublished results
+
+Besides coding whether any statistical methods were used at all and which, we tested for publication bias in each meta-analysis using 3 different methods: PET-PEESE [@stanleyMetaregressionApproximationsReduce2014; @stanleyMetaRegressionMethods2008], $p$-curve [@simonsohnPCurveEffectSize2014; @simonsohnPcurveKeyFiledrawer2014], and the three-parameter selection model (McShane et al., 2016). For each meta-analysis, we concluded that publication bias is a concern in the studies synthesised if at least two out of the three methods used yielded results indicating the presence of publication bias. Although such a "majority vote" approach is not recommended for actual publication bias assessment [@carterCorrectingBiasPsychology2019, p. 140], we adopted it so as to have an unambiguous decision rule whether our analysis agrees with that of the meta-analysts or not. For these analyses, we used the SMDs and the sample sizes reported in the meta-analyses along with the sampling variances extracted from the funnel plots in the case of the first two meta-analyses and calculated based on the CIs in the case of the third meta-analysis.
+
+### Outlier/influential study analysis
+Besides coding whether each meta-analysis checked for the existence of outliers among the included studies and how this was done, we tested this ourselves for each meta-analysis using the leave-one-out method [@tobiasAssessingInfluenceSingle1999a; @harrerDoingMetaAnalysisHandsOn2021].
+
+# Results
+## General description of the meta-analyses
+Table 5 gives an overview of the three meta-analyses we reviewed. Meta-analyses 1 and 2 aimed to estimate the effectiveness of tDCS for improving motor function in post-stroke patients, although meta-analysis 2 focused exclusively on the effects of cathodal tDCS. Meta-analysis 3 investigated effectiveness of tDCS for improving surgical performance of surgery trainees. Meta-analyses 2 and 3 reported more primary SMDs than primary studies because they drew two comparisons from some primary studies. In meta-analysis 1, the double comparisons represented cathodal vs. sham and anodal vs. sham pairs, whereas in meta-analysis 2 comparison pairs were based on two different outcomes. The first meta-analysis synthesised the results of 13 randomised controlled trials (RCTs) and 4 crossover trials, the second 6 RCTs and 9 crossover trials, the third 5 RCTs and one crossover trial. None of the three meta-analyses had been pre-registered. According to Google Scholar, the meta-analyses were cited 197, 12, and two times, respectively, as of 16.11.2021. The average total sample size $N$ of the primary studies included in the three meta-analyses, that is, mean of $n_t + n_c$, were ~ 26, ~ 24, and ~ 32, respectively. 
+
+\singlespacing
+```{r table5}
+library("readxl") 
+library("tidyverse")
+library("metafor")
+library("MAd")
+library("meta")
+library("dmetar")
+# if (!require("groundhog")){
+#   install.packages("groundhog")
+#   }
+# library(groundhog)
+# pkgs <- c("readxl", "tidyverse", "metafor", "MAd", "meta")
+# date = "2021-11-19"
+# groundhog.library(pkgs, date)
+DF <- read_excel("data_thesis/Data_ma_raw.xlsx")
+DF <- DF %>% relocate(doi, .after = k_c)
+kable(DF[,1:5],
+      format = "latex", 
+      booktabs = TRUE, 
+      col.names = c("Meta-analysis ID",
+                    "Authors",
+                    "Year",
+                    "Number of studies",
+                    "Number of SMDs"), 
+      caption = "Reviewed meta-analyses.",
+      align = "c",
+      longtable = TRUE,
+      linesep = "") %>%
+      kable_styling(font_size = 11) %>% 
+      kable_styling(latex_options = "HOLD_position")
+```
+\doublespacing
+
+## Reporting quality
+Meta-analyses 1 did not report having adhered to any reporting guidelines. Despite this, it can be seen as having reported the content of 18 out of the 27 PRISMA [@moherPreferredReportingItems2009] items. Meta-analysis 2 mentioned PRISMA and adhered to 19 out of the 27 items. Meta-analysis 3 reported having adhered to the most recent PRISMA guidelines [@pagePRISMA2020Statement2021] but we evaluated the adherence to the items of the 2009 version to ensure comparability to the other meta-analyses. Meta-analysis reported the content of 25 out of the 27 items. Table 6 summarises the three meta-analyses' adherence to the PRISMA items. 
+
+\singlespacing
+```{r table6}
+table6 <- DF %>% select(starts_with("prisma_", ignore.case = TRUE, vars = NULL)) %>% rownames_to_column() %>% 
+pivot_longer(!rowname, names_to = "col1", values_to = "col2") %>% 
+pivot_wider(names_from = "rowname", values_from = "col2") %>% rename("Original item label" = col1)
+table6[,2:4] <- lapply(table6[,2:4], gsub, pattern = '1', replacement = "Reported", fixed = TRUE)
+table6[is.na(table6)] <- "Not reported"
+table6 <- cbind('Item_number' = 1:27, table6)
+table6$`Original item label` <- c(
+"Title",
+"Structured Summary",
+"Rationale",
+"Objectives",
+"Protocol and registration",
+"Eligibility criteria",
+"Information sources",
+"Search",
+"Study selection",
+"Data collection process",
+"Data items",
+"Risk of bias in individual studies",
+"Summary measures",
+"Synthesis of results",
+"Risk of bias across studies",
+"Additional analyses",
+"Study selection",
+"Study characteristics",
+"Risk of bias within studies",
+"Results of individual studies",
+"Synthesis of results",
+"Risk of bias across studies",
+"Additional analysis",
+"Summary of evidence",
+"Limitations",
+"Condusions",
+"Funding"
+)
+kable(table6, 
+      format = "latex", 
+      booktabs = TRUE,
+      caption = "PRISMA items adherence of the three meta-analyses", 
+      longtable = TRUE,
+      linesep = "",
+      col.names = gsub("[_]", " ", names(table6))) %>%
+      kable_styling(font_size = 10) %>% 
+      kable_styling(latex_options = c("repeat_header"), repeat_header_continued = "") %>%
+      column_spec(1, width = "5em")     %>%
+      column_spec(2, width = "15em")    %>%
+      column_spec(3, width = "7em")     %>%
+      column_spec(4, width = "7em")     %>%
+      column_spec(5, width = "7em")
+```
+\vspace{-8mm}
+\begin{tablenotes}[para,flushleft]
+      \small
+      \item \textit{Note.} Meta-analysis 3 indicated that it had not been pre-registered.
+    \end{tablenotes}
+\doublespacing
+
+A more detailed description of the extent to which the three meta-analyses adhered to items 6 to 9 and 17 is provided in Table 7. All three meta-analyses adequately described their eligibility criteria but none of them described the actual process of how the criteria were enforced. All three meta-analyses did report the result of this process.
+
+\singlespacing
+```{r table7}
+table7 <- data.frame('Item_number' = c(6,7,8,9,17), 
+                     'Original_item_label' = c(
+                      "Eligibility criteria",
+                      "Information sources",
+                      "Search",
+                      "Study selection",
+                      "Study selection"
+                      ))
+
+table7$"1"[[1]] <- 'Target study characteristics as well as inclusion and exclusion criteria described but not following the PICO scheme (e.g., nothing about the outcomes). Rational unclear “Our literature search concentrated on tDCS studies that investigated long-term effects on motor functions post-stroke.”.'
+table7$"1"[[2]] <- 'Databases used for “initial” search were listed. No mention of whether authors of primary authors were contacted. Dates of coverage described.'
+table7$"1"[[3]] <- 'Although the meta-analysts listed the search keywords used, they did not a describe a full search strategy for any of the databases.'
+table7$"1"[[4]] <- 'The meta-analysts did not describe how the different authors contributed to the different stages of eligibility checking or how potential disagreements were resolved.'
+table7$"1"[[5]] <- 'The meta-analysts reported how many studies were initially included and how many were subsequently excluded (including reasons). No PRISMA flow chart was provided.'
+
+table7$"2"[[1]] <- 'Target study characteristics as well as inclusion and exclusion criteria described but not following the PICO scheme (e.g., nothing about the outcomes). Rational unclear.'
+table7$"2"[[2]] <- 'Databases used were listed. No mention of whether authors of primary authors were contacted. Dates of coverage described.'
+table7$"2"[[3]] <- 'Although the meta-analysts listed the search keywords used, they did not a describe a full search strategy for any of the databases.'
+table7$"2"[[4]] <- 'The meta-analysts did not describe how the different authors contributed to the different stages of eligibility checking or how potential disagreements were resolved.'
+table7$"2"[[5]] <- 'The meta-analysts reported how many studies were initially included and how many were subsequently excluded in a PRISMA flow chart (including reasons).'
+
+table7$"3"[[1]] <- 'Target study characteristics as well as inclusion and exclusion criteria described following the PICO scheme but no actual outcomes were mentioned (only "change in surgical performance". Rational unclear.'
+table7$"3"[[2]] <- 'Databases used were listed. The meta-analysts mention in the appendix having contacted the authors of primary studies regarding data but not how the authors resonded. Dates of coverage described.'
+table7$"3"[[3]] <- 'The meta-analysts listed both the search keywords used and the full search strategy for PubMed and other databases.'
+table7$"3"[[4]] <- 'The meta-analysts did not describe how the different authors contributed to the different stages of eligibility checking or how potential disagreements were resolved.'
+table7$"3"[[5]] <- 'The meta-analysts reported how many studies were initially included and how many were subsequently excluded in a PRISMA flow chart (including reasons).'
+
+kable(table7, 
+      format = "latex", 
+      booktabs = TRUE,
+      caption = "Detailed description of adherence to PRISMA items 6-9 and 17", 
+      longtable = TRUE,
+      linesep = "",
+      col.names = gsub("[_]", " ", names(table7))) %>%
+      kable_styling(font_size = 10) %>% 
+      kable_styling(latex_options = c("repeat_header"), repeat_header_continued = "") %>%
+      column_spec(1, width = "4em")     %>%
+      column_spec(2, width = "7em")    %>%
+      column_spec(3, width = "10em")     %>%
+      column_spec(4, width = "10em")     %>%
+      column_spec(5, width = "10em")
+```
+\doublespacing
+
+## Reproducibility
+We faced difficulties in reproducing the primary SMDs and their sampling variances for all three meta-analyses, mainly due to limited reporting of the methods sections. None of the three meta-analyses shared their data or provided data analysis code. Although meta-analysis 3 stated that data "was available upon reasonable request" (p. 11), the corresponding author of the meta-analysis did not respond to our email requesting more information/data.  The process necessitated several time-consuming rounds of data extraction and testing. Which relevant pieces of information were missing and how many primary SMDs could be successfully reproduced is reported below for each meta-analysis separately. The effect of irreproducible primary SMDs on the pooled SMDs is also reported. Since all three meta-analyses reported having fit a random-effects model using the Comprehensive Meta-Analysis software^[In the case of the first meta-analysis, we were informed by the first author of the meta-analysis that they used the Comprehensive Meta-Analysis software in response to an email asking for further information. Our email's text as well as all the reproducibility-relevant information contained in the meta-analysts' response (not the actual text of their responses) can be found in the document "Email_to_authors" on our OSF project.], which per default estimates between-study heterogeneity via the Der-Simonian-Laird method [@dersimonianMetaanalysisClinicalTrials1986], we used these settings for all our analyses, too.
+
+### Meta-analysis 1
+The authors of this meta-analysis reported the following reproducibility-relevant information/data:
+
+* Standardised ES measure is SMD
+* Group sample sizes for each primary SMD calculated. In case of crossover studies, they reported the total sample size for both the control and treatment groups.
+* All primary SMDs calculated
+* CI lower and upper limits for each SMD
+* The outcome measure for each SMD (e.g., "Total latency score in JHFT")
+* What the two compared groups represented (e.g., control group: "sham before inpatient daily rehabilitation at retention", treatment group: "ctDCS on cH before inpatient daily
+rehabilitation at retention")
+* random-effects model
+* The pooled SMD
+
+The following information was missing:
+
+* Type of SMD used (Cohen's $d$ vs. Hedge's $g$)
+* Whether a different method of standardisation was used for the crossover studies (since there are no two groups whose SDs can be pooled to standardise the mean difference)
+* Sampling variances of the SMDs (they had to be extracted from the funnel plot)
+* Whether sampling variances were calculated differently for the SMDs corresponding to crossover trials
+* Which type of values were used to compute each SMD (e.g., means and SDs vs. $p$-value and $n$s)
+* Which exact values were used and where they were found (e.g., $p$-value reported on page $x$ line $y$ or means and SDs reported in Figure $z$)
+* Rationale for choosing outcomes
+* Enough details about the outcome used so as to leave no room for ambivalence (e.g., "Upper Limb FMA" instead of just "FMA" when the primary study reported both "Upper Limb FMA" and "Total )
+* Which between-study heterogeneity estimator was used
+* Software used to run the meta-analysis
+
+Table 7 summarises the reproducibility status and classification of each primary SMD. Six SMDs were successfully reproduced following the procedure as described in the meta-analysis or the seemingly standard procedure. Five further SMDs were approximated. Following a deviating procedure, three more SMDs could be reproduced.
+
+\singlespacing
+```{r table8, warning=FALSE}
+df <- read_excel("data_thesis/Data_ps_raw_updated.xlsx", sheet = "MA1")
+
+
+# remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to onvert #to SDs
+df[] <- lapply(df, gsub, pattern = '/', replacement = '', fixed = TRUE)
+df[] <- lapply(df, gsub, pattern = '*', replacement = '', fixed = TRUE)
+
+# make values numeric
+df <- df %>% mutate_at(vars(starts_with('sd')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('mt')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('mc')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('smd')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('n')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('ci')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('p_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('t_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('F_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('se')), as.numeric)
+
+# Convert SEs to SDs
+df[3, "sdc_ps.1"] <- df[3, "sdc_ps.1"] * sqrt(10)
+df[3, "sdt_ps.1"] <- df[3, "sdt_ps.1"] * sqrt(10)
+
+# Convert upper bounds of SE bars extracted from figures to SDs
+df[1, "sdc_ps.1"] <- (df[1, "sdc_ps.1"] - df[1, "mc_ps.1"]) * sqrt(7)
+df[1, "sdt_ps.1"] <- (df[1, "sdt_ps.1"] - df[1, "mt_ps.1"]) * sqrt(7)
+
+df[2, "sdc_ps.1"] <- (df[2, "sdc_ps.1"] - df[2, "mc_ps.1"]) * sqrt(9)
+df[2, "sdt_ps.1"] <- (df[2, "sdt_ps.1"] - df[2, "mt_ps.1"]) * sqrt(9)
+
+df[8, "sdc_ps.1"] <- (df[8, "sdc_ps.1"] - df[8, "mc_ps.1"]) * sqrt(13)
+df[8, "sdt_ps.1"] <- (df[8, "sdt_ps.1"] - df[8, "mt_ps.1"]) * sqrt(14)
+
+df[9, "sdc_ps.1"] <- (df[9, "sdc_ps.1"] - df[9, "mc_ps.1"]) * sqrt(13)
+df[9, "sdt_ps.1"] <- (df[9, "sdt_ps.1"] - df[9, "mt_ps.1"]) * sqrt(13)
+
+df[10, "sdc_ps.1"] <- (df[10, "sdc_ps.1"] - df[10, "mc_ps.1"]) * sqrt(7)
+df[10, "sdt_ps.1"] <- (df[10, "sdt_ps.1"] - df[10, "mt_ps.1"]) * sqrt(6)
+
+df[11, "sdc_ps.1"] <- (df[11, "sdc_ps.1"] - df[11, "mc_ps.1"]) * sqrt(7)
+df[11, "sdt_ps.1"] <- (df[11, "sdt_ps.1"] - df[11, "mt_ps.1"]) * sqrt(5)
+
+# Convert upper bounds of SD bars extracted from figures to SDs
+df[4, "sdc_ps.1"] <- (df[4, "sdc_ps.1"] - df[4, "mc_ps.1"])
+df[4, "sdt_ps.1"] <- (df[4, "sdt_ps.1"] - df[4, "mt_ps.1"])
+
+# Convert upper bounds of CI bars extracted from figures to SDs
+df[20, "sdc_ps.1"] <- (df[20, "sdc_ps.1"] - df[20, "mc_ps.1"]) * sqrt(45) / 1.96
+df[20, "sdt_ps.1"] <- (df[20, "sdt_ps.1"] - df[20, "mt_ps.1"]) * sqrt(45) / 1.96
+
+# MA MODEL 1
+
+# SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
+df$smd_re1 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d
+
+df$smd_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[2]]
+
+# SMDs which could not be reproduced using the first set of means and SDs, in accordance with information in MA
+df$smd_re1[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[21]]
+
+# SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+#df$smd_re1[[16]] <- NA
+
+df$smd_re1[[19]] <- NA
+
+df$smd_re1[[20]] <- NA
+
+
+# SMDs which could not be reproduced using values that either do not quite correspond to he #information given in the MA or the standard method adopted for the other SMDs
+df$smd_re1[[12]] <- NA
+
+df$smd_re1[[13]] <- NA
+  
+# make numeric and positive
+df$smd_re1 <- df$smd_re1 %>% as.numeric() %>% abs()
+
+# MA MODEL 2
+# SMDs which were successfully reproduced using the first set of means and SDs, in accordance with information in MA
+df$smd_re2 <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d
+
+df$smd_re2[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[2]]
+
+# SMDs which could not be reproduced using the first set of means and SDs, in accordance with information in MA
+df$smd_re2[[21]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[21]]
+
+# SMDs which were successfully reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+df$smd_re2[[16]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = df, denom = "pooled.sd")$d[[16]]
+
+df$smd_re2[[19]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[19]]
+
+df$smd_re2[[20]] <- p_to_d2(df$p_ps[[20]], df$nt_ps[[20]], df$nc_ps[[20]])[1]
+
+# SMDs which could not be reproduced using values that either do not quite correspond to the information given in the MA or the standard method adopted for the other SMDs
+df$smd_re2[[12]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[12]]
+
+df$smd_re2[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df, denom = "pooled.sd")$d[[13]]
+  
+# make numeric and positive
+df$smd_re2 <- df$smd_re2 %>% as.numeric() %>% abs()
+
+#df <- df %>% relocate(c(id_comparison, smd_re1, smd_re2, smd_ma), .after = id_ps)
+
+df$smd_re1_round <- round(df$smd_re1, digits = 2)
+
+table8 <- df %>% select("SMD no." = id_comparison, "Reported SMD" = smd_ma, "Reproduced SMD" = smd_re1_round)
+
+table8$"Reproducibility classification" <- c(1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 4, 4, 1, 1, "2, 3", 2, 2, 3, 3, 2)
+table8$"Reproducibility classification" <- lapply(table8$"Reproducibility classification", gsub, pattern = '1', replacement = 'Faithfully reproducible', fixed = TRUE)
+table8$"Reproducibility classification" <- lapply(table8$"Reproducibility classification", gsub, pattern = '2', replacement = 'Faithfully irreproducible', fixed = TRUE)
+table8$"Reproducibility classification" <- lapply(table8$"Reproducibility classification", gsub, pattern = '3', replacement = 'Brute-force reproducible', fixed = TRUE)
+table8$"Reproducibility classification" <- lapply(table8$"Reproducibility classification", gsub, pattern = '4', replacement = 'Brute-force
+irreproducible', fixed = TRUE)
+
+table8$"Reason for irreproducibility" <- "Not applicable."
+table8$"Reason for irreproducibility"[[8]] <- "Not inferable. "
+table8$"Reason for irreproducibility"[[9]] <- "Not inferable."
+table8$"Reason for irreproducibility"[[12]] <- "Not inferable."
+table8$"Reason for irreproducibility"[[13]] <- "Not inferable."
+table8$"Reason for irreproducibility"[[16]] <- 'Outcome used does not correspond to description.'
+table8$"Reason for irreproducibility"[[17]] <- "Not inferable."
+table8$"Reason for irreproducibility"[[18]] <- "Not inferable."
+table8$"Reason for irreproducibility"[[19]] <- 'Outcome used does not correspond to description.'
+table8$"Reason for irreproducibility"[[20]] <- 'Sucessfully reproduced using a p-value derived from a medians test.'
+table8$"Reason for irreproducibility"[[21]] <- "Not inferable."
+
+kable(table8, 
+      format = "latex", 
+      booktabs = TRUE,
+      caption = "Reproducibility of primary SMDs, Meta-analysis 1",
+      align = rep("l"),
+      linesep = "", 
+      longtable = TRUE) %>%
+      kable_styling(font_size = 9.7)      %>%
+     # kable_styling(latex_options = c("repeat_header"), repeat_header_continued = "") %>%
+      column_spec(1, width = "3em")      %>%
+      column_spec(2, width = "5em")      %>%
+      column_spec(3, width = "5em")      %>%
+      column_spec(4, width = "12em")      %>%
+      column_spec(5, width = "16em")
+```
+\vspace{-8mm}
+\begin{tablenotes}[para,flushleft]
+      \small
+      \item \textit{Note.} The "Reproduced SMD" column lists the faithfully reproduced SMDs only (rounded to the second decimal).
+    \end{tablenotes}
+\doublespacing
+
+Using the SMDs and the sample sizes reported in the meta-analysis along with the sampling variances extracted from the funnel plot (MAM 3), all meta-analytic estimates were successfully reproduced. This MAM was thus treated as the "reported" variety and compared to the two other MAMs. All three MAMs are depicted as forest plots in Figure 3. The pooled SMDs from MAMs 1 and 2 deviate from the reported pooled SMD by 0.05 and 0.11 SDs, respectively. More noteworthy differences are observable in the heterogeneity estimates $I^2$ and $\tau^2$. 
+```{r fig3, fig.cap = 'Forest plots of the three meta-analytic models, meta-analysis 1.', fig.subcap=c('MAM 1, based on faithfully reproduced SMDs.', 'MAM 2, based on faithfully and brute-force reproduced SMDs.', 'MAM 3, based on reported SMDs.'), fig.align = "center", out.width = "50%", fig.ncol = 2}
+knitr::include_graphics("figures/fig3_mam1.png")
+knitr::include_graphics("figures/fig3_mam2.png")
+knitr::include_graphics("figures/fig3_mam3.png")
+```
+
+### Meta-analysis 2
+The following reproducibility-relevant information/data were reported:
+
+* Standardised ES measure is SMD
+* Group sample sizes ($n$s) for each primary SMD calculated. In case of crossover studies, they reported the total sample size ($N$) for both the control and treatment groups.
+* All primary SMDs calculated
+* CI lower and upper limits for each SMD
+* The outcome measure for each SMD
+* SMDs were based on comparisons between cathodal tDCS group and sham group at post
+* random-effects model
+* The pooled SMD
+* Software used was Comprehensive Meta-Analysis
+
+The following information was missing:
+
+* Type of SMD used
+* Whether a different method of standardisation was used for the crossover studies
+* Sampling variances of the SMDs (depicted in the funnel plot)
+* Whether sampling variances were calculated differently for the SMDs corresponding to crossover trials
+* Which type of values were used to compute each SMD
+* Which exact values were used and where they were found
+* Rationale for choosing outcomes
+* Enough details about the outcome used so as to leave no room for ambivalence 
+* Which between-study heterogeneity estimator was used
+
+Table 8 summarises the reproducibility status and classification of each primary SMD. One SMD was successfully reproduced following the procedure as described in the meta-analysis or the seemingly standard procedure. Three further SMDs were approximated. Following a deviating procedure, two more SMDs were reproducible and one approximated.
+
+\singlespacing
+```{r table9, warning=FALSE}
+df <- read_excel("data_thesis/Data_ps_raw_updated.xlsx", sheet = "MA2")
+
+
+# remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to convert to SDs
+df[] <- lapply(df, gsub, pattern = '/', replacement = '', fixed = TRUE)
+df[] <- lapply(df, gsub, pattern = '*', replacement = '', fixed = TRUE)
+
+# make values numeric
+df <- df %>% mutate_at(vars(starts_with('sd')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('mt')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('mc')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('smd')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('n')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('ci')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('p_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('t_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('F_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('se')), as.numeric)
+
+# Convert upper bounds of SE bars extracted from figures to SDs
+df[10, "sdc_ps.1"] <- (df[10, "sdc_ps.1"] - df[10, "mc_ps.1"]) * sqrt(13)
+df[10, "sdt_ps.1"] <- (df[10, "sdt_ps.1"] - df[10, "mt_ps.1"]) * sqrt(13)
+
+df[11, "sdc_ps.1"] <- (df[11, "sdc_ps.1"] - df[11, "mc_ps.1"]) * sqrt(13)
+df[11, "sdt_ps.1"] <- (df[11, "sdt_ps.1"] - df[11, "mt_ps.1"]) * sqrt(13)
+
+df[12, "sdc_ps.1"] <- (df[12, "sdc_ps.1"] - df[12, "mc_ps.1"]) * sqrt(6)
+df[12, "sdt_ps.1"] <- (df[12, "sdt_ps.1"] - df[12, "mt_ps.1"]) * sqrt(7)
+
+df[18, "sdc_ps.1"] <- (df[18, "sdc_ps.1"] - df[18, "mc_ps.1"]) * sqrt(13)
+
+
+# Convert lower bounds of SE bars extracted from figures to SDs
+df[13, "sdc_ps.1"] <- (df[13, "sdc_ps.1"] + df[13, "mc_ps.1"]) * sqrt(25)
+df[13, "sdt_ps.1"] <- (df[13, "sdt_ps.1"] + df[13, "mt_ps.1"]) * sqrt(25)
+
+df[18, "sdt_ps.1"] <- (df[18, "sdt_ps.1"] + df[18, "mt_ps.1"]) * sqrt(13)
+
+df$smd_re1[[1]] <- NA
+
+df$smd_re1[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$d
+
+df$smd_re1[[3]] <- NA
+
+df$smd_re1[[4]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[4,], denom = "pooled.sd")$d
+
+df$smd_re1[[5]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[5,], denom = "pooled.sd")$d
+
+df$smd_re1[[6]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = df[6,], denom = "pooled.sd")$d
+
+df$smd_re1[[7]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = df[7,], denom = "pooled.sd")$d
+
+df$smd_re1[[8]] <- NA
+
+df$smd_re1[[9]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[9,], denom = "pooled.sd")$d
+
+df$smd_re1[[10]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[10,], denom = "pooled.sd")$d
+
+df$smd_re1[[11]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[11,], denom = "pooled.sd")$d %>% abs()
+
+df$smd_re1[[12]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[12,], denom = "pooled.sd")$d
+
+df$smd_re1[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[13,], denom = "pooled.sd")$d
+
+df$smd_re1[[14]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[14,], denom = "pooled.sd")$d
+
+df$smd_re1[[15]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[15,], denom = "pooled.sd")$d
+
+df$smd_re1[[16]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[16,], denom = "pooled.sd")$d
+
+df$smd_re1[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[17,], denom = "pooled.sd")$d
+
+df$smd_re1[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[18,], denom = "pooled.sd")$d %>% abs()
+
+df$smd_re1[[19]] <- -p_to_d1(df$p_ps[[19]], df$n_ps[[19]], df$n_ps[[19]])[1]
+
+df$smd_re1[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[20,], denom = "pooled.sd")$d
+
+# make numeric
+df$smd_re1 <- df$smd_re1 %>% as.numeric()
+
+df$smd_re2[[1]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[1,], denom = "pooled.sd")$d
+
+df$smd_re2[[2]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$d
+
+df$smd_re2[[3]] <- df$smd_ps[[3]]
+
+df$smd_re2[[4]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[4,], denom = "pooled.sd")$d
+
+df$smd_re2[[5]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[5,], denom = "pooled.sd")$d
+
+df$smd_re2[[6]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = df[6,], denom = "pooled.sd")$d
+
+df$smd_re2[[7]] <- compute_ds(nt_ps, mt_ps.2, sdt_ps.2, nc_ps, mc_ps.2, sdc_ps.2, data = df[7,], denom = "pooled.sd")$d
+
+df$smd_re2[[8]] <- -p_to_d2(df$p_ps[[8]], df$nc_ps[[8]], df$nt_ps[[8]])[1]
+
+df$smd_re2[[9]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[9,], denom = "pooled.sd")$d
+
+df$smd_re2[[10]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[10,], denom = "pooled.sd")$d
+
+df$smd_re2[[11]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[11,], denom = "pooled.sd")$d %>% abs()
+
+df$smd_re2[[12]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[12,], denom = "pooled.sd")$d
+
+df$smd_re2[[13]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[13,], denom = "pooled.sd")$d
+
+df$smd_re2[[14]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[14,], denom = "pooled.sd")$d
+
+df$smd_re2[[15]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[15,], denom = "pooled.sd")$d
+
+df$smd_re2[[16]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[16,], denom = "pooled.sd")$d
+
+df$smd_re2[[17]] <- compute_ds(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[17,], denom = "pooled.sd")$d
+
+df$smd_re2[[18]] <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = df[18,], denom = "pooled.sd")$d %>% abs()
+
+df$smd_re2[[19]] <- -p_to_d1(df$p_ps[[19]], df$n_ps[[19]], df$n_ps[[19]])[1]
+
+df$smd_re2[[20]] <- compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = df[20,], denom = "pooled.sd")$d
+
+# make numeric
+df$smd_re2 <- df$smd_re2 %>% as.numeric()
+
+df$smd_re1_round <- round(df$smd_re1, digits = 2)
+
+table9 <- df %>% select("SMD no." = id_comparison, "Reported SMD" = smd_ma, "Reproduced SMD" = smd_re1_round)
+
+table9$"Reproducibility classification" <- c(4, 2, 3, 2, 2, 1, 2, 3, "2, 3", 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2)
+table9$"Reproducibility classification" <- lapply(table9$"Reproducibility classification", gsub, pattern = '1', replacement = 'Faithfully reproducible', fixed = TRUE)
+table9$"Reproducibility classification" <- lapply(table9$"Reproducibility classification", gsub, pattern = '2', replacement = 'Faithfully irreproducible', fixed = TRUE)
+table9$"Reproducibility classification" <- lapply(table9$"Reproducibility classification", gsub, pattern = '3', replacement = 'Brute-force reproducible', fixed = TRUE)
+table9$"Reproducibility classification" <- lapply(table9$"Reproducibility classification", gsub, pattern = '4', replacement = 'Brute-force
+irreproducible', fixed = TRUE)
+
+table9$"Reason for irreproducibility" <- "Not inferable."
+table9$"Reason for irreproducibility"[[3]] <- 'Brute-force reproducible but outcome used does not correspond to description.'
+table9$"Reason for irreproducibility"[[6]] <- 'Not applicable.'
+table9$"Reason for irreproducibility"[[8]] <- 'Successfully reproduced using a p-value derived from a Kruskal-Wallis test of differences between the three groups anodal, cathodal, and sham.'
+table9$"Reason for irreproducibility"[[9]] <- 'Successfully reproduced using a p-value derived from a Kruskal-Wallis test of differences between the three groups anodal, cathodal, and sham. Means and SDs were reported in the primary study for the outcome used.'
+table9$"Reason for irreproducibility"[[16]] <- 'Wrong sign.'
+table9$"Reason for irreproducibility"[[17]] <- 'Not applicable.'
+table9$"Reason for irreproducibility"[[18]] <- 'Not applicable.'
+table9$"Reason for irreproducibility"[[19]] <- 'Not applicable.'
+
+kable(table9, 
+      format = "latex", 
+      booktabs = TRUE,
+      caption = "Reproducibility of primary SMDs, Meta-analysis 2",
+      align = rep("l"),
+      linesep = "", 
+      longtable = TRUE) %>%
+      kable_styling(font_size = 10)      %>%
+      kable_styling(latex_options = c("repeat_header"), repeat_header_continued = "") %>%
+      column_spec(1, width = "3em")      %>%
+      column_spec(2, width = "5em")      %>%
+      column_spec(3, width = "5em")      %>%
+      column_spec(4, width = "12em")      %>%
+      column_spec(5, width = "16em")
+```
+\doublespacing
+
+All meta-analytic estimates were successfully reproduced in MAM 3, whose output was again treated as "reported". The three MAMs are depicted in Figure 4. The pooled SMDs from MAMs 1 and 2 deviate from the reported pooled SMD by 0.17 and 0.22 SDs, respectively. All three models displayed a very high degree of heterogeneity.
+\newpage
+```{r fig4, fig.cap = 'Forest plots of the three meta-analytic models, meta-analysis 2.', fig.subcap=c('MAM 1, based on faithfully reproduced SMDs.', 'MAM 2, based on faithfully and brute-force reproduced SMDs.', 'MAM 3, based on reported SMDs.'), fig.align = "center", out.width = "50%", fig.ncol = 2}
+knitr::include_graphics("figures/fig4_mam1.png")
+knitr::include_graphics("figures/fig4_mam2.png")
+knitr::include_graphics("figures/fig4_mam3.png")
+```
+
+### Meta-analysis 3
+The following reproducibility-relevant information/data were reported:
+
+* Standardised ES measure is Hedges' $g$
+* Group sample sizes ($n$s) for each primary SMD calculated. In case of crossover studies, they reported the total sample size ($N$) for both the control and treatment groups.
+* All primary SMDs calculated
+* CI lower and upper limits for each SMD
+* The outcome measure used for each primary study was what the primary study defined as the primary outcome
+* SMDs were based on comparisons between  tDCS group and sham group at post
+* The task learned by participants (which sometimes aided in finding the outcome used by the meta-analysts)
+* The pooled SMD
+* Software used was Comprehensive Meta-Analysis
+
+The following information was missing:
+
+* Whether a different method of standardisation was used for the crossover study
+* Sampling variances of the SMDs
+* Whether sampling variances were calculated differently for the SMD corresponding to the crossover trial
+* Which type of values were used to compute each SMD
+* Which exact values were used and where they were found
+* Enough details about the outcome used so as to leave no room for ambivalence 
+* Which between-study heterogeneity estimator was used
+
+Table 9 summarises the reproducibility status and classification of each primary SMD. One SMD was approximated following the procedure as described in the meta-analysis or the seemingly standard procedure. Following a deviating procedure, all 5 remaining SMDs could be reproduced or approximated.
+
+\newpage
+\singlespacing
+```{r table10, warning=FALSE}
+df <- read_excel("data_thesis/Data_ps_raw_updated.xlsx", sheet = "MA3")
+
+# make values numeric
+df <- df %>% mutate_at(vars(starts_with('sd')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('mt')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('mc')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('smd')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('n')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('ci')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('p_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('t_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('F_')), as.numeric)
+df <- df %>% mutate_at(vars(starts_with('si')), as.numeric)
+
+# 1
+df$smd_re1[[1]] <- NA
+
+# 2
+df$mt_ps.3 <- (df$mt_ps.1 + df$mt_ps.2) / 2
+df$sdt_ps.3 <- (df$sdt_ps.1 + df$sdt_ps.2) / 2
+df$smd_re1[[2]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g %>% abs()
+
+# 3
+df$smd_re1[[3]] <- NA
+
+# 4
+df$smd_re1[[4]] <- NA
+
+#5 
+df$mc_ps.3 <- (df$mc_ps.1 + df$mc_ps.2) / 2
+df$mt_ps.3 <- (df$mt_ps.1 + df$mt_ps.2) / 2
+df$sdc_ps.3 <- (df$sdc_ps.1 + df$sdc_ps.2) / 2
+df$sdt_ps.3 <- (df$sdt_ps.1 + df$sdt_ps.2) / 2
+df$smd_re1[[5]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = df[5,], denom = "pooled.sd")$g
+
+#6
+df$smd_re1[[6]] <- NA
+
+# make numeric
+df <- df %>% mutate_at(vars(starts_with('smd')), as.numeric)
+
+
+# 1
+df$d <- p_to_d2(df$p_ps[[1]], df$nt_ps[[1]], df$nc_ps[[1]])[1]
+df$vd <- p_to_d2(df$p_ps[[1]], df$nt_ps[[1]], df$nc_ps[[1]])[2]
+df$smd_re2[[1]] <- compute_gs(d, vd, nt_ps, nc_ps, df)$g[1]
+
+# 2
+df$smd_re2[[2]] <- compute_dgs(nt_ps*2, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[2,], denom = "pooled.sd")$g %>% abs()
+
+# 3
+df$d <- p_to_d2(df$p_ps[[3]], df$n_ps[[3]], df$n_ps[[3]])[1]
+df$vd <- p_to_d2(df$p_ps[[3]], df$n_ps[[3]], df$n_ps[[3]])[2]
+df$smd_re2[[3]] <- compute_gs(d, vd, n_ps, n_ps, df)$g[3]
+
+# 4
+df$smd_re2[[4]] <- compute_dgs(nt_ps, mt_ps.1, sdt_ps.1, nc_ps, mc_ps.1, sdc_ps.1, data = df[4,], denom = "pooled.sd")$g
+
+#5 
+df$mc_ps.3 <- (df$mc_ps.1 + df$mc_ps.2) / 2
+df$mt_ps.3 <- (df$mt_ps.1 + df$mt_ps.2) / 2
+df$sdc_ps.3 <- (df$sdc_ps.1 + df$sdc_ps.2) / 2
+df$sdt_ps.3 <- (df$sdt_ps.1 + df$sdt_ps.2) / 2
+df$smd_re2[[5]] <- compute_dgs(nt_ps, mt_ps.3, sdt_ps.3, nc_ps, mc_ps.3, sdc_ps.3, data = df[5,], denom = "pooled.sd")$g
+
+#6
+df$d <- p_to_d2(df$p_ps[[6]], df$nc_ps[[6]], df$nt_ps[[6]])[1]
+df$vd <- p_to_d2(df$p_ps[[6]], df$nc_ps[[6]], df$nt_ps[[6]])[2]
+df$smd_re2[[6]] <- compute_gs(d, vd, nt_ps, nc_ps, df)$g[6]
+
+# make numeric
+df <- df %>% mutate_at(vars(starts_with('smd')), as.numeric)
+
+df$smd_re1_round <- round(df$smd_re1, digits = 2)
+
+df$smd_ma <- round(df$smd_ma, digits = 2)
+
+table10 <- df %>% select("SMD no." = id_comparison, "Reported SMD" = smd_ma, "Reproduced SMD" = smd_re1_round)
+
+table10$"Reproducibility classification" <- c(3, "2, 3", 3, 3, 1, 3)
+table10$"Reproducibility classification" <- lapply(table10$"Reproducibility classification", gsub, pattern = '1', replacement = 'Faithfully reproducible', fixed = TRUE)
+table10$"Reproducibility classification" <- lapply(table10$"Reproducibility classification", gsub, pattern = '2', replacement = 'Faithfully irreproducible', fixed = TRUE)
+table10$"Reproducibility classification" <- lapply(table10$"Reproducibility classification", gsub, pattern = '3', replacement = 'Brute-force reproducible', fixed = TRUE)
+table10$"Reproducibility classification" <- lapply(table10$"Reproducibility classification", gsub, pattern = '4', replacement = 'Brute-force
+irreproducible', fixed = TRUE)
+
+table10$"Reason for irreproducibility"[[1]] <- 'Successfully reproduced using a p-value (reported in the primary study as a range "<0.01") derived from a difference in medians test.'
+table10$"Reason for irreproducibility"[[2]] <- 'Successfully reproduced using the values for one of the two outcomes indicated to have been used and doubling the tDCS group sample size.'
+table10$"Reason for irreproducibility"[[3]] <- 'Sucessfully reproduced using a p-value (reported as a range "<0.01") derived from a medians test in combination with the total sample size in place of both treatment and control group sample sizes. Notably, this was not a journal article, but a conference abstract.'
+table10$"Reason for irreproducibility"[[4]] <- 'Outcome used does not correspond to description.'
+table10$"Reason for irreproducibility"[[5]] <- "Not applicable."
+table10$"Reason for irreproducibility"[[6]] <- 'Successfully reproduced using a p-value based on difference between tDCS and sham groups in change from baseline'
+
+kable(table10, 
+      format = "latex", 
+      booktabs = TRUE,
+      caption = "Reproducibility of primary SMDs, Meta-analysis 3",
+      align = rep("l"),
+      linesep = "", 
+      longtable = TRUE) %>%
+      kable_styling(font_size = 10)      %>% 
+      column_spec(1, width = "3em")      %>%
+      column_spec(2, width = "5em")      %>%
+      column_spec(3, width = "5em")      %>%
+      column_spec(4, width = "12em")      %>%
+      column_spec(5, width = "16em")
+```
+\vspace{-9mm}
+\begin{tablenotes}[para,flushleft]
+      \small
+      \item \textit{Note.} The reported SMDs were rounded to the second decimal (3 decimals were reported).
+    \end{tablenotes}
+\doublespacing
+
+Using the SMDs and the sample sizes reported in the meta-analysis along with the sampling variances calculated based on the reported CIs, all meta-analytic estimates were successfully reproduced. The output of this MAM (3) was thus again treated as the reported variety and used for comparison. The three MAMs are depicted in Figure 4. The pooled SMD from MAM 1  deviates from the reported pooled SMD by 0.24 SDs, whereas MAM 2 is almost identical to the MAM 3. Very little heterogeneity was observed in all three cases.
+
+\newpage
+```{r fig5, fig.cap = 'Forest plots of the three meta-analytic models, meta-analysis 3.', fig.subcap=c('MAM 1, based on faithfully reproduced SMDs.', 'MAM 2, based on faithfully and brute-force reproduced SMDs.', 'MAM 3, based on reported SMDs.'), fig.align = "center", out.width = "50%", fig.ncol = 2}
+knitr::include_graphics("figures/fig5_mam1.png")
+knitr::include_graphics("figures/fig5_mam2.png")
+knitr::include_graphics("figures/fig5_mam3.png")
+```
+
+## Publication bias control
+All three meta-analyses mentioned publication bias, although only meta-analysis 3 reported having taken measures to pre-emptively mitigate its effects: the authors report having searched ClinicalTrials.gov and ProQuest (which indexes theses and dissertations), contacted the authors of the primary studies to ask for more data, and not restricted their search to articles written in English. 
+
+All three meta-analyses report having inspected a funnel plot as a means to detect publication bias. Meta-analysis 1 additionally used Fail-Safe $N$. To correct for publication bias, meta-analysis 1 used trim-and-fill; meta-analysis 2 used trim-and-fill, Egger's test, and Begg and Maxumdar's rank correlation test [@beggOperatingCharacteristicsRank1994]; meta-analysis 3 used Egger's test. The authors of meta-analysis 1 concluded that the findings of the tests they used "support a minor publication bias conclusion" [@kangTranscranialDirectCurrent2016a, p. 348]. Similarly, the conclusion in meta-analysis 2 [@kangTranscranialDirectCurrent2018, p. 5] was "minimal publication bias in the studies used". No clear conclusion was provided in meta-analysis 3.
+
+Our publication bias testing routine (along with the associated decision rule pre-defined in the data analysis plan) indicated a conclusion concurring with that of the meta-analysts in the case of the first meta-analysis and the opposite conclusions for the two other meta-analyses. For meta-analysis 1, the estimate of the true effect produced by the three-parameter selection model (0.59) was virtually identical to the original. The estimate produced by the $p$-curve was larger (0.70). Only the PET-PEESE intercepts (0.34 and 0.45, respectively) indicated that the random-effects model based estimates might be overestimating the true effect. For meta-analysis 2, the selection model (0.20), $p$-curve (0.18), and PEESE (0.21) estimates were much smaller than the original (0.62). The PET intercept (-0.12) was negative. Similar results were observed for the last meta-analysis: the estimates produced by the the $p$-curve and PET-PEESE were 0.40, -0.71, and 0.01, respectively. Only the selection model yielded an estimate which is close to the one based on the random-effects model (0.62).
+
+### Outlier/influential study analysis
+Only the third meta-analysis mentioned outliers or influential studies. They ran a leave-one-out analysis and reported that the main results did not change due to removing any one of the 6 studies they included. Our leave-one-out analysis indicated the presence of influential studies in all three meta-analyses (see Figure 6).
+
+\newpage
+```{r fig6, fig.cap = 'Baujat plots based on the leave-one-out method.', fig.subcap=c('Meta-analysis 1.', 'Meta-analysis 2.', 'Meta-analysis 3.'), fig.align = "center", out.width = "50%", fig.ncol = 2}
+knitr::include_graphics("figures/fig6.png")
+knitr::include_graphics("figures/fig7.png")
+knitr::include_graphics("figures/fig8.png")
+```
+
+# Discussion
+The aim of this work was to evaluate the methodological quality of meta-analyses in tDCS-motor learning research with respect to reporting quality, reproducibility, and publication bias control. We found the meta-analyses we studied to be lacking in all three points. Although the meta-analyses reported the content of most PRISMA [@moherPreferredReportingItems2009] items, they described their methods so sparsely as to render reproducing their procedure impossible without lengthy detective work. None of the meta-analyses had pre-registration protocols, shared their data, or provided their data-analysis code. We failed to numerically reproduce the main pooled ES estimates reported in all meta-analyses when following the procedures they described. As to publication bias control, only meta-analysis 3 reported having searched the grey literature and all three meta-analyses mostly used "traditional" publication bias detection and correction tools without discussion of their assumptions or appropriateness.
+
+To give a more comprehensive account of our results, with respect to reporting quality as measured by adherence to PRISMA items, our findings mostly follow the pattern of those reported in Table 2. Concretely, similarly to the large sample of systematic reviews investigated by @pageEvaluationsUptakeImpact2017, only meta-analysis 3 mentioned pre-registration (item 5), included a reproducible search string for a database (item 8), and conducted an assessment of bias in the individual studies (item 12). Notable differences between our sample and that of @pageEvaluationsUptakeImpact2017 is that all three meta-analyses we reviewed included a list of variables they sought data for (item 11), conducted statistical assessments of bias across studies (items 15 and 22), and reported the results of their study selection procedure (item 17), although none of them described the actual procedure (item 9). 
+
+With respect to reproducibility, the most notable finding is probably the high prevalence of discrepancies between how the meta-analysts reported having computed individual ESs and how they really did it. These discrepancies were most often in relation to the outcomes used. For example, there were multiple cases where the meta-analysis reported having used an outcome X whereas they actually used the outcome change in X from baseline. This was particularly perplexing when values for both outcomes were reported in the primary study. In general, all primary studies included in the meta-analyses reported values/tests for several outcomes and meta-analysis 3 was the only one to provide a rationale, albeit a vague one^[Namely that they used the outcome the respective primary study defined as their primary outcome.], for why they chose the outcome they did for each primary study. In most cases, it was impossible to infer how these things came about as the authors of meta-analyses 1 and 2 did not respond to our request for data or data analysis code or protocol and the authors of meta-analysis 3 did not respond to our email at all. On the whole, we had similar difficulties in our reproducibility endeavour as @lakensExaminingReproducibilityMetaAnalyses2017 and  @maassenReproducibilityIndividualEffect2020. 
+
+However, although our reproduced pooled SMDs were calculated using less primary SMDs for all three meta-analyses (due to methodologically irreproducible SMDs), none of our reproductions led to a radical change in the pooled ES estimate like in Gøtzsche et al.'s [-@gotzscheDataExtractionErrors2007] or Ford et al.'s [-@fordErrorsConductSystematic2010] reviews. Indeed, our reproduced pooled SMDs for meta-analyses 1 and 2 were both significant in the same direction as the original ones, which is one of the many commonly used criteria for a successful replication [e.g., in large scale replication projects such as the one conducted by the Open Science Collaboration, -@opensciencecollaborationEstimatingReproducibilityPsychological2015a]. This can be seen as an indication for inferential reproducibility of the meta-analyses' main conclusions, albeit a weak one, as this criterion for successful replication is often criticised and thus used in combination with other criteria [@heireneCallReplicationsAddiction2021; @opensciencecollaborationEstimatingReproducibilityPsychological2015a]. A more thorough evaluation of inferential reproducibility would require a deeper dive into both methodological (e.g., marked differences in heterogeneity parameters between the reproduced and reported models) and tDCS-related aspects.
+
+As to statistical publication bias analysis, like @banksPublicationBiasCall2012, we found the meta-analyses we reviewed to mostly use outdated publication bias control methods. However, this was not the critical issue, rather the fact the meta-analysts reported the results of their analyses very briefly and without discussion of their assumptions and their appropriateness for the data at hand. As mentioned before, publication bias testing remains an exceedingly active and contentious field of research and no consensus exists as of yet regarding which tests to use under which conditions. Any single test or constellation of tests used is thus inevitably arbitrary. One major problem all current methods suffer from is their mediocre performance when applied to a heterogeneous set of ESs. Meta-analyses 1 and 2 synthesised such sets of ESs, meta-analysis 3 only included 6 primary studies. 
+
+Furthermore, the primary studies included in the meta-analyses are likely to have been selected for publication based on different values than the ones the meta-analysts (and we) used for the publication bias tests (i.e., results of omnibus tests on several outcomes and not the pair-wise comparisons in one outcome at a single time point). This is especially relevant for the $p$-curve and the selection model we used of which an important step is dividing the set of ESs into significant and non-significant ones. Therefore, the results of both our and the meta-analysts' statistical publication bias tests can only be taken with a grain of salt. Nevertheless, the fact that all three meta-analysts used more than one tool is commendable as "[a]ny assessment of publication bias is better than none, and using all methods available is better than using only one." [@veveaPublicationBias2019, p. 392]. Their publication bias analysis would have been more informative had they used more recent methods as sensitivity analyses and provided clearer descriptions of the implications of tests' results.
+
+Attempting to reproduce the meta-analyses revealed further methodological issues which do not directly pertain to the main methodological aspects we investigated: All three meta-analyses indiscriminately combined primary studies of different designs. For example, they computed SMDs using the same formula for both controlled and crossover designs, a procedure which neglects bias resulting from estimating sampling variances for crossover studies without accounting for carry-over effects or correlations between time points  [@borensteinEffectSizesMetaanalyses2019; @madeyskiEffectSizesTheir2018; @morrisCombiningEffectSize2002]. Furthermore, the fact the meta-analysts used the total sample size of the cross-over trial to replace the treatment and control group sample sizes is likely to have inflated the power of these pair-wise comparisons (which is especially relevant for the publication bias tests). Another issue the meta-analysts neglected to account for is ES dependency [@gleserStochasticallyDependentEffect2009], which is especially critical in the case of the first two meta-analyses as they derived multiple ESs from single studies. 
+
+Moreover, although there are several ways to calculate an SMD besides the classic formula based on means and SDs [for an overview see @borensteinEffectSizesMetaanalyses2019], it can be argued that the meta-analyses we reviewed used methods that went beyond what is plausible. For example, $p$-values based on median tests were used to calculate SMDs in two of the meta-analyses. Medians can replace means when they are derived from normally distributed data. However, primary studies usually report medians and interquartile ranges instead of means and SDs _because_ their samples are not normally distributed [@higginsCochraneHandbookSystematic2019 p. 167]. This is likely to have been the case as most studies in the meta-analyses we reviewed are small. Besides, one would still need to impute the corresponding SDs. Similarly, @higginsCochraneHandbookSystematic2019 advise against combining SMDs based on post values and SMDs based on change from baseline as the SDs used to standardise them estimate different entities (p. 253).
+
+All in all, our results indicate that the methodological limitations prevalent in meta-analyses in neighbouring fields can also be observed in meta-analyses studying the effect of tDCS on motor learning. This is unfortunate since together, the three meta-analyses have been cited over 200 times and knowing the high status meta-analyses enjoy on the "hierarchy of evidence" [@evansHierarchyEvidenceFramework2003], they are likely to be influential beyond the restricted realm of scientific publishing. Naive consumers of these meta-analyses might be mislead into believing that they provide a definitive "proof" of the tDCS' effectiveness and researchers will have trouble evaluating the validity of the meta-analyses' methodology due to the rather limited reporting in key aspects (e.g., how and why studies and outcomes were selected) and the lack of pre-registered protocols, raw data or data analysis code [@pagePRISMA2020Explanation2021; @pagePRISMA2020Statement2021].
+
+Although the meta-analyses we reviewed were adequate in some aspects (e.g., description of outcome used for each primary study), there is clearly some room for improvement. As a remedy for the compromised reporting quality and reproducibility, more detailed descriptions of the methodological procedure are called for, ideally accompanied by raw data and the data analysis code [@pagePRISMA2020Explanation2021]. For publication bias assessment, a more extensive testing procedure involving sensitivity analyses both within a single method and across the different methods is necessary [following a literature search which is as comprehensive as allocated resources permit, @veveaPublicationBias2019]. When dealing with a highly heterogeneous set of ESs, @vanaertConductingMetaAnalysesBased2016 recommend splitting the set into subgroups based on theoretical and methodological considerations before carrying out the bias testing procedure. @inzlichtBiasCorrectionTechniquesAlone2015 recommend presenting a range of plausible pooled ESs based on different publication bias tests (using different assumptions).
+
+No self-evident solutions can be offered for the shortcomings related to the computational aspects of the meta-analyses. There is immense variation in reporting quality of primary studies and meta-analysts usually have no other choice but to work with the data reported in the primary study [that is, when contacting the authors of the primary study for more data is not feasible or proves to be fruitless, @higginsCochraneHandbookSystematic2019]. It is thus entirely understandable that meta-analysts must sometimes resort to alternative means of calculating certain measures. However, there _are_ limits to how divergent the alternative methods can be. For example, instead of converting a $p$-value derived from a medians test to an SMD, the meta-analysts could have estimated the means and SDs based on the medians and the corresponding ranges and or interquartile ranges calculated the SMD based on these means and SDs, which would have yielded a more comparable result to an SMD calculated on actual means and SDs [@wanEstimatingSampleMean2014; @hozoEstimatingMeanVariance2005]. 
+
+Similarly, there are methods to compute the ESs and their corresponding sampling variances when dealing with crossover studies [@madeyskiEffectSizesTheir2018]. Even estimating the ESs using the formula for within-subjects designs would have been better as these would have at least taken the correlations between time points, but not the carry-over effects, into account [@borensteinEffectSizesMetaanalyses2019]. 
+Instead of combining ESs derived from primary studies with different designs to compute a single pooled ESs, a practice strongly discouraged by meta-analysis pioneers like @borensteinEffectSizesMetaanalyses2019 as such primary ESs cannot be seen as estimating the same parameter, meta-analysts can conduct multiple meta-analyses by grouping similar studies together. In some cases, meta-analysts must accept the loss of power by excluding primary studies, which are markedly different from the other studies in key aspects or which display a high or unclear risk of bias [@higginsCochraneHandbookSystematic2019, p. 192]. Finally, it is paramount that the meta-analysts report how they computed each ES regardless of how they dealt with limited reporting in the primary study.
+
+The fact that our publication bias testing routine is unlikely to have yielded more meaningful results than that of the meta-analysts is not the only limitation to our work. Others include:
+
+* We have defined our exclusion criteria based on mostly practical considerations. Their high restrictiveness has probably led to a sample that is not representative of the field at large. Our non-systematic literature search and study selection strategy can only have exasperated this issue. It also goes without saying that three meta-analyses is too small a sample to draw far-reaching conclusions.
+* Although we had a mechanism in place to minimise the probability of data extraction errors on our part when evaluating reproducibility, it cannot be excluded that potential errors when extracting data for other variables (e.g., for PRISMA adherence) influenced our results as data extraction and coding was not checked by others [@buscemiSingleDataExtraction2006; @jonesHighPrevalenceLow2005].
+* We focused on reproducibility of data extraction and calculation of ESs because previous reviews demonstrated a high prevalence of mistakes in these steps. However, it cannot be excluded that other aspects we neglected such as study search and selection have a larger impact.
+* Throughout the process of reproduction, we had to make subjective decisions that cannot be guaranteed to have been faultless. Notably, it was not always trivial to judge whether our procedure for reproducing a certain primary SMD strictly followed the procedure purported to have been used by the meta-analysts. For example, we managed to approximate SMD no. 5 in meta-analysis 3 by averaging the means and SDs of two outcomes and computing an SMDs based on the average value. We subsequently classified this SMD as faithfully reproducible because the meta-analysts reported having used what each primary study defined as its primary outcome and this specific primary study defined both these outcomes as its primary outcomes. However, since the meta-analysts did not provide any information on how they computed the SMD or any indication that they took an average, it is almost certain that they calculated the SMD differently because otherwise we would have successfully reproduced the SMD to the third decimal like we did the other brute-force reproducible ones. Other such examples are documented in the data analysis notebook.
+* Due to our rather limited expertise with regards to the technical and practical aspects of tDCS research, it cannot be excluded that we have overlooked or misunderstood relevant tDCS-related methodological facets.
+
+Future similar works may thus aim for a more fine-grained and nuanced evaluation of reporting quality which goes beyond the minimal requirements set by reporting guidelines, a more comprehensive reproducibility testing which is not restricted to data extraction and ES calculation as well as a thorough investigation of robustness towards changes in analytical decisions (especially data selection and outcomes used), and a more principled approach towards evaluating publication bias assessment.
+
+Despite these limitations, we hope to have provided consumers of tDCS-motor learning research with an incentive to evaluate meta-analyses in this field more critically when making decisions about the use of tDCS and meta-analysts with aspects to consider when conducting meta-analyses in the future. By no means do we want to imply that the solutions presented above are easy. Despite the abundance and comprehensiveness of guidelines such as PRISMA and tutorials on how to conduct a transparent and reproducible meta-analysis [e.g., @moreauConductingMetaanalysisAge2020; @quintanaPreregistrationPublicationNontechnical2015], it is undeniable that meticulous adherence to guidelines and making one's meta-analysis reproducible require a substantial amount of time and effort. Likewise, it cannot be expected from substantive researchers to be adept at every methodological/statistical aspect relevant to conducting a meta-analysis. A discussion of potential measures to improve the situation on a higher, more structural level, such as ways to incentivise transparency-related practices [@bakkerRulesGameCalled2012; @higginsonCurrentIncentivesScientists2016; @nosekPromotingOpenResearch2015] or journals employing specialised statistical review [@hardwickeShouldPsychologyJournals2019], is beyond the scope of this work. 
+
+Nevertheless, given the epistemic weight meta-analyses usually carry, problems associated with how they are conducted and reported cannot be shrugged off. Efforts to improve them should be promoted. Besides the guidelines which are constantly being updated and advancements in statistical procedures for controlling publication bias, many methodological procedures have been developed in the recent years to systematically account for the impact of different analytical decisions [e.g., @voracekWhichDataMetaanalyze2019; @taylorTriangulatingMetaanalysesExample2016]. More emphasis is also being placed on flagship open science practices such as pre-registration and data and code sharing [@pagePRISMA2020Explanation2021; @maassenReproducibilityIndividualEffect2020]. 
+
+Finally, since meta-analyses can only be as good as the primary literatures they synthesise, meta-analysts cannot be expected to carry all the responsibility for improvement [@aguinisDebunkingMythsUrban2011; @borensteinCriticismsMetaanalysis2009. In the quest for a reliable cumulative science, efforts to counteract the methodological issues found in the tDCS primary literature [e.g., heterogeneity in employed tDCS parameters, compromised reproducibility due to incomplete reporting @buchEffectsTDCSMotor2017] must also be supported. Such efforts include mathematical models which can be used to systematically determine the optimal tDCS parameters to use [@lipkaResolvingHeterogeneityTranscranial2021] and checklists outlining all aspects which should be disclosed when reporting the results of a tDCS study [@buchEffectsTDCSMotor2017].
+
+\newpage
+
+# References
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+
+
+<div id="refs" custom-style="Bibliography"></div>
+\endgroup

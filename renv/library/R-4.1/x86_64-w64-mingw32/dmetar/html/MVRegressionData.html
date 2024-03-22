@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Toy Dataset for Multivariate Meta-Regression</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for MVRegressionData {dmetar}"><tr><td>MVRegressionData {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Toy Dataset for Multivariate Meta-Regression</h2>
+
+<h3>Description</h3>
+
+<p>This is a toy dataset containing simulated effect size data of a fictitious
+meta-analysis examining the effect of various putative effect moderators. Effect size
+data is provided as the standardized mean difference (SMD) between the intervention
+and control group and its corresponding standard error for each study at post.
+Columns are named in after arguments of the <code><a href="../../metafor/help/rma.uni.html">rma.uni</a></code>
+function to facilitate out-of-the-box usage.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data("MVRegressionData")
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A data.frame with 6 columns.
+</p>
+
+<dl>
+<dt>yi</dt><dd><p>Numeric. The calculated standardized mean difference at post-test between the intervention and control group</p>
+</dd>
+<dt>sei</dt><dd><p>Numeric. The standard error of the standardized mean difference</p>
+</dd>
+<dt>reputation</dt><dd><p>Numeric. The mean-centered score signifying the
+&quot;reputation&quot; (for example, impact factor) of the journal the respective study was published in.</p>
+</dd>
+<dt>quality</dt><dd><p>Numeric. The methodological quality of the study, rated from 0-10 (low to high).</p>
+</dd>
+<dt>pubyear</dt><dd><p>Numeric. The z-standardized year of publication.</p>
+</dd>
+<dt>continent</dt><dd><p>Numeric. The continent the study was conducted in.</p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer, David Daniel Ebert
+</p>
+
+
+<h3>Source</h3>
+
+<p>Simulated data.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

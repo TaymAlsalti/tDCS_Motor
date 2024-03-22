@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: S4 Class kRp.hyph.pat</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for kRp.hyph.pat,-class {sylly}"><tr><td>kRp.hyph.pat,-class {sylly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>S4 Class kRp.hyph.pat</h2>
+
+<h3>Description</h3>
+
+<p>This class is used for objects that are returned by <code><a href="../help/read.hyph.pat.html">read.hyph.pat</a></code>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>Since this package has been a part of the <code>koRpus</code> package before,
+you might run into old pattern
+files. You will know that this is the case if using them automatically tries to load the <code>koRpus</code> package.
+In these cases,
+you might want to strip the defunct reference to <code>koRpus</code> by calling the private
+function <code>sylly:::koRpus2sylly</code> which take the path to the old file as its first argument. Be aware that
+calling this function will overwrite the old file in-place,
+so you should make a backup first!
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>lang</code></dt><dd><p>A character string,
+naming the language that is assumed for the patterns in this object</p>
+</dd>
+<dt><code>pattern</code></dt><dd><p>A matrix with three colums:
+</p>
+
+<dl>
+<dt><code>orig</code>:</dt><dd><p>The unchanged patgen patterns.</p>
+</dd>
+<dt><code>char</code>:</dt><dd><p>Only the characters used for matching.</p>
+</dd>
+<dt><code>nums</code>:</dt><dd><p>The hyphenation number code for the pattern.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+<h3>Contructor function</h3>
+
+<p>Should you need to manually generate objects of this class (which should rarely be the case),
+the contructor function 
+<code>kRp_hyph_pat(...)</code> can be used instead of
+<code>new("kRp.hyph.pat", ...)</code>. Whenever possible, stick to
+<code><a href="../help/read.hyph.pat.html">read.hyph.pat</a></code>.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>sylly</em> version 0.1-6 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Create variance table from various ANOVA objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for arrange_anova {papaja}"><tr><td>arrange_anova {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Create variance table from various ANOVA objects</h2>
+
+<h3>Description</h3>
+
+<p>These methods take objects from various R functions that calculate ANOVA to create
+a <code>data.frame</code> containing a variance table. <em>This function is not exported.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+arrange_anova(x, ...)
+
+## S3 method for class 'anova'
+arrange_anova(x)
+
+## S3 method for class 'summary.aov'
+arrange_anova(x)
+
+## S3 method for class 'summary.Anova.mlm'
+arrange_anova(x, correction = "GG")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Output object. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further arguments to pass to methods.</p>
+</td></tr>
+<tr valign="top"><td><code>correction</code></td>
+<td>
+<p>Character. For <code>summary.Anova.mlm</code> objects, specifies the type of
+sphericity correction to be used. Either <code>GG</code> for Greenhouse-Geisser or <code>HF</code>
+for Huyn-Feldt methods or <code>none</code> is also possible. Ignored for other objects.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The returned <code>data.frame</code> can be passed to functions such as <code><a href="../../papaja/help/print_anova.html">print_anova</a></code>.
+</p>
+<p>Currently, methods for the following objects are available:
+</p>
+
+<ul>
+<li><p><code>summary.aov</code>
+</p>
+</li>
+<li><p><code>summary.aovlist</code>
+</p>
+</li>
+<li><p><code>Anova.mlm</code>
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p><code>data.frame</code> of class <code>apa_variance_table</code> or <code>apa_model_comp</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../papaja/help/print_anova.html">print_anova</a></code>, <code><a href="../../papaja/help/print_model_comp.html">print_model_comp</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ ## Not run: 
+   ## From Venables and Ripley (2002) p. 165.
+   npk_aov &lt;- aov(yield ~ block + N * P * K, npk)
+   arrange_anova(summary(npk_aov))
+ 
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

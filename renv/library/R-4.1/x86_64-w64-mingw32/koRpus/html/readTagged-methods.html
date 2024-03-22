@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Import already tagged texts</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for readTagged {koRpus}"><tr><td>readTagged {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Import already tagged texts</h2>
+
+<h3>Description</h3>
+
+<p>This method can be used on text files or matrices containing already tagged text material,
+e.g. the results of
+TreeTagger[1].
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+readTagged(file, ...)
+
+## S4 method for signature 'matrix'
+readTagged(
+  file,
+  lang = "kRp.env",
+  tagger = "TreeTagger",
+  apply.sentc.end = TRUE,
+  sentc.end = c(".", "!", "?", ";", ":"),
+  stopwords = NULL,
+  stemmer = NULL,
+  rm.sgml = TRUE,
+  doc_id = NA,
+  add.desc = "kRp.env",
+  mtx_cols = c(token = "token", tag = "tag", lemma = "lemma")
+)
+
+## S4 method for signature 'data.frame'
+readTagged(
+  file,
+  lang = "kRp.env",
+  tagger = "TreeTagger",
+  apply.sentc.end = TRUE,
+  sentc.end = c(".", "!", "?", ";", ":"),
+  stopwords = NULL,
+  stemmer = NULL,
+  rm.sgml = TRUE,
+  doc_id = NA,
+  add.desc = "kRp.env",
+  mtx_cols = c(token = "token", tag = "tag", lemma = "lemma")
+)
+
+## S4 method for signature 'kRp.connection'
+readTagged(
+  file,
+  lang = "kRp.env",
+  encoding = getOption("encoding"),
+  tagger = "TreeTagger",
+  apply.sentc.end = TRUE,
+  sentc.end = c(".", "!", "?", ";", ":"),
+  stopwords = NULL,
+  stemmer = NULL,
+  rm.sgml = TRUE,
+  doc_id = NA,
+  add.desc = "kRp.env"
+)
+
+## S4 method for signature 'character'
+readTagged(
+  file,
+  lang = "kRp.env",
+  encoding = getOption("encoding"),
+  tagger = "TreeTagger",
+  apply.sentc.end = TRUE,
+  sentc.end = c(".", "!", "?", ";", ":"),
+  stopwords = NULL,
+  stemmer = NULL,
+  rm.sgml = TRUE,
+  doc_id = NA,
+  add.desc = "kRp.env"
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>Either a matrix, a connection or a character vector. If the latter,
+that must be a valid path to a file,
+containing the previously analyzed text. If it is a matrix,
+it must contain three columns named &quot;token&quot;, &quot;tag&quot;, and &quot;lemma&quot;,
+and except for these three columns all others are ignored.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional options, currently unused.</p>
+</td></tr>
+<tr valign="top"><td><code>lang</code></td>
+<td>
+<p>A character string naming the language of the analyzed corpus. See <code><a href="../help/kRp.POS.tags.html">kRp.POS.tags</a></code>
+for all supported languages.
+If set to <code>"kRp.env"</code> this is got from <code><a href="../help/get.kRp.env.html">get.kRp.env</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tagger</code></td>
+<td>
+<p>The software which was used to tokenize and tag the text. Currently,
+&quot;TreeTagger&quot; and &quot;manual&quot; are the only
+supported values. If &quot;manual&quot;,
+you must also adjust the values of <code>mtx_cols</code> to define the columns to be imported.</p>
+</td></tr>
+<tr valign="top"><td><code>apply.sentc.end</code></td>
+<td>
+<p>Logical,
+whethter the tokens defined in <code>sentc.end</code> should be searched and set to a sentence ending tag.
+You could call this a compatibility mode to make sure you get the results you would get if you called
+<code><a href="../help/treetag.html">treetag</a></code> on the original file.
+If set to <code>FALSE</code>, the tags will be imported as they are.</p>
+</td></tr>
+<tr valign="top"><td><code>sentc.end</code></td>
+<td>
+<p>A character vector with tokens indicating a sentence ending. This adds to given results,
+it doesn't replace them.</p>
+</td></tr>
+<tr valign="top"><td><code>stopwords</code></td>
+<td>
+<p>A character vector to be used for stopword detection. Comparison is done in lower case. You can also simply set 
+<code>stopwords=tm::stopwords("en")</code> to use the english stopwords provided by the <code>tm</code> package.</p>
+</td></tr>
+<tr valign="top"><td><code>stemmer</code></td>
+<td>
+<p>A function or method to perform stemming. For instance,
+you can set <code>stemmer=Snowball::SnowballStemmer</code> if you
+have the <code>Snowball</code> package installed (or <code>SnowballC::wordStem</code>). As of now,
+you cannot provide further arguments to
+this function.</p>
+</td></tr>
+<tr valign="top"><td><code>rm.sgml</code></td>
+<td>
+<p>Logical, whether SGML tags should be ignored and removed from output.</p>
+</td></tr>
+<tr valign="top"><td><code>doc_id</code></td>
+<td>
+<p>Character string,
+optional identifier of the particular document. Will be added to the <code>desc</code> slot.</p>
+</td></tr>
+<tr valign="top"><td><code>add.desc</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>,
+the tag description (column <code>"desc"</code> of the data.frame) will be added directly
+to the resulting object. If set to <code>"kRp.env"</code> this is fetched from <code><a href="../help/get.kRp.env.html">get.kRp.env</a></code>. Only needed if <code>tag=TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>mtx_cols</code></td>
+<td>
+<p>Character vector with exactly three elements named &quot;token&quot;, &quot;tag&quot;,
+and &quot;lemma&quot;,
+the values of which must match the respective column names of the matrix provided via <code>file</code>.
+It is possible to set <code>lemma=NA</code> if the tagged results only provide token and tag.
+This argument is ignored unless <code>tagger="manual"</code> and data is provided as either a matrix or data frame.</p>
+</td></tr>
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>A character string defining the character encoding of the input file,
+like  <code>"Latin1"</code> or <code>"UTF-8"</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Note that the value of <code>lang</code> must match a valid language supported by <code><a href="../help/kRp.POS.tags.html">kRp.POS.tags</a></code>.
+It will also get stored in the resulting object and might be used by other functions at a later point.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>. If <code>debug=TRUE</code>,
+prints internal variable settings and
+attempts to return the original output if the TreeTagger system call in a matrix.
+</p>
+
+
+<h3>References</h3>
+
+<p>Schmid, H. (1994). Probabilistic part-of-speec tagging using decision trees. In
+<em>International Conference on New Methods in Language Processing</em>, Manchester, UK,
+44&ndash;49.
+</p>
+<p>[1] <a href="https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/">https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/treetag.html">treetag</a></code>,
+<code><a href="../help/freq.analysis.html">freq.analysis</a></code>,
+<code><a href="../help/get.kRp.env.html">get.kRp.env</a></code>,
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+  # call method on a connection
+  text_con &lt;- file("~/my.data/tagged_speech.txt", "r")
+  tagged_results &lt;- readTagged(text_con, lang="en")
+  close(text_con)
+
+  # call it on the file directly
+  tagged_results &lt;- readTagged("~/my.data/tagged_speech.txt", lang="en")
+  
+  # import the results of RDRPOSTagger, using the "manual" tagger feature
+  sample_text &lt;- c("Dies ist ein kurzes Beispiel. Es ergibt wenig Sinn.")
+  tagger &lt;- RDRPOSTagger::rdr_model(language="German", annotation="POS")
+  tagged_rdr &lt;- RDRPOSTagger::rdr_pos(tagger, x=sample_text)
+  tagged_results &lt;- readTagged(
+    tagged_rdr,
+    lang="de",
+    tagger="manual",
+    mtx_cols=c(token="token", tag="pos", lemma=NA)
+  )
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

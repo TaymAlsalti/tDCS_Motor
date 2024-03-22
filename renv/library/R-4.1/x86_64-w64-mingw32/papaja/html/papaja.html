@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: APA manuscripts from R Markdown</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for papaja {papaja}"><tr><td>papaja {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>APA manuscripts from R Markdown</h2>
+
+<h3>Description</h3>
+
+<p><span class="pkg">papaja</span> is a R-package in the making including a <a href="http://rmarkdown.rstudio.com/">R Markdown</a> template
+that can be used with (or without) <a href="http://www.rstudio.com/">RStudio</a> to produce documents, which conform to
+the American Psychological Association (APA, 2010) manuscript guidelines (6th Edition). The package uses the LaTeX
+document class <a href="http://www.ctan.org/pkg/apa6">apa6</a> and a .docx-reference file, so you can create PDF documents,
+or Word documents if you have to. Moreover, 'papaja' supplies R-functions (e.g., <code><a href="../../papaja/help/apa_print.html">apa_print</a></code>) that
+facilitate reporting results of your analyses in accordance with APA guidelines.
+</p>
+
+
+<h3>Details</h3>
+
+<p>Note, at this point 'papaja' is in active development and should be considered alpha. If you experience any problems,
+please <a href="https://github.com/crsh/papaja/issues">open an issue</a> with a reproducible example of the encountered problem.
+</p>
+
+
+<h3>Functions</h3>
+
+<p>To get a list of all functions try <code>ls("package:papaja")</code> or click the Index link at the bottom of this document.
+</p>
+
+
+<h3>System requirements</h3>
+
+<p>To use <span class="pkg">papaja</span> you need to make sure the following software is installed on your computer:
+</p>
+
+<ul>
+<li><p><a href="http://www.rstudio.com/">RStudio</a> (&gt;= 0.98.932) or if you don't use RStudio
+, you need to install <a href="http://johnmacfarlane.net/pandoc/">pandoc</a> using the
+<a href="https://github.com/rstudio/rmarkdown/blob/master/PANDOC.md">instructions for your operating system</a>
+</p>
+</li>
+<li><p>A <a href="http://de.wikipedia.org/wiki/TeX">TeX</a> distribution (2013 or later; e.g., <a href="http://miktex.org/">MikTeX</a>
+for Windows, <a href="https://tug.org/mactex/">MacTeX</a> for Mac, obviously, or <a href="http://www.tug.org/texlive/">TeX Live</a>
+for Linux)
+</p>
+</li></ul>
+
+<p><em>Windows</em> users should use MikTeX if possible. Currently, pandoc and the Windows version of Tex Live
+<a href="https://github.com/rstudio/rmarkdown/issues/6">don't seem to like each other</a>. Make sure you install the
+<em>complete</em>&mdash;not the basic&mdash;version.
+</p>
+<p><em>Ubuntu 14.04</em> users need a few additional TeX packages for the document class
+<a href="http://www.ctan.org/pkg/apa6">apa6</a> to work:
+</p>
+<p><code>sudo apt-get install texlive texlive-publishers texlive-fonts-extra texlive-latex-extra texlive-humanities lmodern</code>
+</p>
+
+
+<h3>Authors</h3>
+
+<p>Frederik Aust (frederik.aust at uni-koeln.de).
+Marius Barth (marius.barth at uni-koeln.de).
+</p>
+
+
+<h3>Maintainer</h3>
+
+<p>Frederik Aust (frederik.aust at uni-koeln.de).
+</p>
+
+
+<h3>Contributors</h3>
+
+
+<ul>
+<li><p>Birk Diedenhofen
+</p>
+</li>
+<li><p>Christoph Stahl
+</p>
+</li></ul>
+
+
+
+<h3>References</h3>
+
+<p>American Psychological Association. (2010). Publication Manual of the American Psychological Association (6th edition).
+Washington, DC: American Psychological Association.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

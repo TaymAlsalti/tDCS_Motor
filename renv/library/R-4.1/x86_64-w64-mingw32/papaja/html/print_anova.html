@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Format statistics from ANOVA (APA 6th edition)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for print_anova {papaja}"><tr><td>print_anova {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Format statistics from ANOVA (APA 6th edition)</h2>
+
+<h3>Description</h3>
+
+<p>This function is the internal workhorse of the <code>apa_print</code>-family for ANOVA. It takes a <code>data.frame</code>
+of class <code>apa_variance_table</code> and produces strings to report the results in accordance with APA manuscript
+guidelines. It is not ment to be called by the user. <em>This function is not exported.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+print_anova(
+  x,
+  intercept = FALSE,
+  observed = NULL,
+  es = "ges",
+  mse = getOption("papaja.mse"),
+  in_paren = FALSE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Data.frame. A <code>data.frame</code> of class <code>apa_variance_table</code> as returned by <code><a href="../../papaja/help/arrange_anova.html">arrange_anova</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>intercept</code></td>
+<td>
+<p>Logical. Indicates if intercept test should be included in output.</p>
+</td></tr>
+<tr valign="top"><td><code>observed</code></td>
+<td>
+<p>Character. The names of the factors that are observed, (i.e., not manipulated). Necessary for calculation of generalized eta-squared; otherwise ignored.</p>
+</td></tr>
+<tr valign="top"><td><code>es</code></td>
+<td>
+<p>Character. The effect-size measure to be calculated; can be either <code>ges</code> for generalized eta-squared, <code>pes</code> for partial eta-squared or <code>es</code> for eta-squared.
+Note that eta-squared is calculated correctly if and only if the design is balanced.</p>
+</td></tr>
+<tr valign="top"><td><code>mse</code></td>
+<td>
+<p>Logical. Indicates if mean squared errors should be included in output. Default is <code>TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>in_paren</code></td>
+<td>
+<p>Logical. Indicates if the formated string will be reported inside parentheses. See details.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A named list containing the following components:
+</p>
+
+<dl>
+<dt><code>statistic</code></dt><dd><p>A named list of character strings giving the test statistic, parameters, and <em>p</em>
+value for each factor.</p>
+</dd>
+<dt><code>estimate</code></dt><dd><p>A named list of character strings giving the effect size estimates for each factor.</p>
+</dd> </dl>
+
+<dl>
+<dt><code>full_result</code></dt><dd><p>A named list of character strings comprised of <code>estimate</code> and <code>statistic</code> for each factor.</p>
+</dd>
+<dt><code>table</code></dt><dd><p>A data.frame containing the complete ANOVA table, which can be passed to <code><a href="../../papaja/help/apa_table.html">apa_table</a></code>.</p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../papaja/help/arrange_anova.html">arrange_anova</a></code>, <code><a href="../../papaja/help/apa_print.aov.html">apa_print.aov</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ ## Not run: 
+   ## From Venables and Ripley (2002) p. 165.
+   npk_aov &lt;- aov(yield ~ block + N * P * K, npk)
+   anova_table &lt;- arrange_anova(summary(npk_aov))
+   print_anova(anova_table)
+ 
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

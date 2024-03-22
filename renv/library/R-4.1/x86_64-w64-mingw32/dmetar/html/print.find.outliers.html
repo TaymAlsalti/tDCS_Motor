@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Print, summary and plot methods for objects created using...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for print.find.outliers {dmetar}"><tr><td>print.find.outliers {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Print, summary and plot methods for objects created using 'dmetar' functions</h2>
+
+<h3>Description</h3>
+
+<p>Print, summary and plot S3 methods for objects of class <code>direct.evidence.plot</code>, <code>find.outliers</code>,
+<code>influence.analysis</code>, <code>multimodel.inference</code>, <code>pcurve</code>, <code>power.analysis</code>,
+<code>subgroup.analysis.mixed.effects</code>, and <code>sucra</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'find.outliers'
+print(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>An object of class <code>find.outliers</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>A total of four package-specific S3 methods are provided in <code>dmetar</code>: S3 methods for <code>print</code>,
+<code>summary</code>, <code>plot</code> and <code>forest</code>. Outputs from <code>print</code> and <code>summary</code> are always identical.
+When both <code>plot</code> and <code>forest</code> are available for a class, outputs of both functions are identical (i.e., a forest
+plot is returned). The <code>forest</code>/<code>plot</code> function allows additional arguments of the <code>meta.forest</code> or
+<code>metafor</code>'s code<a href="../../metafor/help/forest.html">forest</a> function (depending on the class of the meta-analysis object on which prior
+calculations are based on). These can be used for further styling of the forest plot.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer &amp; David Daniel Ebert
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Produce jumbled words</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for jumbleWords {koRpus}"><tr><td>jumbleWords {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Produce jumbled words</h2>
+
+<h3>Description</h3>
+
+<p>This method either takes a character vector or objects inheriting class <code>kRp.text</code>
+(i.e., text tokenized by <code>koRpus</code>),
+and jumbles the words. This usually means that the
+first and last letter of each word is left intact,
+while all characters inbetween are being
+randomized.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+jumbleWords(words, ...)
+
+## S4 method for signature 'kRp.text'
+jumbleWords(words, min.length = 3, intact = c(start = 1, end = 1))
+
+## S4 method for signature 'character'
+jumbleWords(words, min.length = 3, intact = c(start = 1, end = 1))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>words</code></td>
+<td>
+<p>Either a character vector or an object inheriting from class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional options, currently unused.</p>
+</td></tr>
+<tr valign="top"><td><code>min.length</code></td>
+<td>
+<p>An integer value,
+defining the minimum word length. Words with less characters
+will not be changed. Grapheme clusters are counted as one.</p>
+</td></tr>
+<tr valign="top"><td><code>intact</code></td>
+<td>
+<p>A named vector with the two integer values named <code>start</code> and <code>stop</code>.
+These define how many characters of each relevant words will be left unchanged at its start
+and its end, respectively.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>Depending on the class of <code>words</code>, either a character vector or an object of class
+<code><a href="../help/kRp.text-class.html">kRp.text</a></code> with the added feature <code>diff</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+  tokenized.obj &lt;- jumbleWords(tokenized.obj)
+  pasteText(tokenized.obj)
+
+  # diff stats are now part of the object
+  hasFeature(tokenized.obj)
+  diffText(tokenized.obj)
+} else {}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

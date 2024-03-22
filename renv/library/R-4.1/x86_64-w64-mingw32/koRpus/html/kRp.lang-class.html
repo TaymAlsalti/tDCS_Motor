@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: S4 Class kRp.lang</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for kRp.lang,-class {koRpus}"><tr><td>kRp.lang,-class {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>S4 Class kRp.lang</h2>
+
+<h3>Description</h3>
+
+<p>This class is used for objects that are returned by <code><a href="../help/guess.lang.html">guess.lang</a></code>.
+</p>
+
+
+<h3>Slots</h3>
+
+
+<dl>
+<dt><code>lang</code></dt><dd><p>A character string,
+naming the language (by its ISO 639-3 identifier) that was estimated for the analized text in this object.</p>
+</dd>
+<dt><code>lang.name</code></dt><dd><p>A character string, full name of the estimated language.</p>
+</dd>
+<dt><code>txt</code></dt><dd><p>A character string containing the analized part of the text.</p>
+</dd>
+<dt><code>txt.full</code></dt><dd><p>A character string containing the full text.</p>
+</dd>
+<dt><code>udhr</code></dt><dd><p>A data.frame with full analysis results for each language tried.</p>
+</dd>
+</dl>
+
+
+<h3>Contructor function</h3>
+
+<p>Should you need to manually generate objects of this class (which should rarely be the case),
+the contructor function 
+<code>kRp_lang(...)</code> can be used instead of
+<code>new("kRp.lang", ...)</code>.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Toy Dataset for Network Meta-Analyses using the gemtc package</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for NetDataGemtc {dmetar}"><tr><td>NetDataGemtc {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Toy Dataset for Network Meta-Analyses using the gemtc package</h2>
+
+<h3>Description</h3>
+
+<p>This is a toy dataset containing simulated effect size data of a fictitious
+network meta-analysis examining the effect of psychotherapies. Effect size
+data is provided as the standardized mean difference (<em>SMD</em>) between the intervention
+and control group and its corresponding standard error for each study at post.
+The dataframe layout is optimized for out-of-the-box usage using the <code>data.re</code>
+argument of the <code><a href="../../gemtc/help/mtc.network.html">mtc.network</a></code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data("NetDataGemtc")
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A data.frame with 4 columns.
+</p>
+
+<dl>
+<dt>study</dt><dd><p><code>character</code>. The name of the included study.</p>
+</dd>
+<dt>treatment</dt><dd><p><code>character</code>. The name of the treatment under study. Includes psychotherapies for
+the treatment of depression, &quot;CBT&quot; (Cognitive Behavioral Therapy), &quot;PDT&quot; (Psychodynamic Therapy),
+&quot;IPT&quot; (Interpersonal Therapy), &quot;PST&quot; (Problem-solving Therapy) and &quot;SUP&quot; (Supportive Counseling),
+and comparison conditions, &quot;TAU&quot; (Treatment as usual), &quot;Placebo&quot; (Placebo), and &quot;WLC&quot; (Waitlist control).
+Each treatment condition in a study is displayed in its own row of the dataframe.</p>
+</dd>
+<dt>diff</dt><dd><p><code>numeric</code>. The standardized mean difference of the comparison. The row in each study in which
+this variable is <code>NA</code> represents the comparison condition for the effect size displayed above.</p>
+</dd>
+<dt>std.err</dt><dd><p><code>numeric</code>. The standard error of the comparison. The row in each study in which
+this variable is <code>NA</code> represents the comparison condition for the standard error of
+the effect size displayed above.</p>
+</dd>
+</dl>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer, David Daniel Ebert
+</p>
+
+
+<h3>Source</h3>
+
+<p>Simulated data.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

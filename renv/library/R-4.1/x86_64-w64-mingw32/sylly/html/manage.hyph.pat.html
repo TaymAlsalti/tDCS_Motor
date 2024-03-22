@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Handling hyphenation pattern objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for manage.hyph.pat {sylly}"><tr><td>manage.hyph.pat {sylly}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Handling hyphenation pattern objects</h2>
+
+<h3>Description</h3>
+
+<p>This function can be used to examine and change hyphenation pattern objects be used with <code><a href="../help/hyphen.html">hyphen</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+manage.hyph.pat(
+  hyph.pattern,
+  get = NULL,
+  set = NULL,
+  rm = NULL,
+  word = NULL,
+  min.length = 3L,
+  rm.hyph = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>hyph.pattern</code></td>
+<td>
+<p>Either an object of class <code>kRp.hyph.pat</code>,
+or a valid language abbreviation for patterns included in this package.</p>
+</td></tr>
+<tr valign="top"><td><code>get</code></td>
+<td>
+<p>A character string, part of a word to look up in the pattern set, i.e.,
+without the numbers indicating split probability.</p>
+</td></tr>
+<tr valign="top"><td><code>set</code></td>
+<td>
+<p>A character string, a full pattern to be added to the pattern set, i.e.,
+including the numbers indicating split probability.</p>
+</td></tr>
+<tr valign="top"><td><code>rm</code></td>
+<td>
+<p>A character string, part of a word to remove from the pattern set, i.e.,
+without the numbers indicating split probability.</p>
+</td></tr>
+<tr valign="top"><td><code>word</code></td>
+<td>
+<p>A character string, a full word to hyphenate using the given pattern set.</p>
+</td></tr>
+<tr valign="top"><td><code>min.length</code></td>
+<td>
+<p>Integer,
+number of letters a word must have for considering a hyphenation.</p>
+</td></tr>
+<tr valign="top"><td><code>rm.hyph</code></td>
+<td>
+<p>Logical,
+whether appearing hyphens in words should be removed before pattern matching.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>You can only run one of the possible actions at a time. If any of these arguments is not <code>NULL</code>,
+the corresponding action is done in the following order, and every additional discarded:
+</p>
+
+<ul>
+<li><p><code>get</code>Searches the pattern set for a given word part
+</p>
+</li>
+<li><p><code>set</code>Adds or replaces a pattern in the set (duplicates are removed)
+</p>
+</li>
+<li><p><code>rm</code>Removes a word part and its pattern from the set
+</p>
+</li>
+<li><p><code>word</code>Hyphenates a word and returns all parts examined as well as all matching patterns
+</p>
+</li></ul>
+
+<p>If all action arguments are <code>NULL</code>,
+<code>manage.hyph.pat</code> returns the full pattern object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If all action arguments are <code>NULL</code>,
+returns an object of class <code><a href="../help/kRp.hyph.pat-class.html">kRp.hyph.pat</a></code>.
+The same is true if <code>set</code> or <code>rm</code> are set and <code>hyph.pattern</code> is itself an object of that class; if you refer to a language
+instead,
+pattern changes will be done internally for the running session and take effect immediately.
+The <code>get</code> argument will return a caracter vector, and <code>word</code> a data frame.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] <a href="http://tug.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/txt/">http://tug.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/txt/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../help/kRp.hyph.pat-class.html">kRp.hyph.pat</a></code>,
+<code><a href="../help/hyphen.html">hyphen</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+manage.hyph.pat("en", set="r3ticl")
+manage.hyph.pat("en", get="rticl")
+manage.hyph.pat("en", word="article")
+manage.hyph.pat("en", rm="rticl")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>sylly</em> version 0.1-6 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

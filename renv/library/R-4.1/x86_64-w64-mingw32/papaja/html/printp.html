@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Prepare numeric values for printing as p value</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for printp {papaja}"><tr><td>printp {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Prepare numeric values for printing as p value</h2>
+
+<h3>Description</h3>
+
+<p>Convenience wrapper for <code>printnum.numeric</code> to print <em>p</em> values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+printp(x, digits = 3L, na_string = "", add_equals = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Numeric. Can be either a single value, vector, or matrix.</p>
+</td></tr>
+<tr valign="top"><td><code>digits</code></td>
+<td>
+<p>Integer. The desired number of digits after the decimal point, passed on to <code><a href="../../base/html/formatc.html">formatC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>na_string</code></td>
+<td>
+<p>Character. String to print if element of <code>x</code> is <code>NA</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>add_equals</code></td>
+<td>
+<p>Logical. Indicates if the output string should be prepended with an <em>equals</em> sign.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+printp(0.05)
+printp(0.0005)
+printp(0.99999999)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

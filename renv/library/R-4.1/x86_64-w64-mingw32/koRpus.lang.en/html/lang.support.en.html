@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Language support for English</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for lang.support.en {koRpus.lang.en}"><tr><td>lang.support.en {koRpus.lang.en}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Language support for English</h2>
+
+<h3>Description</h3>
+
+<p>This function adds support for English to the koRpus package. You should not
+need to call it manually, as that is done automatically when this package is
+being loaded.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+lang.support.en(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Optional arguments for <code><a href="../../koRpus/help/set.lang.support.html">set.lang.support</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The POS tags cover tag definitions from multiple sources. Please note that there is one tag,
+&quot;PRP&quot;, that
+is defined in both PENN[3] and BNC[4] tagsets,
+but with different meanings: The PENN tag marks
+personal pronouns,
+whereas the BNC tag marks prepositions (except &quot;of&quot;). Since the conflicting tag
+is not being used by TreeTagger's PENN parameter set, but in its BNC set,
+koRpus also uses the BNC
+definition. Keep this in mind if you use this language support package with alternative taggers.
+</p>
+<p>In particular, this function adds the following:
+</p>
+
+<ul>
+<li> <p><code>lang</code>: The additional language &quot;en&quot; to be used with koRpus
+</p>
+</li>
+<li> <p><code>treetag</code>: The additional preset &quot;en&quot;,
+implemented according to the respective TreeTagger[1] script
+</p>
+</li>
+<li> <p><code>POS tags</code>: An additional set of tags,
+implemented using the documentation for the corresponding
+TreeTagger parameter set[2], additional tags from the PENN treebank project[3],
+and the BNC tagset[4] used in
+an alternative TreeTagger parameter set.
+</p>
+</li></ul>
+
+<p>Hyphenation patterns are provided by means of the <code><a href="../../sylly.en/help/hyph.support.en.html">sylly.en</a></code> package.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/">http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/</a>
+</p>
+<p>[2] <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/Penn-Treebank-Tagset.pdf">http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/Penn-Treebank-Tagset.pdf</a>
+</p>
+<p>[3] <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html</a>
+</p>
+<p>[4] <a href="http://www.natcorp.ox.ac.uk/docs/c5spec.html">http://www.natcorp.ox.ac.uk/docs/c5spec.html</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+lang.support.en()
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus.lang.en</em> version 0.1-4 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: APA article (6th edition)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for apa6_pdf {papaja}"><tr><td>apa6_pdf {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>APA article (6th edition)</h2>
+
+<h3>Description</h3>
+
+<p>Template for creating an article according to APA guidelines (6th edition) in PDF format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+apa6_pdf(
+  fig_caption = TRUE,
+  number_sections = FALSE,
+  toc = FALSE,
+  keep_tex = TRUE,
+  md_extensions = NULL,
+  includes = NULL,
+  ...
+)
+
+apa6_docx(fig_caption = TRUE, md_extensions = NULL, ...)
+
+apa6_word(fig_caption = TRUE, md_extensions = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>fig_caption</code></td>
+<td>
+<p><code>TRUE</code> to render figures with captions</p>
+</td></tr>
+<tr valign="top"><td><code>number_sections</code></td>
+<td>
+<p><code>TRUE</code> to number section headings</p>
+</td></tr>
+<tr valign="top"><td><code>toc</code></td>
+<td>
+<p><code>TRUE</code> to include a table of contents in the output</p>
+</td></tr>
+<tr valign="top"><td><code>keep_tex</code></td>
+<td>
+<p>Keep the intermediate tex file used in the conversion to PDF</p>
+</td></tr>
+<tr valign="top"><td><code>md_extensions</code></td>
+<td>
+<p>Markdown extensions to be added or removed from the default definition or R Markdown. See the <code><a href="../../rmarkdown/help/rmarkdown_format.html">rmarkdown_format</a></code> for additional details.</p>
+</td></tr>
+<tr valign="top"><td><code>includes</code></td>
+<td>
+<p>Named list of additional content to include within the
+document (typically created using the <code><a href="../../rmarkdown/help/includes.html">includes</a></code> function).</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further arguments to pass to <code><a href="../../rmarkdown/help/pdf_document.html">pdf_document</a></code> or <code><a href="../../rmarkdown/help/word_document.html">word_document</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>When creating PDF documents the YAML option <code>classoption</code> is passed to the class options of the LaTeX apa6 document class.
+In this case, additional options are available. Refer to the apa6 document class
+<a href="ftp://ftp.fu-berlin.de/tex/CTAN/macros/latex/contrib/apa6/apa6.pdf">documentation</a> to find out about class options
+such as paper size or draft watermarks.
+</p>
+<p>When creating PDF documents the output device for figures defaults to <code>c("pdf", "png")</code>,
+so that each figure is saved in all four formats at a resolution of 300 dpi.
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>apa6_docx</code>: Format to create .docx-files. <code>class</code> parameter is ignored. <em>This function
+should be considered experimental.</em>
+</p>
+</li>
+<li> <p><code>apa6_word</code>: Format to create .docx-files. Alias of <code>apa6_docx</code>.
+</p>
+</li></ul>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../bookdown/help/html_document2.html">html_document2</a></code>, <code><a href="../../rmarkdown/help/pdf_document.html">pdf_document</a></code>, <code><a href="../../rmarkdown/help/word_document.html">word_document</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+NULL
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

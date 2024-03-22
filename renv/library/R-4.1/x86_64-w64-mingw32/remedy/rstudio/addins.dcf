@@ -1,0 +1,134 @@
+Name: Align
+Description: Align <- in selection
+Binding: align_arrow
+Interactive: false
+
+Name: AlignEqual
+Description: Align = in selection
+Binding: align_equal
+Interactive: false
+
+Name: Backtick
+Description: Backtick selected word(s)
+Binding: backtickr
+Interactive: false
+
+Name: Blockquote
+Description: Convert selected text into a blockquote
+Binding: blockquoter
+Interactive: false
+
+Name: Bold
+Description: Embolden selected text
+Binding: boldr
+Interactive: false
+
+Name: Chunk
+Description: Chunk script or file
+Binding: chunkr
+Interactive: false
+
+Name: Chunksplit
+Description: Split chunk into two chunks
+Binding: chunksplitr
+Interactive: false
+
+Name: Chunkname
+Description: Name unnamed chunks in bulk
+Binding: chunknamer
+Interactive: false
+
+Name: Footnote
+Description: Convert selected text into a footnote
+Binding: footnoter
+Interactive: false
+
+Name: H1
+Description: Convert selected text into an h1 header
+Binding: h1r
+Interactive: false
+
+Name: H2
+Description: Convert selected text into an h2 header
+Binding: h2r
+Interactive: false
+
+Name: H3
+Description: Convert selected text into an h3 header
+Binding: h3r
+Interactive: false
+
+Name: H4
+Description: Convert selected text into an h4 header
+Binding: h4r
+Interactive: false
+
+Name: H5
+Description: Convert selected text into an h5 header
+Binding: h5r
+Interactive: false
+
+Name: H6
+Description: Convert selected text into an h6 header
+Binding: h6r
+Interactive: false
+
+Name: Htmlcomment
+Description: Convert selected text into an HTML comment or insert new comment
+Binding: htmlcommentr
+Interactive: false
+
+Name: Image
+Description: Convert selected path into an embedded image
+Binding: imager
+Interactive: false
+
+Name: Italics
+Description: Italicize selected text
+Binding: italicsr
+Interactive: false
+
+Name: LaTeX
+Description: Convert the selected text in inline LaTeX.
+Binding: latexr
+Interactive: false
+
+Name: List (ordered)
+Description: Convert selected text into an ordered list
+Binding: olistr
+Interactive: false
+
+Name: List (unordered)
+Description: Convert selected text into an unordered list
+Binding: listr
+Interactive: false
+
+Name: Right
+Description: Copy selected text (or line) to the right
+Binding: rightr
+Interactive: false
+
+Name: Strike
+Description: Strikethrough selected text
+Binding: striker
+Interactive: false
+
+Name: Table
+Description: Insert a markdown table
+Binding: tabler
+Interactive: false
+
+Name: Url
+Description: Convert selected text into a url
+Binding: urlr
+Interactive: false
+
+Name: Xaringan
+Description: xaringan pull left and pull right
+Binding: xaringanr
+Interactive: false
+
+Name: Youtube
+Description: Convert selected text into a markdown youtube frame
+Binding: youtuber
+Interactive: false

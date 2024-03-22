@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Format statistics model comparisons (APA 6th edition)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for print_model_comp {papaja}"><tr><td>print_model_comp {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Format statistics model comparisons (APA 6th edition)</h2>
+
+<h3>Description</h3>
+
+<p>This function is the workhorse of the <code>apa_print.anova</code> for model comparisons. It takes a <code>data.frame</code>
+of class <code>apa_model_comp</code> and produces strings to report the results in accordance with APA manuscript
+guidelines. <em>This function is not exported.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+print_model_comp(
+  x,
+  models = NULL,
+  ci = NULL,
+  boot_samples = 1000,
+  in_paren = FALSE,
+  observed_predictors = TRUE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Data.frame. A <code>data.frame</code> of class <code>apa_variance_table</code> as returned by <code><a href="../../papaja/help/arrange_anova.html">arrange_anova</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>models</code></td>
+<td>
+<p>List. List containing fitted <code>lm</code>- objects that were compared using <code>anova()</code>. If the list is named, element names are used as model names in the output object.</p>
+</td></tr>
+<tr valign="top"><td><code>ci</code></td>
+<td>
+<p>Numeric. Confidence level for the confidence interval for <i>&Delta; R^2</i> if <code>x</code> is a model comparison object of class <code>anova</code>. If <code>ci = NULL</code> no confidence intervals are estimated.</p>
+</td></tr>
+<tr valign="top"><td><code>boot_samples</code></td>
+<td>
+<p>Numeric. Number of bootstrap samples to estimate confidence intervals for <i>&Delta; R^2</i> if <code>x</code> is a model comparison object of class <code>anova</code>; ignored if <code>ci = NULL</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>in_paren</code></td>
+<td>
+<p>Logical. Indicates if the formated string will be reported inside parentheses. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>observed_predictors</code></td>
+<td>
+<p>Logical. Indicates whether predictor variables were observed. See details.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A named list containing the following components:
+</p>
+
+<dl>
+<dt><code>statistic</code></dt><dd><p>A named list of character strings giving the test statistic, parameters, and <em>p</em>
+value for each factor.</p>
+</dd>
+<dt><code>estimate</code></dt><dd><p>A named list of character strings giving the effect size estimates for each factor.</p>
+</dd> </dl>
+
+<dl>
+<dt><code>full_result</code></dt><dd><p>A named list of character strings comprised of <code>estimate</code> and <code>statistic</code> for each factor.</p>
+</dd>
+<dt><code>table</code></dt><dd><p>A data.frame containing the complete ANOVA table, which can be passed to <code><a href="../../papaja/help/apa_table.html">apa_table</a></code>.</p>
+</dd>
+</dl>
+
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../papaja/help/arrange_anova.html">arrange_anova</a></code>, <code><a href="../../papaja/help/apa_print.aov.html">apa_print.aov</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ ## Not run: 
+   mod1 &lt;- lm(Sepal.Length ~ Sepal.Width, data = iris)
+   mod2 &lt;- update(mod1, formula = . ~ . + Petal.Length)
+   mod3 &lt;- update(mod2, formula = . ~ . + Petal.Width)
+
+   # No bootstrapped Delta R^2 CI
+   print_model_comp(list(Baseline = mod1, Length = mod2, Both = mod3), boot_samples = 0)
+ 
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Validate function input</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for validate {papaja}"><tr><td>validate {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Validate function input</h2>
+
+<h3>Description</h3>
+
+<p>This function can be used to validate the input to functions. <em>This function is not exported.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+validate(
+  x,
+  name = NULL,
+  check_class = NULL,
+  check_mode = NULL,
+  check_integer = FALSE,
+  check_NA = TRUE,
+  check_infinite = TRUE,
+  check_length = NULL,
+  check_dim = NULL,
+  check_range = NULL,
+  check_cols = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Function input.</p>
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+<p>Character. Name of variable to validate; if <code>NULL</code> variable name of object supplied to <code>x</code> is used.</p>
+</td></tr>
+<tr valign="top"><td><code>check_class</code></td>
+<td>
+<p>Character. Name of class to expect.</p>
+</td></tr>
+<tr valign="top"><td><code>check_mode</code></td>
+<td>
+<p>Character. Name of mode to expect.</p>
+</td></tr>
+<tr valign="top"><td><code>check_integer</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> an object of type <code>integer</code> or a whole number <code>numeric</code> is expected.</p>
+</td></tr>
+<tr valign="top"><td><code>check_NA</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> an non-<code>NA</code> object is expected.</p>
+</td></tr>
+<tr valign="top"><td><code>check_infinite</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> a finite object is expected.</p>
+</td></tr>
+<tr valign="top"><td><code>check_length</code></td>
+<td>
+<p>Integer. Length of the object to expect.</p>
+</td></tr>
+<tr valign="top"><td><code>check_dim</code></td>
+<td>
+<p>Numeric. Vector of object dimensions to expect.</p>
+</td></tr>
+<tr valign="top"><td><code>check_range</code></td>
+<td>
+<p>Numeric. Vector of length 2 defining the expected range of the object.</p>
+</td></tr>
+<tr valign="top"><td><code>check_cols</code></td>
+<td>
+<p>Character. Vector of columns that are intended to be in a <code>data.frame</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+in_paren &lt;- TRUE # Taken from printnum()
+validate(in_paren, check_class = "logical", check_length = 1)
+validate(in_paren, check_class = "numeric", check_length = 1)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

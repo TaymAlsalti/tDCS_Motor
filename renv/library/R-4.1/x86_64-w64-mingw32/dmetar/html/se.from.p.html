@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculate the standard error from the effect size and p-value</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for se.from.p {dmetar}"><tr><td>se.from.p {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculate the standard error from the effect size and p-value</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the standard error of an effect size provided the exact
+<i>p</i>-value and (continuous) effect size according to the formula
+by <a href="https://www.ncbi.nlm.nih.gov/pubmed/21824904">Altman and Bland (2011)</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+se.from.p(effect.size, p, N, effect.size.type = 'difference',
+    calculate.g = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>effect.size</code></td>
+<td>
+<p>Numeric vector or single number. The effect size, such as the
+standardized mean difference, Hedges' <i>g</i> or other continuous effect size.</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>Numeric vector or single number. The exact <i>p</i>-value corresponding to the
+effect size.</p>
+</td></tr>
+<tr valign="top"><td><code>N</code></td>
+<td>
+<p>Numeric vector or single number. The total number of samples used to
+calculate the effect size/<i>p</i>-value.</p>
+</td></tr>
+<tr valign="top"><td><code>effect.size.type</code></td>
+<td>
+<p>The type of effect sizes provided in <code>effect.size</code>. For
+effect sizes based on differences (e.g., mean differences), this parameter has to be
+set to <code>"difference"</code>. For effect sizes based on ratios (e.g., risk ratio, odds ratio),
+this parameter has to be set to <code>"ratio"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>calculate.g</code></td>
+<td>
+<p>Logical. Calculates the standardized mean difference
+corrected for small sample bias (Hedges' <i>g</i>). <code>FALSE</code> by default.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function calculates the standard error, standard deviation and 95% confidence
+interval of an effect size given the effect size and exact <i>p</i>-value. The function can be used for:
+</p>
+
+<ul>
+<li><p> effect sizes based on <strong>differences</strong> (e.g., mean differences) by setting <code>effect.size.type</code>
+to <code>"difference"</code>, or
+</p>
+</li>
+<li><p> effect sizes based on <strong>ratios</strong> (e.g. risk ratios, odds ratios or
+hazard ratios) by setting <code>effect.size.type</code> to <code>"ratio"</code>. When ratios are used, the
+function returns the log-transformed effect sizes, standard error, standard deviation and confidence interval,
+which can be used for meta-analytic pooling using the <code><a href="../../meta/help/metagen.html">metagen</a></code> function,
+along with the original effect size and confidence interval.
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>A dataframe containing the following columns:
+</p>
+
+<ul>
+<li> <p><code>(log)EffectSize</code>: The input effect size. Log-transformed if <code>effect.size.type</code> is <code>"ratio"</code>.
+</p>
+</li>
+<li> <p><code>Hedges.g</code>: The calculated Hedges' g values (only if <code>calculate.g=TRUE</code>).
+</p>
+</li>
+<li> <p><code>(log)StandardError</code>: The standard error (SE) for the effect size. Log-transformed if <code>effect.size.type</code> is <code>"ratio"</code>.
+</p>
+</li>
+<li> <p><code>(log)LLCI</code> and <code>(log)ULCI</code>: The lower and upper 95% confidence interval of the effect size. Log-transformed if <code>effect.size.type="ratio"</code>.</p>
+</li></ul>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer &amp; David Daniel Ebert
+</p>
+
+
+<h3>References</h3>
+
+<p>Altman D.G. &amp; Bland J.M. (2011) How to obtain the confidence interval
+of a <em>p</em> value. <em>BMJ 343</em>:d2090.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Example 1: one single effect size
+se.from.p(effect.size = 0.71, p = 0.013, N = 75,
+    effect.size.type= "difference", calculate.g = TRUE)
+
+# Example 2: vector of effect sizes (Odds Ratio)
+effect.size = c(0.91, 1.01, 0.72, 0.43)
+p = c(0.05, 0.031, 0.001, 0.09)
+N = c(120, 86, 450, 123)
+se.from.p(effect.size = effect.size, p = p, N = N,
+    effect.size.type = "ratio")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

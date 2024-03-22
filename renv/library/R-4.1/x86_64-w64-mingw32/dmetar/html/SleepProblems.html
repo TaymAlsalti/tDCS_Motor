@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Factor Structure of Sleep Complaints data set</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for SleepProblems {dmetar}"><tr><td>SleepProblems {dmetar}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Factor Structure of Sleep Complaints data set</h2>
+
+<h3>Description</h3>
+
+<p>This is a fictitious data set containing correlation matrices of five sleep-related variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+data("SleepProblems")
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A <code>list</code> with 2 elements.
+</p>
+
+<dl>
+<dt>data</dt><dd><p><code>list</code>. Contains correlation matrices of k=11 studies. Each correlation matrix
+has the same structure, and contains the variables &quot;sleep quality&quot;, &quot;sleep latency&quot;, &quot;sleep efficiency&quot;, &quot;daytime dysfunction&quot; and &quot;hypersomnia&quot;.</p>
+</dd>
+<dt>n</dt><dd><p><code>numeric</code>. Sample size of each study.</p>
+</dd>
+</dl>
+
+
+
+<h3>Details</h3>
+
+<p>This simulated data set can by used to fit a meta-analytic structural equation model using <code><a href="../../metaSEM/help/tssem1.html">tssem1</a></code>. It is assumed that
+&quot;sleep quality&quot;, &quot;sleep latency&quot; and &quot;sleep efficiency&quot; load on the latent factor &quot;insomnia&quot;, while &quot;daytime dysfunction&quot; and &quot;hypersomnia&quot; measure the
+latent factor &quot;lassitude&quot;.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mathias Harrer
+</p>
+
+
+<h3>Source</h3>
+
+<p>Fictitious data set. Data were simulated using the <code><a href="../../lavaan/help/simulateData.html">simulateData</a></code> function in <code>lavaan</code>.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>dmetar</em> version 0.0.9000 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

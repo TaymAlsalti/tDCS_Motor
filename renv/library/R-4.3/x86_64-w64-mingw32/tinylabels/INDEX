@@ -1,0 +1,6 @@
+as.character.tiny_labelled
+                        Conversion of Labelled Vectors
+label_variable          Label Variables Using Pipes
+relevel.tiny_labelled   Reorder Levels of Labelled Factor
+unlabel                 Remove Labels from Objects
+variable_label          Assign or Extract Variable Labels

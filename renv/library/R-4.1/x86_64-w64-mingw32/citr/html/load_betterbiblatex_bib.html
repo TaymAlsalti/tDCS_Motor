@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Load bibliography from Zotero</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for load_betterbiblatex_bib {citr}"><tr><td>load_betterbiblatex_bib {citr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Load bibliography from Zotero</h2>
+
+<h3>Description</h3>
+
+<p>Load bibliography from Zotero
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+load_betterbiblatex_bib(
+  encoding,
+  betterbiblatex_format = "bibtex",
+  exclude_betterbiblatex_library = NULL,
+  increment_progress = FALSE
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>Character. Encoding of the Bib(La)TeX-file. See the <code><a href="../../base/html/connections.html">connection</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>betterbiblatex_format</code></td>
+<td>
+<p>Character. Bibliography format to export from Zotero/Juris-M. Can be either <code>"bibtex"</code> or <code>"biblatex"</code>. Ignored if <code>use_betterbiblatex = FALSE</code>.
+Requires that the <a href="https://github.com/retorquere/zotero-better-bibtex">Better BibTeX</a> is installed and
+Zotero/Juris-M is running.</p>
+</td></tr>
+<tr valign="top"><td><code>exclude_betterbiblatex_library</code></td>
+<td>
+<p>Character. A vector of Zotero/Juris-M library names not to query.</p>
+</td></tr>
+<tr valign="top"><td><code>increment_progress</code></td>
+<td>
+<p>logical switch which will use the shiny function
+<code>incProgress</code> when <code>TRUE</code>. <code>FALSE</code> by default.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function loads into RAM the bibliography stored in Zotero.
+May take a several seconds if you have many hundreds of references.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+b &lt;- load_betterbiblatex_bib(encoding = "UTF-8")
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>citr</em> version 0.3.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

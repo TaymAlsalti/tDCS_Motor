@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Render appendix</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for render_appendix {papaja}"><tr><td>render_appendix {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Render appendix</h2>
+
+<h3>Description</h3>
+
+<p>This functions renders an R Markdown document <em>without</em> YAML header to a TeX fragment inside
+an <code>appendix</code> environment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+render_appendix(
+  x,
+  bibliography = rmarkdown::metadata$bibliography,
+  csl = rmarkdown::metadata$csl,
+  quiet = TRUE,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Character. Input file name.</p>
+</td></tr>
+<tr valign="top"><td><code>bibliography</code></td>
+<td>
+<p>Character. Location of bibliography file(s) to use.</p>
+</td></tr>
+<tr valign="top"><td><code>csl</code></td>
+<td>
+<p>Character. Location of CSL file to use. Defaults to APA-style.</p>
+</td></tr>
+<tr valign="top"><td><code>quiet</code></td>
+<td>
+<p>Logical. Suppresses pandoc command line output; see <code><a href="../../rmarkdown/help/render.html">render</a></code>.
+If <code>FALSE</code> output will be included in the document.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code><a href="../../rmarkdown/help/pandoc_convert.html">rmarkdown::pandoc_convert</a></code>
+</p>
+
+<dl>
+<dt><code>input</code></dt><dd><p>Character vector containing paths to input files
+(files must be UTF-8 encoded)</p>
+</dd>
+<dt><code>to</code></dt><dd><p>Format to convert to (if not specified, you must specify
+<code>output</code>)</p>
+</dd>
+<dt><code>from</code></dt><dd><p>Format to convert from (if not specified then the format is
+determined based on the file extension of <code>input</code>).</p>
+</dd>
+<dt><code>output</code></dt><dd><p>Output file (if not specified then determined based on format
+being converted to).</p>
+</dd>
+<dt><code>citeproc</code></dt><dd><p><code>TRUE</code> to run the pandoc-citeproc filter (for processing
+citations) as part of the conversion.</p>
+</dd>
+<dt><code>options</code></dt><dd><p>Character vector of command line options to pass to pandoc.</p>
+</dd>
+<dt><code>verbose</code></dt><dd><p><code>TRUE</code> to show the pandoc command line which was executed</p>
+</dd>
+<dt><code>wd</code></dt><dd><p>Working directory in which code will be executed. If not
+supplied, defaults to the common base directory of <code>input</code>.</p>
+</dd>
+</dl>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>By default <code>x</code> is converted to a TeX file which can be included in an R Markdown document
+as <code>include</code>:
+</p>
+<pre>
+   output:
+     pdf_document:
+       include:
+         after_body: appendix.tex
+   </pre>
+<p>If <code>render_appendix</code> is called form an R Markdown document with a target document type other
+than a PDF file a Markdown document is created and a warning returned (includes are only supported
+in PDF documents).
+</p>
+<p>Default chunk options and hooks are set to those used in the R Markdown document from
+which <code>render_appendix</code> is called; otherwise defaults of <code><a href="../../rmarkdown/help/md_document.html">md_document</a></code> are
+used. It is, therefore, recommended to include <code>render_appendix</code> in your parent document.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

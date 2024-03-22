@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Assign or Extract Variable Labels</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for variable_label {papaja}"><tr><td>variable_label {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Assign or Extract Variable Labels</h2>
+
+<h3>Description</h3>
+
+<p>Assign or extract variable labels of a <code>vector</code> <em>or</em>
+the columns (i.e., vectors) of a <code>data.frame</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+variable_label(x, ...)
+
+## Default S3 method:
+variable_label(x, ...)
+
+## S3 method for class 'data.frame'
+variable_label(x, ...)
+
+variable_label(x) &lt;- value
+
+## Default S3 replacement method:
+variable_label(x) &lt;- value
+
+## S3 replacement method for class 'data.frame'
+variable_label(x) &lt;- value
+
+label_variable(x, ...)
+
+variable_labels(x, ...)
+
+variable_labels(x) &lt;- value
+
+label_variables(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Either a vector or a <code>data.frame</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further arguments that can be passes to methods.</p>
+</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+<p>Character. The variable label(s) to be assigned. If <code>variable_label</code> is applied to a single vector,
+this should be a length-one argument. If applied to a <code>data.frame</code>, <code>value</code> is required to be a <em>named</em> vector.
+Check the examples for details.</p>
+</td></tr>
+</table>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

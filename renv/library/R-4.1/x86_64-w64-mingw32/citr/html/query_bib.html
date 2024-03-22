@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Query bibliography</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for query_bib {citr}"><tr><td>query_bib {citr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Query bibliography</h2>
+
+<h3>Description</h3>
+
+<p>Search entries in a bibliography.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+query_bib(
+  x,
+  bib_file = getOption("citr.bibliography_path"),
+  cache = TRUE,
+  use_betterbiblatex = getOption("citr.use_betterbiblatex"),
+  betterbiblatex_format = getOption("citr.betterbiblatex_format"),
+  exclude_betterbiblatex_library = getOption("citr.exclude_betterbiblatex_library"),
+  encoding = getOption("citr.encoding")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Character. Search terms used to filter bibliography (by author, year, title, and journal
+fields); Regex is supported.</p>
+</td></tr>
+<tr valign="top"><td><code>bib_file</code></td>
+<td>
+<p>Character. Path to Bib(La)TeX-file. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>cache</code></td>
+<td>
+<p>Logical. If <code>cache = TRUE</code> cached bibliography is used, if available. If
+<code>cache = FALSE</code> bibliography is re-imported on every function call.</p>
+</td></tr>
+<tr valign="top"><td><code>use_betterbiblatex</code></td>
+<td>
+<p>Logical. If <code>use_betterbiblatex = TRUE</code> references are imported from Zotero/Juris-M.</p>
+</td></tr>
+<tr valign="top"><td><code>betterbiblatex_format</code></td>
+<td>
+<p>Character. Bibliography format to export from Zotero/Juris-M. Can be either <code>"bibtex"</code> or <code>"biblatex"</code>. Ignored if <code>use_betterbiblatex = FALSE</code>.
+Requires that the <a href="https://github.com/retorquere/zotero-better-bibtex">Better BibTeX</a> is installed and
+Zotero/Juris-M is running.</p>
+</td></tr>
+<tr valign="top"><td><code>exclude_betterbiblatex_library</code></td>
+<td>
+<p>Character. A vector of Zotero/Juris-M library names not to query.</p>
+</td></tr>
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>Character. Encoding of the Bib(La)TeX-file. See the <code><a href="../../base/html/connections.html">connection</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The path to the BibTeX-file can be set in the global options and is set to
+<code>references.bib</code> when the package is loaded. Once the path is changed in the
+RStudio addin, the global option is updated. If <code>use_betterbiblatex = TRUE</code> references
+are imported from Zotero/Juris-M rather than from the Bib(La)TeX-file. The Bib(La)TeX-file
+is then updated to include the inserted reference.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns list of class <code><a href="../../RefManageR/help/BibEntry.html">BibEntry</a></code> including all matching bibliography entries.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../citr/help/md_cite.html">md_cite</a></code>, <code><a href="../../citr/help/insert_citation.html">insert_citation</a></code>
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>citr</em> version 0.3.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

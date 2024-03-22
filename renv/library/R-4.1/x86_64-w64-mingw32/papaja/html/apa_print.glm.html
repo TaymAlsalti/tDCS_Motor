@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Format statistics (APA 6th edition)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for apa_print.glm {papaja}"><tr><td>apa_print.glm {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Format statistics (APA 6th edition)</h2>
+
+<h3>Description</h3>
+
+<p>These methods take <code>glm</code> and <code>lm</code> objects to create formatted character
+strings to report the results in accordance with APA manuscript guidelines.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'glm'
+apa_print(x, est_name = NULL, ci = 0.95, in_paren = FALSE, ...)
+
+## S3 method for class 'lm'
+apa_print(
+  x,
+  est_name = NULL,
+  standardized = FALSE,
+  ci = 0.95,
+  observed_predictors = TRUE,
+  in_paren = FALSE,
+  ...
+)
+
+## S3 method for class 'summary.glm'
+apa_print(x, ...)
+
+## S3 method for class 'summary.lm'
+apa_print(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p><code>glm</code> or <code>lm</code> object.</p>
+</td></tr>
+<tr valign="top"><td><code>est_name</code></td>
+<td>
+<p>Character. If <code>NULL</code> (default) the name given in <code>x</code> (or a formally correct
+adaptation, such as &quot;<i>b^*</i>&quot; instead of &quot;b&quot; for standardized regression coefficients) is used,
+otherwise the supplied name is used. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>ci</code></td>
+<td>
+<p>Numeric. Either a single value (range [0, 1]) giving the confidence level or a two-column
+<code>matrix</code> with confidence region bounds as column names (e.g. &quot;2.5 %&quot; and &quot;97.5 %&quot;) and
+coefficient names as row names (in the same order as they appear in <code>summary(x)$coefficients</code>.
+See details.</p>
+</td></tr>
+<tr valign="top"><td><code>in_paren</code></td>
+<td>
+<p>Logical. Indicates if the formatted string will be reported inside parentheses. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+
+<p>Arguments passed on to <code><a href="../../papaja/help/printnum.html">printnum</a></code>
+</p>
+
+<dl>
+<dt></dt><dd></dd>
+</dl>
+</td></tr>
+<tr valign="top"><td><code>standardized</code></td>
+<td>
+<p>Logical. Indicates if coefficients are standardized or unstandardized and leading
+zeros are omitted if appropriate. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>observed_predictors</code></td>
+<td>
+<p>Logical. Indicates whether predictor variables were observed. See details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The coefficients names are sanitized to facilitate their use as list names. Parentheses
+are omitted and other non-word characters are replaced by <code>_</code> (see <code><a href="../../papaja/help/sanitize_terms.html">sanitize_terms</a></code>).
+</p>
+<p>If <code>in_paren</code> is <code>TRUE</code> parentheses in the formatted string, such as those surrounding degrees
+of freedom, are replaced with brackets.
+</p>
+<p><code>est_name</code> is placed in the output string and is then passed to pandoc or LaTeX through <span class="pkg">knitr</span>.
+Thus, to the extent it is supported by the final document type, you can pass LaTeX-markup to format the final
+text (e.g., <code>\\beta</code> yields <i>&beta;</i>).
+</p>
+<p>If <code>standardized</code> is <code>TRUE</code> &quot;scale()&quot; is removed from coefficients names (see examples).
+Currently, this option is ignored for <code>glm</code>-objects.
+</p>
+<p>If <code>ci</code> is a single value, confidence intervals are calculated using <code><a href="../../stats/help/confint.html">confint</a></code>.
+</p>
+<p>If <code>x</code> is an <code>lm</code>-object and the <span class="pkg">MBESS</span> package is available, confidence intervals for <i>R^2</i>
+are computed using <code><a href="../../MBESS/help/ci.R2.html">ci.R2</a></code> to obtain a confidence region that corresponds to the
+<i>&alpha;</i>-level chosen for the confidence intervals of regression coefficients (e.g., 95% CI or
+<i>&alpha; = 0.05</i> for regression coefficients yields a 90% CI for <i>R^2</i>, see Steiger, 2004). If
+<code>observed_predictors = FALSE</code>, it is assumed that predictors are fixed variables, i.e., &quot;the values of the
+[predictors] were selected a priori as part of the research design&quot; (p. 15, Kelly, 2007); put differently, it
+is assumed that predictors are not random.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>apa_print.lm</code> returns a list containing the following components according to the input:
+</p>
+
+<dl>
+<dt><code>statistic</code></dt><dd><p>A named list of character strings giving the test statistic, parameters, and <em>p</em>
+value for each term.</p>
+</dd>
+<dt><code>estimate</code></dt><dd><p>A named list of character strings giving the descriptive estimates and confidence intervals
+for each term.</p>
+</dd> </dl>
+
+<dl>
+<dt><code>full_result</code></dt><dd><p>A named list of character strings comprised of <code>estimate</code> and <code>statistic</code> for each term.</p>
+</dd>
+<dt><code>table</code></dt><dd><p>A data.frame containing the complete regression table, which can be passed to <code><a href="../../papaja/help/apa_table.html">apa_table</a></code>.</p>
+</dd>
+</dl>
+
+
+
+<h3>References</h3>
+
+<p>Steiger (2004). Beyond the F Test: Effect Size Confidence Intervals and Tests of Close Fit in the Analysis of
+Variance and Contrast Analysis. <em>Psychological Methods</em>, 9(2), 164-182.
+doi:<a href="https://doi.org/10.1037/1082-989X.9.2.164">10.1037/1082-989X.9.2.164</a>
+</p>
+<p>Kelley, K. (2007). Confidence intervals for standardized effect sizes: Theory, application, and
+implementation. <em>Journal of Statistical Software</em>, 20(8), 1-24.
+doi:<a href="https://doi.org/10.18637/jss.v020.i08">10.18637/jss.v020.i08</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../stats/help/confint.html">confint</a></code>, <code><a href="../../MBESS/help/ci.pvaf.html">ci.pvaf</a></code>
+</p>
+<p>Other apa_print: 
+<code><a href="../../papaja/help/apa_print.BFBayesFactor.html">apa_print.BFBayesFactor</a>()</code>,
+<code><a href="../../papaja/help/apa_print.aov.html">apa_print.aov</a>()</code>,
+<code><a href="../../papaja/help/apa_print.emmGrid.html">apa_print.emmGrid</a>()</code>,
+<code><a href="../../papaja/help/apa_print.glht.html">apa_print.glht</a>()</code>,
+<code><a href="../../papaja/help/apa_print.htest.html">apa_print.htest</a>()</code>,
+<code><a href="../../papaja/help/apa_print.list.html">apa_print.list</a>()</code>,
+<code><a href="../../papaja/help/apa_print.html">apa_print</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Data from Dobson (1990), p. 9.
+ctl &lt;- c(4.17, 5.58, 5.18, 6.11, 4.50, 4.61, 5.17, 4.53, 5.33, 5.14)
+trt &lt;- c(4.81, 4.17, 4.41, 3.59, 5.87, 3.83, 6.03, 4.89, 4.32, 4.69)
+group &lt;- gl(2, 10, 20, labels = c("Ctl", "Trt"))
+weight &lt;- c(ctl, trt)
+lm_fit &lt;- lm(weight ~ group)
+
+apa_print(lm_fit)
+
+trt &lt;- rep(trt, 2) # More data is always better
+ctl &lt;- rep(ctl, 2)
+lm_fit2 &lt;- lm(scale(trt) ~ scale(ctl))
+
+apa_print(lm_fit2, standardized = TRUE)
+
+
+# Dobson (1990) Page 93: Randomized Controlled Trial :
+counts &lt;- c(18,17,15,20,10,20,25,13,12)
+outcome &lt;- gl(3,1,9)
+treatment &lt;- gl(3,3)
+d.AD &lt;- data.frame(treatment, outcome, counts)
+glm.D93 &lt;- glm(counts ~ outcome + treatment, family = poisson())
+
+apa_print(glm.D93)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

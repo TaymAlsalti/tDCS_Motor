@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Turn a multi-document kRp.text object into a list of kRp.text...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for split_by_doc_id {koRpus}"><tr><td>split_by_doc_id {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Turn a multi-document kRp.text object into a list of kRp.text objects</h2>
+
+<h3>Description</h3>
+
+<p>For some analysis steps it might be important to have individual tagged texts
+instead of one large corpus object. This method produces just that.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+split_by_doc_id(obj, keepFeatures = TRUE)
+
+## S4 method for signature 'kRp.text'
+split_by_doc_id(obj, keepFeatures = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+<p>An object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>keepFeatures</code></td>
+<td>
+<p>Either logical, whether to keep all features or drop them,
+or a character vector
+of names of features to keep if present.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A named list of objects of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+Elements are named by their <code>doc_id</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+myCorpusList &lt;- split_by_doc_id(myCorpus)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

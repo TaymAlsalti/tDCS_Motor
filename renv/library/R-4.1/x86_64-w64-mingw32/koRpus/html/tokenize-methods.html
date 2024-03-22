@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: A simple tokenizer</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for tokenize {koRpus}"><tr><td>tokenize {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>A simple tokenizer</h2>
+
+<h3>Description</h3>
+
+<p>This tokenizer can be used to try replace TreeTagger. Its results are not as detailed when it comes to word classes,
+and no
+lemmatization is done. However, for most cases this should suffice.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tokenize(
+  txt,
+  format = "file",
+  fileEncoding = NULL,
+  split = "[[:space:]]",
+  ign.comp = "-",
+  heuristics = "abbr",
+  heur.fix = list(pre = c("\u2019", "'"), suf = c("\u2019", "'")),
+  abbrev = NULL,
+  tag = TRUE,
+  lang = "kRp.env",
+  sentc.end = c(".", "!", "?", ";", ":"),
+  detect = c(parag = FALSE, hline = FALSE),
+  clean.raw = NULL,
+  perl = FALSE,
+  stopwords = NULL,
+  stemmer = NULL,
+  doc_id = NA,
+  add.desc = "kRp.env",
+  ...
+)
+
+## S4 method for signature 'character'
+tokenize(
+  txt,
+  format = "file",
+  fileEncoding = NULL,
+  split = "[[:space:]]",
+  ign.comp = "-",
+  heuristics = "abbr",
+  heur.fix = list(pre = c("\u2019", "'"), suf = c("\u2019", "'")),
+  abbrev = NULL,
+  tag = TRUE,
+  lang = "kRp.env",
+  sentc.end = c(".", "!", "?", ";", ":"),
+  detect = c(parag = FALSE, hline = FALSE),
+  clean.raw = NULL,
+  perl = FALSE,
+  stopwords = NULL,
+  stemmer = NULL,
+  doc_id = NA,
+  add.desc = "kRp.env"
+)
+
+## S4 method for signature 'kRp.connection'
+tokenize(
+  txt,
+  format = NA,
+  fileEncoding = NULL,
+  split = "[[:space:]]",
+  ign.comp = "-",
+  heuristics = "abbr",
+  heur.fix = list(pre = c("\u2019", "'"), suf = c("\u2019", "'")),
+  abbrev = NULL,
+  tag = TRUE,
+  lang = "kRp.env",
+  sentc.end = c(".", "!", "?", ";", ":"),
+  detect = c(parag = FALSE, hline = FALSE),
+  clean.raw = NULL,
+  perl = FALSE,
+  stopwords = NULL,
+  stemmer = NULL,
+  doc_id = NA,
+  add.desc = "kRp.env"
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txt</code></td>
+<td>
+<p>Either an open connection,
+the path to directory with txt files to read and tokenize, or a vector object
+already holding the text corpus.</p>
+</td></tr>
+<tr valign="top"><td><code>format</code></td>
+<td>
+<p>Either &quot;file&quot; or &quot;obj&quot;,
+depending on whether you want to scan files or analyze the given object.
+Ignored if <code>txt</code> is a connection.</p>
+</td></tr>
+<tr valign="top"><td><code>fileEncoding</code></td>
+<td>
+<p>A character string naming the encoding of all files.</p>
+</td></tr>
+<tr valign="top"><td><code>split</code></td>
+<td>
+<p>A regular expression to define the basic split method. Should only need refinement
+for languages that don't separate words by space.</p>
+</td></tr>
+<tr valign="top"><td><code>ign.comp</code></td>
+<td>
+<p>A character vector defining punctuation which might be used in composita that should 
+not be split.</p>
+</td></tr>
+<tr valign="top"><td><code>heuristics</code></td>
+<td>
+<p>A vector to indicate if the tokenizer should use some heuristics. Can be none,
+one or several of the following:
+</p>
+
+<ul>
+<li><p><code>"abbr"</code>Assume that &quot;letter-dot-letter-dot&quot; combinations are abbreviations and leave them intact.
+</p>
+</li>
+<li><p><code>"suf"</code>Try to detect possesive suffixes like &quot;'s&quot;,
+or shorting suffixes like &quot;'ll&quot; and treat them as one token
+</p>
+</li>
+<li><p><code>"pre"</code>Try to detect prefixes like &quot;s'&quot; or &quot;l'&quot; and treat them as one token
+</p>
+</li></ul>
+
+<p>Earlier releases used the names <code>"en"</code> and <code>"fr"</code> instead of <code>"suf"</code> and <code>"pre"</code>. They are still working,
+that is
+<code>"en"</code> is equivalent to <code>"suf"</code>,
+whereas <code>"fr"</code> is now equivalent to both <code>"suf"</code> and <code>"pre"</code> (and not only
+<code>"pre"</code> as in the past, which was missing the use of suffixes in French).</p>
+</td></tr>
+<tr valign="top"><td><code>heur.fix</code></td>
+<td>
+<p>A list with the named vectors <code>pre</code> and <code>suf</code>. These will be used if <code>heuristics</code> were
+set to use one of the presets that try to detect pre- and/or suffixes. Change them if you document uses other
+characters than the ones defined by default.</p>
+</td></tr>
+<tr valign="top"><td><code>abbrev</code></td>
+<td>
+<p>Path to a text file with abbreviations to take care of,
+one per line. Note that
+this file must have the same encoding as defined by <code>fileEncoding</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>tag</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>,
+the text will be rudimentarily tagged and returned as an object
+of class <code>kRp.text</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>lang</code></td>
+<td>
+<p>A character string naming the language of the analyzed text. If set to <code>"kRp.env"</code> this is fetched from <code><a href="../help/get.kRp.env.html">get.kRp.env</a></code>. Only needed if <code>tag=TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>sentc.end</code></td>
+<td>
+<p>A character vector with tokens indicating a sentence ending. Only needed if <code>tag=TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>detect</code></td>
+<td>
+<p>A named logical vector,
+indicating by the setting of <code>parag</code> and <code>hline</code> whether <code>tokenize</code> should try
+to detect paragraphs and headlines.</p>
+</td></tr>
+<tr valign="top"><td><code>clean.raw</code></td>
+<td>
+<p>A named list of character values,
+indicating replacements that should globally be made to the text prior to tokenizing it.
+This is applied after the text was converted into UTF-8 internally. In the list,
+the name of each element represents a pattern which
+is replaced by its value if met in the text. Since this is done by calling <code><a href="../../base/help/gsub.html">gsub</a></code>,
+regular expressions are basically
+supported. See the <code>perl</code> attribute, too.</p>
+</td></tr>
+<tr valign="top"><td><code>perl</code></td>
+<td>
+<p>Logical,
+only relevant if <code>clean.raw</code> is not <code>NULL</code>. If <code>perl=TRUE</code>, this is forwarded to <code><a href="../../base/help/gsub.html">gsub</a></code>
+to allow for perl-like regular expressions in <code>clean.raw</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>stopwords</code></td>
+<td>
+<p>A character vector to be used for stopword detection. Comparison is done in lower case. You can also simply set 
+<code>stopwords=tm::stopwords("en")</code> to use the english stopwords provided by the <code>tm</code> package.</p>
+</td></tr>
+<tr valign="top"><td><code>stemmer</code></td>
+<td>
+<p>A function or method to perform stemming. For instance,
+you can set <code>SnowballC::wordStem</code> if you have
+the <code>SnowballC</code> package installed. As of now,
+you cannot provide further arguments to this function.</p>
+</td></tr>
+<tr valign="top"><td><code>doc_id</code></td>
+<td>
+<p>Character string,
+optional identifier of the particular document. Will be added to the <code>desc</code> slot, and as a factor to the <code>"doc_id"</code> column
+of the <code>tokens</code> slot. If <code>NA</code>,
+the document name will be used (for <code>format="obj"</code> a random name).</p>
+</td></tr>
+<tr valign="top"><td><code>add.desc</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>,
+the tag description (column <code>"desc"</code> of the data.frame) will be added directly
+to the resulting object. If set to <code>"kRp.env"</code> this is fetched from <code><a href="../help/get.kRp.env.html">get.kRp.env</a></code>. Only needed if <code>tag=TRUE</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Only used for the method generic.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>tokenize</code> can try to guess what's a headline and where a paragraph was inserted (via the <code>detect</code> parameter).
+A headline is assumed if a line of text without sentence ending punctuation is found,
+a paragraph if two blocks of text
+are separated by space. This will add extra tags into the text: &quot;&lt;kRp.h&gt;&quot; (headline starts),
+&quot;&lt;/kRp.h&gt;&quot; (headline ends)
+and &quot;&lt;kRp.p/&gt;&quot; (paragraph),
+respectively. This can be useful in two cases: &quot;&lt;/kRp.h&gt;&quot; will be treated like a sentence ending,
+which gives you more control for automatic analyses. And adding to that,
+<code><a href="../help/pasteText.html">pasteText</a></code>
+can replace these tags, which probably preserves more of the original layout.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>tag=FALSE</code>, a character vector with the tokenized text. If <code>tag=TRUE</code>,
+returns an object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# code is only run when the english language package can be loaded
+if(require("koRpus.lang.en", quietly = TRUE)){
+  sample_file &lt;- file.path(
+    path.package("koRpus"), "examples", "corpus", "Reality_Winner.txt"
+  )
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en"
+  )
+
+  ## character manipulation
+  # this is useful if you know of problematic characters in your
+  # raw text files, but don't want to touch them directly. you
+  # don't have to, as you can substitute them, even using regular
+  # expressions. a simple example: replace all single quotes by
+  # double quotes througout the text:
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en",
+    clean.raw=list("'"='\"')
+  )
+
+  # now replace all occurrances of the letter A followed
+  # by two digits with the letter B, followed by the same
+  # two digits:
+  tokenized.obj &lt;- tokenize(
+    txt=sample_file,
+    lang="en",
+    clean.raw=list("(A)([[:digit:]]{2})"="B\\2"),
+    perl=TRUE
+  )
+
+  ## enabling stopword detection and stemming
+  if(all(
+    requireNamespace("tm", quietly=TRUE),
+    requireNamespace("SnowballC", quietly=TRUE)
+  )){
+    # if you also installed the packages tm and Snowball,
+    # you can use some of their features with koRpus:
+    tokenized.obj &lt;- tokenize(
+      txt=sample_file,
+      lang="en",
+      stopwords=tm::stopwords("en"),
+      stemmer=SnowballC::wordStem
+    )
+
+    # removing all stopwords now is simple:
+    tokenized.noStopWords &lt;- filterByClass(tokenized.obj, "stopword")
+  } else {}
+} else {}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

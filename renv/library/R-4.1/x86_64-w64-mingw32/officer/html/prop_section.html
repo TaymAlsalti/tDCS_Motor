@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: section properties</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for prop_section {officer}"><tr><td>prop_section {officer}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>section properties</h2>
+
+<h3>Description</h3>
+
+<p>A section is a grouping of blocks (ie. paragraphs and tables)
+that have a set of properties that define pages on which the text will appear.
+</p>
+<p>A Section properties object stores information about page composition,
+such as page size, page orientation, borders and margins.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+prop_section(
+  page_size = NULL,
+  page_margins = NULL,
+  type = NULL,
+  section_columns = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>page_size</code></td>
+<td>
+<p>page dimensions, an object generated with function <a href="../../officer/help/page_size.html">page_size</a>.</p>
+</td></tr>
+<tr valign="top"><td><code>page_margins</code></td>
+<td>
+<p>page margins, an object generated with function <a href="../../officer/help/page_mar.html">page_mar</a>.</p>
+</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+<p>Section type. It defines how the contents of the section will be
+placed relative to the previous section. Available types are &quot;continuous&quot;
+(begins the section on the next paragraph), &quot;evenPage&quot; (begins on the next
+even-numbered page), &quot;nextColumn&quot; (begins on the next column on the page),
+&quot;nextPage&quot; (begins on the following page), &quot;oddPage&quot; (begins on the next
+odd-numbered page).</p>
+</td></tr>
+<tr valign="top"><td><code>section_columns</code></td>
+<td>
+<p>section columns, an object generated with function <a href="../../officer/help/section_columns.html">section_columns</a>.</p>
+</td></tr>
+</table>
+
+
+<h3>Illustrations</h3>
+
+<p><img src="../help/figures/prop_section_doc_1.png" width=80% />
+</p>
+
+
+<h3>Note</h3>
+
+<p>There is no support yet for header and footer contents definition.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><a href="../../officer/help/block_section.html">block_section</a>
+</p>
+<p>Other functions for section definition: 
+<code><a href="../../officer/help/page_mar.html">page_mar</a>()</code>,
+<code><a href="../../officer/help/page_size.html">page_size</a>()</code>,
+<code><a href="../../officer/help/section_columns.html">section_columns</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(officer)
+
+landscape_one_column &lt;- block_section(
+  prop_section(
+    page_size = page_size(orient = "landscape"), type = "continuous"
+  )
+)
+landscape_two_columns &lt;- block_section(
+  prop_section(
+    page_size = page_size(orient = "landscape"), type = "continuous",
+    section_columns = section_columns(widths = c(4.75, 4.75))
+  )
+)
+
+doc_1 &lt;- read_docx()
+# there starts section with landscape_one_column
+doc_1 &lt;- body_add_table(doc_1, value = mtcars[1:10,], style = "table_template")
+doc_1 &lt;- body_end_block_section(doc_1, value = landscape_one_column)
+# there stops section with landscape_one_column
+
+
+# there starts section with landscape_two_columns
+doc_1 &lt;- body_add_par(doc_1, value = paste(rep(letters, 50), collapse = " "))
+doc_1 &lt;- body_end_block_section(doc_1, value = landscape_two_columns)
+# there stops section with landscape_two_columns
+
+doc_1 &lt;- body_add_table(doc_1, value = mtcars[1:25,], style = "table_template")
+
+print(doc_1, target = tempfile(fileext = ".docx"))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>officer</em> version 0.4.1 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

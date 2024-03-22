@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Tidy bibliography file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for tidy_bib_file {citr}"><tr><td>tidy_bib_file {citr}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Tidy bibliography file</h2>
+
+<h3>Description</h3>
+
+<p>Removes duplicate and unneeded entries from a Bib(La)Tex-file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tidy_bib_file(
+  rmd_file,
+  messy_bibliography,
+  file = NULL,
+  encoding = getOption("citr.encoding"),
+  betterbiblatex_format = getOption("citr.betterbiblatex_format")
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>rmd_file</code></td>
+<td>
+<p>Character. One or more paths to the R Markdown files that use the messy bibliography file.</p>
+</td></tr>
+<tr valign="top"><td><code>messy_bibliography</code></td>
+<td>
+<p>Character. Path to the messy bibliography file.</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>Character. Path and name for the to-be-created tidy bibliography. If <code>NULL</code> the messy bibliography is replaced.</p>
+</td></tr>
+<tr valign="top"><td><code>encoding</code></td>
+<td>
+<p>Character. Encoding of the Bib(La)TeX-file. See the <code><a href="../../base/html/connections.html">connection</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>betterbiblatex_format</code></td>
+<td>
+<p>Character. Bibliography format to export from Zotero/Juris-M. Can be either <code>"bibtex"</code> or <code>"biblatex"</code>. Ignored if <code>use_betterbiblatex = FALSE</code>.
+Requires that the <a href="https://github.com/retorquere/zotero-better-bibtex">Better BibTeX</a> is installed and
+Zotero/Juris-M is running.</p>
+</td></tr>
+</table>
+
+
+<h3>Examples</h3>
+
+<pre>
+NULL
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>citr</em> version 0.3.2 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

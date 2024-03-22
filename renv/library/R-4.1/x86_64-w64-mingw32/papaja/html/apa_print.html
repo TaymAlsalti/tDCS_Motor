@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Format statistics (APA 6th edition)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for apa_print {papaja}"><tr><td>apa_print {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Format statistics (APA 6th edition)</h2>
+
+<h3>Description</h3>
+
+<p>A generic function that takes objects from various statistical methods to create formatted character
+strings to report the results in accordance with APA manuscript guidelines. The function invokes particular
+methods, which depend on the <code><a href="../../base/html/class.html">class</a></code> of the first argument.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+apa_print(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>Output object. See details.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments passed to other methods. See details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Currently the following output objects are supported:
+</p>
+
+<ul>
+<li> <p><code>htest</code>
+</p>
+</li>
+<li> <p><code>lm</code> and <code>summary.lm</code>
+</p>
+</li>
+<li> <p><code>aov</code>, <code>aovlist</code>, <code>summary.aov</code>, and <code>summary.aovlist</code>
+</p>
+</li>
+<li> <p><code>anova</code> and <code>Anova.mlm</code>
+</p>
+</li></ul>
+
+
+
+<h3>Value</h3>
+
+<p>The form of the value returned by <code>apa_print</code> depends on the class of <code>x</code>. See the
+documentation of the particular methods for details (e.g., <code>?apa_print.htest</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other apa_print: 
+<code><a href="../../papaja/help/apa_print.BFBayesFactor.html">apa_print.BFBayesFactor</a>()</code>,
+<code><a href="../../papaja/help/apa_print.aov.html">apa_print.aov</a>()</code>,
+<code><a href="../../papaja/help/apa_print.emmGrid.html">apa_print.emmGrid</a>()</code>,
+<code><a href="../../papaja/help/apa_print.glht.html">apa_print.glht</a>()</code>,
+<code><a href="../../papaja/help/apa_print.glm.html">apa_print.glm</a>()</code>,
+<code><a href="../../papaja/help/apa_print.htest.html">apa_print.htest</a>()</code>,
+<code><a href="../../papaja/help/apa_print.list.html">apa_print.list</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# List methods for apa_print()
+methods("apa_print")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

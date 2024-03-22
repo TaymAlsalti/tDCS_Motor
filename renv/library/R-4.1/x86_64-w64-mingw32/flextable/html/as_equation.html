@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: equation chunk</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for as_equation {flextable}"><tr><td>as_equation {flextable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>equation chunk</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to insert equations into
+flextable with function <code><a href="../../flextable/help/compose.html">compose()</a></code>.
+It should be used inside a call to <code><a href="../../flextable/help/as_paragraph.html">as_paragraph()</a></code>.
+</p>
+<p>To use this function, package 'equatags' is required;
+also <code>equatags::mathjax_install()</code> must be executed only once
+to install necessary dependencies.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as_equation(x, width = 1, height = 0.2, unit = "in")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>values containing the 'MathJax' equations</p>
+</td></tr>
+<tr valign="top"><td><code>width, height</code></td>
+<td>
+<p>size of the resulting equation in inches</p>
+</td></tr>
+<tr valign="top"><td><code>unit</code></td>
+<td>
+<p>unit for width and height, one of &quot;in&quot;, &quot;cm&quot;, &quot;mm&quot;.</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p>Other chunk elements for paragraph: 
+<code><a href="../../flextable/help/as_bracket.html">as_bracket</a>()</code>,
+<code><a href="../../flextable/help/as_b.html">as_b</a>()</code>,
+<code><a href="../../flextable/help/as_chunk.html">as_chunk</a>()</code>,
+<code><a href="../../flextable/help/as_highlight.html">as_highlight</a>()</code>,
+<code><a href="../../flextable/help/as_image.html">as_image</a>()</code>,
+<code><a href="../../flextable/help/as_i.html">as_i</a>()</code>,
+<code><a href="../../flextable/help/as_sub.html">as_sub</a>()</code>,
+<code><a href="../../flextable/help/as_sup.html">as_sup</a>()</code>,
+<code><a href="../../flextable/help/colorize.html">colorize</a>()</code>,
+<code><a href="../../flextable/help/gg_chunk.html">gg_chunk</a>()</code>,
+<code><a href="../../flextable/help/hyperlink_text.html">hyperlink_text</a>()</code>,
+<code><a href="../../flextable/help/linerange.html">linerange</a>()</code>,
+<code><a href="../../flextable/help/lollipop.html">lollipop</a>()</code>,
+<code><a href="../../flextable/help/minibar.html">minibar</a>()</code>,
+<code><a href="../../flextable/help/plot_chunk.html">plot_chunk</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(flextable)
+if(require("equatags") &amp;&amp; mathjax_available()){
+
+eqs &lt;- c(
+  "(ax^2 + bx + c = 0)",
+  "a \\ne 0",
+  "x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}")
+df &lt;- data.frame(formula = eqs)
+df
+
+
+ft &lt;- flextable(df)
+ft &lt;- compose(
+  x = ft, j = "formula",
+  value = as_paragraph(as_equation(formula, width = 2, height = .5)))
+ft &lt;- align(ft, align = "center", part = "all")
+ft &lt;- width(ft, width = 2)
+ft
+
+}
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>flextable</em> version 0.6.10 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

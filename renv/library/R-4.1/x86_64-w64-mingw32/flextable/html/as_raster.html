@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: get a flextable as a raster</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for as_raster {flextable}"><tr><td>as_raster {flextable}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>get a flextable as a raster</h2>
+
+<h3>Description</h3>
+
+<p>save a flextable as an image and return the corresponding
+raster. This function has been implemented to let flextable be printed
+on a ggplot object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as_raster(x, zoom = 2, expand = 2, webshot = "webshot")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>a flextable object</p>
+</td></tr>
+<tr valign="top"><td><code>zoom, expand</code></td>
+<td>
+<p>parameters used by <code>webshot</code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>webshot</code></td>
+<td>
+<p>webshot package as a scalar character, one of &quot;webshot&quot; or
+&quot;webshot2&quot;.</p>
+</td></tr>
+</table>
+
+
+<h3>Note</h3>
+
+<p>This function requires packages: webshot and magick.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other flextable print function: 
+<code><a href="../../flextable/help/df_printer.html">df_printer</a>()</code>,
+<code><a href="../../flextable/help/flextable_to_rmd.html">flextable_to_rmd</a>()</code>,
+<code><a href="../../flextable/help/htmltools_value.html">htmltools_value</a>()</code>,
+<code><a href="../../flextable/help/knit_print.flextable.html">knit_print.flextable</a>()</code>,
+<code><a href="../../flextable/help/plot.flextable.html">plot.flextable</a>()</code>,
+<code><a href="../../flextable/help/print.flextable.html">print.flextable</a>()</code>,
+<code><a href="../../flextable/help/save_as_docx.html">save_as_docx</a>()</code>,
+<code><a href="../../flextable/help/save_as_html.html">save_as_html</a>()</code>,
+<code><a href="../../flextable/help/save_as_image.html">save_as_image</a>()</code>,
+<code><a href="../../flextable/help/save_as_pptx.html">save_as_pptx</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ft &lt;- qflextable( head( mtcars ) )
+## Not run: 
+if( require("ggplot2") &amp;&amp; require("webshot") ){
+  print(qplot(speed, dist, data = cars, geom = "point"))
+  grid::grid.raster(as_raster(ft))
+}
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>flextable</em> version 0.6.10 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Remove Incomplete Observations from Data Frame</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for complete_observations {papaja}"><tr><td>complete_observations {papaja}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Remove Incomplete Observations from Data Frame</h2>
+
+<h3>Description</h3>
+
+<p>This is an internal function that is used to remove incomplete observations
+from a <code>data.frame</code>. It removes (1) explicit NAs and (2) cases with
+implicit NAs, i.e. participants who did not provide observations for all
+combinations of (possibly multiple) within-subjects factors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+complete_observations(data, id, within, dv)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>The <code>data.frame</code> to be processed.</p>
+</td></tr>
+<tr valign="top"><td><code>id</code></td>
+<td>
+<p>Character. Name of the column containing the subject identifier.</p>
+</td></tr>
+<tr valign="top"><td><code>within</code></td>
+<td>
+<p>Character. Names of the columns containing within-subjects factors.</p>
+</td></tr>
+<tr valign="top"><td><code>dv</code></td>
+<td>
+<p>Character. Name of the column containing the dependent variable.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> where NAs and incomplete observations are removed.
+It also has up to two additional attributes <code>removed_cases_explicit_NA</code>
+and <code>removed_cases_implicit_NA</code>, carrying the subject identifiers of
+participants whose data has been removed.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>papaja</em> version 0.1.0.9997 <a href="00Index.html">Index</a>]</div>
+</div></body></html>

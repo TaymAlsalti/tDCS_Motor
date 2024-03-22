@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Readability: Traenkle-Bailer Formeln</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+
+<table width="100%" summary="page for traenkle.bailer {koRpus}"><tr><td>traenkle.bailer {koRpus}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Readability: Traenkle-Bailer Formeln</h2>
+
+<h3>Description</h3>
+
+<p>This is just a convenient wrapper function for <code><a href="../help/readability.html">readability</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+traenkle.bailer(
+  txt.file,
+  TB1 = c(const = 224.6814, awl = 79.8304, asl = 12.24032, prep = 1.292857),
+  TB2 = c(const = 234.1063, awl = 96.11069, prep = 2.05444, conj = 1.02805),
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>txt.file</code></td>
+<td>
+<p>Either an object of class <code><a href="../help/kRp.text-class.html">kRp.text</a></code>,
+a character vector which must be be
+a valid path to a file containing the text to be analyzed,
+or a list of text features. If the latter, calculation
+is done by <code><a href="../help/readability.num.html">readability.num</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>TB1</code></td>
+<td>
+<p>A numeric vector with named magic numbers for the first of the formulas.</p>
+</td></tr>
+<tr valign="top"><td><code>TB2</code></td>
+<td>
+<p>A numeric vector with named magic numbers for the second of the formulas.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Further valid options for the main function,
+see <code><a href="../help/readability.html">readability</a></code> for details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>This function calculates the two formulae by Tr\&quot;ankle-Bailer,
+which are based on the Dickes-Steiwer formulae.
+In contrast to <code><a href="../help/readability.html">readability</a></code>,
+which by default calculates all possible indices,
+this function will only calculate the index values.
+</p>
+<p>This formula doesn't need syllable count.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code><a href="../help/kRp.readability-class.html">kRp.readability</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+  traenkle.bailer(tagged.text)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>koRpus</em> version 0.13-8 <a href="00Index.html">Index</a>]</div>
+</div></body></html>
