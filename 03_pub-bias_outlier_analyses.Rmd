@@ -1,0 +1,341 @@
+---
+title: Publication bias and outlier analyses
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+**Load packages and dataset**
+```{r setup, echo = TRUE, message = FALSE}
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = TRUE,
+	error = FALSE, 
+	fig.width=8, 
+	fig.height=6
+)
+windowsFonts(Times = windowsFont("Times New Roman"))
+options(scipen = 999, digits = 2)
+
+
+library(groundhog)
+groundhog.library(c("tidyverse", "metafor", "meta"), date = "2024-02-14")
+groundhog.library("github::MathiasHarrer/dmetar", date = "2024-02-14")
+
+```
+
+
+
+# Meta-analysis 1
+```{r}
+MA1 <- readRDS("data/preprocessed/MA_all.rds") %>% 
+  filter(id_ma == 1)
+```
+
+
+## Publication bias analysis
+The analysis in this section mostly follows the tutorial [here](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/pub-bias.html#addressing-pubbias).
+
+### PET-PEESE
+Collate the necessary variables
+For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
+```{r}
+petpeese <- data.frame(smd = MA1$smd_ma) # smds
+petpeese$v <- MA1$v_ma # sampling variances (extracted from the figures)
+petpeese$se <- MA1$se_ma # standard errors of SMD estimates
+petpeese$w <- 1/petpeese$v # inverse variance weights
+```
+
+PET (precision-effect test)
+```{r}
+pet <- lm(smd ~ se, weights = w, data = petpeese)
+summary(pet)$coefficients
+```
+
+PEESE (precision-effect estimate with standard error)
+```{r}
+peese <- lm(smd ~ v, weights = w, data = petpeese)
+summary(peese)$coefficients
+```
+Both estimates indicate the presence of publication bias.
+
+
+### P-Curve
+
+P-Curve
+```{r}
+ma3 <- metagen(TE = smd_ma,
+              seTE = se_ma,
+              studlab = as.character(id_comparison),
+              data = MA1,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA.
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+
+pcurve(ma3, 
+       effect.estimation = TRUE,
+       N = MA1$nt_ma + MA1$nc_ma, 
+       dmin = 0,
+       dmax = 1)
+```
+No indication of bias.
+
+
+### Three-parameter selection model
+Create a `metafor` package meta-analysis object, necessary for the `selmodel` function
+```{r}
+ma3_metafor <- rma(yi = smd_ma,        
+          sei = se_ma,
+          data = MA1,
+          method = "DL")
+```
+
+Fit the selection model
+```{r}
+selmodel(ma3_metafor,
+         type = "stepfun",
+         steps = 0.025)
+```
+No indication of bias.
+
+
+## Outlier/influence diagnostics
+### Leave-one-out analysis
+```{r}
+metainf(ma3, pooled = "random")
+```
+Removing SMD 8 for example would reduce the pooled SMD by ~ 0.05 and considerably reduce the variance.
+
+### Some plots
+Baujat 
+```{r}
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
+plot(outl, "baujat")
+```
+
+Forest plot
+```{r}
+plot(outl, "ES")
+```
+
+
+SMDs 6, 7, and 8 contribute disproportionately to both the variance and the pooled SMD.
+
+### Run meta-analysis without outliers
+```{r}
+s <- update(ma3, subset = -c(6, 7, 8))
+forest(s,
+
+            print.tau2 = TRUE,
+            leftlabs = c("SMD No.", "d", "SE"))
+```
+Removing the outliers increases the pooled SMD by ~ 0.07 and eliminates between-study heterogeneity altogether.
+
+# Meta-analysis 2
+```{r}
+MA2 <- readRDS("data/preprocessed/MA_all.rds") %>% 
+  filter(id_ma == 2)
+```
+
+## Publication bias analysis
+
+### PET-PEESE
+Collate the necessary variables
+For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
+```{r}
+petpeese <- data.frame(smd = MA2$smd_ma) # smds
+petpeese$v <- MA2$se_ma^2 # sampling variances (extracted from the figures)
+petpeese$se <- MA2$se_ma # standard errors of SMD estimates
+petpeese$w <- 1/petpeese$v # inverse variance weights
+```
+
+PET (precision-effect test)
+```{r}
+pet <- lm(smd ~ se, weights = w, data = petpeese)
+summary(pet)$coefficients
+```
+
+PEESE (precision-effect estimate with standard error)
+```{r}
+peese <- lm(smd ~ v, weights = w, data = petpeese)
+summary(peese)$coefficients
+```
+
+
+### P-Curve
+
+P-Curve
+```{r}
+ma3 <- metagen(TE = smd_ma,
+              seTE = se_ma,
+              studlab = as.character(id_comparison),
+              data = MA2,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA.
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+
+
+pcurve(ma3, 
+       effect.estimation = TRUE,
+       N = MA2$nt_ma + MA2$nc_ma, 
+       dmin = 0,
+       dmax = 1)
+```
+
+
+
+### Three-parameter selection model
+Create a `metafor` package meta-analysis object, necessary for the `selmodel` function
+```{r}
+ma3_metafor <- rma(yi = smd_ma,        
+          sei = se_ma,
+          data = MA2,
+          method = "DL")
+```
+
+Fit the selection model
+```{r}
+selmodel(ma3_metafor,
+         type = "stepfun",
+         steps = 0.025)
+```
+
+
+
+## Outlier/influence diagnostics
+### Leave-one-out analysis
+```{r}
+metainf(ma3, pooled = "random")
+```
+
+
+### Some plots
+Baujat 
+```{r}
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
+plot(outl, "baujat")
+```
+
+Forest plot
+```{r}
+plot(outl, "ES")
+```
+### Run meta-analysis without outliers
+```{r}
+s <- update(ma3, subset = -c(8, 9, 11, 19))
+forest(s,
+
+            print.tau2 = TRUE,
+            leftlabs = c("SMD No.", "d", "SE"))
+```
+
+# Meta-analysis 3
+
+```{r}
+MA3 <- readRDS("data/preprocessed/MA_all.rds") %>% 
+  filter(id_ma == 3)
+```
+
+
+## Publication bias analysis
+
+### PET-PEESE
+Collate the necessary variables
+For the PET-PEESE model, the effect sizes (here SMDs), their SEs, their variances, and their inverse-variance weights, are needed.
+```{r}
+petpeese <- data.frame(smd = MA3$smd_ma) # smds
+petpeese$v <- MA3$v_ma # sampling variances (extracted from the figures)
+petpeese$se <- MA3$se_ma # standard errors of SMD estimates
+petpeese$w <- 1/petpeese$v # inverse variance weights
+```
+
+PET (precision-effect test)
+```{r}
+pet <- lm(smd ~ se, weights = w, data = petpeese)
+summary(pet)$coefficients
+```
+
+PEESE (precision-effect estimate with standard error)
+```{r}
+peese <- lm(smd ~ v, weights = w, data = petpeese)
+summary(peese)$coefficients
+```
+
+
+### P-Curve
+
+P-Curve
+```{r}
+ma3 <- metagen(TE = smd_ma,
+              seTE = se_ma,
+              studlab = as.character(id_comparison),
+              data = MA3,
+              sm = "SMD",
+              fixed = FALSE,
+              random = TRUE, # a random effects MA.
+              method.tau = "DL", # DerSimonian-Laird estimator
+                 )
+
+pcurve(ma3, 
+       effect.estimation = TRUE,
+       N = MA3$nt_ma + MA3$nc_ma, 
+       dmin = 0,
+       dmax = 1)
+```
+
+
+
+### Three-parameter selection model
+Create a `metafor` package meta-analysis object, necessary for the `selmodel` function
+```{r}
+ma3_metafor <- rma(yi = smd_ma,        
+          sei = se_ma,
+          data = MA3,
+          method = "DL")
+```
+
+Fit the selection model
+```{r}
+selmodel(ma3_metafor,
+         type = "stepfun",
+         steps = 0.025)
+```
+
+
+
+## Outlier/influence diagnostics
+### Leave-one-out analysis
+```{r}
+metainf(ma3, pooled = "random")
+```
+
+
+### Some plots
+Baujat 
+```{r}
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
+plot(outl, "baujat")
+```
+
+Forest plot
+```{r}
+plot(outl, "ES")
+```
+
+### Run meta-analysis without outliers
+```{r}
+s <- update(ma3, subset = -c(2))
+forest(s,
+
+            print.tau2 = TRUE,
+            leftlabs = c("SMD No.", "g", "SE"))
+```

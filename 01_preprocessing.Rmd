@@ -1,0 +1,143 @@
+---
+title: "Data preprocessing"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+
+```{r setup, echo = TRUE, message = FALSE}
+
+
+knitr::opts_chunk$set(
+	message = FALSE,
+	warning = FALSE,
+	include = TRUE,
+	error = FALSE
+)
+
+
+windowsFonts(Times = windowsFont("Times New Roman"))
+options(scipen = 999, digits = 3)
+
+
+library(groundhog)
+groundhog.library(c("tidyverse", "readxl"), date = "2024-02-14")
+```
+
+
+# Meta-analysis 1
+
+
+```{r}
+
+MA1 <- read_excel("data/raw/Data_ps_raw.xlsx", sheet = "MA1") %>%
+  # remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to convert to SDs
+  mutate(across(everything(), ~ gsub("[/*]", "", ., fixed = FALSE))) %>%
+  # make values numeric
+  mutate(across(starts_with(c('i', 'w', 'y', 's', 'm', 'n', 'ci', 'e', 'p_', 't_', 'F_')), as.numeric))
+
+
+# convert non SDs to SDs
+MA1 <- MA1 %>%
+  mutate(
+    sdc_ps.1 = case_when(
+      # SE to SD
+      row_number() == 3    ~ sdc_ps.1 * sqrt(10), 
+      # upper bounds of CI bars extracted from figures to SDs
+      row_number() == 20   ~ (sdc_ps.1 - mc_ps.1) * sqrt(45) / 1.96, 
+      # upper bounds of SD bars extracted from figures to SDs
+      row_number() == 4    ~ sdc_ps.1 - mc_ps.1, 
+      # upper bounds of SE bars extracted from figures to SDs
+      row_number() == 1    ~ (sdc_ps.1 - mc_ps.1) * sqrt(7),
+      row_number() == 2    ~ (sdc_ps.1 - mc_ps.1) * sqrt(9),
+      row_number() == 8    ~ (sdc_ps.1 - mc_ps.1) * sqrt(13),
+      row_number() == 9    ~ (sdc_ps.1 - mc_ps.1) * sqrt(13),
+      row_number() == 10   ~ (sdc_ps.1 - mc_ps.1) * sqrt(7),
+      row_number() == 11   ~ (sdc_ps.1 - mc_ps.1) * sqrt(7),
+      TRUE                ~ sdc_ps.1
+    ),
+    sdt_ps.1 = case_when(
+      # SE to SD
+      row_number() == 3    ~ sdt_ps.1 * sqrt(10), 
+      # upper bounds of CI bars extracted from figures to SDs
+      row_number() == 20   ~ (sdt_ps.1 - mt_ps.1) * sqrt(45) / 1.96, 
+      # upper bounds of SD bars extracted from figures to SDs
+      row_number() == 4    ~ sdt_ps.1 - mt_ps.1, 
+      # upper bounds of SE bars extracted from figures to SDs
+      row_number() == 1    ~ (sdt_ps.1 - mt_ps.1) * sqrt(7),
+      row_number() == 2    ~ (sdt_ps.1 - mt_ps.1) * sqrt(9),
+      row_number() == 8    ~ (sdt_ps.1 - mt_ps.1) * sqrt(14),
+      row_number() == 9    ~ (sdt_ps.1 - mt_ps.1) * sqrt(13),
+      row_number() == 10   ~ (sdt_ps.1 - mt_ps.1) * sqrt(6),
+      row_number() == 11   ~ (sdt_ps.1 - mt_ps.1) * sqrt(5),
+      TRUE                ~ sdt_ps.1
+    )
+  )
+
+```
+
+
+
+
+
+
+# Meta-analysis 2
+
+
+```{r}
+MA2 <- read_excel("data/raw/Data_ps_raw.xlsx", sheet = "MA2") %>%
+  # remove characters marking SEs, upper bounds of SE bars, or upper bounds of CIs, to convert to SDs
+  mutate(across(everything(), ~ gsub("[/*]", "", ., fixed = FALSE))) %>%
+  # make values numeric
+  mutate(across(starts_with(c('i', 'w', 'y', 's', 'm', 'n', 'ci', 'e', 'p_', 't_', 'F_')), as.numeric))
+
+
+# Convert upper bounds of SE bars extracted from figures to SDs
+MA2[10, "sdc_ps.1"] <- (MA2[10, "sdc_ps.1"] - MA2[10, "mc_ps.1"]) * sqrt(13)
+MA2[10, "sdt_ps.1"] <- (MA2[10, "sdt_ps.1"] - MA2[10, "mt_ps.1"]) * sqrt(13)
+
+MA2[11, "sdc_ps.1"] <- (MA2[11, "sdc_ps.1"] - MA2[11, "mc_ps.1"]) * sqrt(13)
+MA2[11, "sdt_ps.1"] <- (MA2[11, "sdt_ps.1"] - MA2[11, "mt_ps.1"]) * sqrt(13)
+
+MA2[12, "sdc_ps.1"] <- (MA2[12, "sdc_ps.1"] - MA2[12, "mc_ps.1"]) * sqrt(6)
+MA2[12, "sdt_ps.1"] <- (MA2[12, "sdt_ps.1"] - MA2[12, "mt_ps.1"]) * sqrt(7)
+
+MA2[18, "sdc_ps.1"] <- (MA2[18, "sdc_ps.1"] - MA2[18, "mc_ps.1"]) * sqrt(13)
+
+
+# Convert lower bounds of SE bars extracted from figures to SDs
+MA2[13, "sdc_ps.1"] <- (MA2[13, "sdc_ps.1"] + MA2[13, "mc_ps.1"]) * sqrt(25)
+MA2[13, "sdt_ps.1"] <- (MA2[13, "sdt_ps.1"] + MA2[13, "mt_ps.1"]) * sqrt(25)
+
+MA2[18, "sdt_ps.1"] <- (MA2[18, "sdt_ps.1"] + MA2[18, "mt_ps.1"]) * sqrt(13)
+```
+
+# Meta-analysis 3
+
+```{r}
+MA3 <- read_excel("data/raw/Data_ps_raw.xlsx", sheet = "MA3") %>%
+  # make values numeric
+  mutate(across(starts_with(c('i', 'w', 'y', 's', 'm', 'n', 'ci', 'e', 'p_', 't_', 'F_')), as.numeric))
+```
+
+
+# Save
+```{r}
+saveRDS(MA1, "data/preprocessed/MA1.rds")
+saveRDS(MA2, "data/preprocessed/MA2.rds")
+saveRDS(MA3, "data/preprocessed/MA3.rds")
+
+```
+
+
+```{r}
+sessionInfo()
+```
+
+
+
