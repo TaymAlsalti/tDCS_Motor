@@ -117,12 +117,13 @@ Removing SMD 8 for example would reduce the pooled SMD by ~ 0.05 and considerabl
 Baujat 
 ```{r}
 outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 2)
-plot(outl, "baujat")
+plot(outl, "baujat", )
 ```
 
 Forest plot
 ```{r}
-plot(outl, "ES")
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 1.5)
+plot(outl, "ES", text.scale = 2)
 ```
 
 
@@ -227,8 +228,10 @@ plot(outl, "baujat")
 
 Forest plot
 ```{r}
-plot(outl, "ES")
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 1.5)
+plot(outl, "ES", text.scale = 2)
 ```
+
 ### Run meta-analysis without outliers
 ```{r}
 s <- update(ma3, subset = -c(8, 9, 11, 19))
@@ -328,7 +331,8 @@ plot(outl, "baujat")
 
 Forest plot
 ```{r}
-plot(outl, "ES")
+outl <- InfluenceAnalysis(ma3, random = TRUE, text.scale = 1.5)
+plot(outl, "ES", text.scale = 2)
 ```
 
 ### Run meta-analysis without outliers

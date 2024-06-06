@@ -16,16 +16,19 @@ knitr::opts_chunk$set(
 	warning = FALSE,
 	include = TRUE,
 	error = FALSE, 
-	fig.width=8, 
-	fig.height=6
+	fig.width=7, 
+	fig.height=5
 )
 
-windowsFonts(Times = windowsFont("Times New Roman"))
-options(scipen = 999, digits = 3)
+
 
 
 library(groundhog)
 groundhog.library(c("tidyverse", "kableExtra", "MAd", "meta"), date = "2024-02-14")
+
+windowsFonts(Times = windowsFont("Times New Roman"))
+options(scipen = 999, digits = 3)
+theme_set(theme_minimal(base_size = 12, base_family = "Times"))
 
 ```
 
@@ -75,10 +78,11 @@ MA1_co <- compute_ds(n_ps, mt_ps.1, sdt_ps.1, n_ps, mc_ps.1, sdc_ps.1, data = MA
 ```
 
 Reproduced SMDs 12, 13, 21 deviate from the reported ones beyond what would be expected as a result of rounding or differences in how values were extracted from figures. For SMDs 12 and 13, other values could have been used:
-SMDs 12 and 13 had another set of means and SDs:
+SMDs 12 and 13 and 21 had another set of means and SDs:
 ```{r}
 compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[12]]
 compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[13]]
+compute_ds(n_ps, mt_ps.2, sdt_ps.2, n_ps, mc_ps.2, sdc_ps.2, data = MA1, denom = "pooled.sd")$d[[21]]
 ```
 
 Still not reproducible. SMD 13 does reproduce the Cohen's $d$ reported in the primary study, though. 
@@ -87,25 +91,25 @@ Still not reproducible. SMD 13 does reproduce the Cohen's $d$ reported in the pr
 Data extraction was correct for all SMDs and no further data were extracted (see data sheets column "comments" for sources of data).
 
 1. Faithfully reproducible
-2. Faithfully approximated 
+2. Faithfully approximated by entering the total sample size as both the control and treatment groups sample size.
 3. Faithfully reproducible
 4. Faithfully approximated
 5. Faithfully reproducible
 6. Faithfully reproducible
 7. Faithfully reproducible
-8. irreproducible
-9. irreproducible
-10. approximated
-11. approximated
+8. Faithfully irreproducible
+9. Faithfully irreproducible
+10. Faithfully approximated
+11. Faithfully approximated
 12. irreproducible. SMD based on the first set of means and SDs will be used for MA model 2  (according to definition below) since the control values here are the baseline (0) values which corresponds more or less to the meta-analysts' description of their procedure "baseline: Ctrl".
 13. irreproducible. SMD based on the first set will be used for MA model 2 since the control values here are the baseline (0) values which corresponds more or less to the meta-analysts' description of their procedure "baseline: Ctrl".
-14. successfully reproduced
-15. approximated
-16. irreproducible using the values purported to have been used by the meta-analysts "3J-ROM(ctDCS on cH during OT at retention: Rx vs sham during OT at retention: Ctrl)", successfully reproduced using "Proportional change in 3J-ROM" values. The SMD based on the latter values will be used for MA model 2 .
-17. irreproducible. 
-18. irreproducible.
-19. successfully reproduced but not according to the information given in the MA. the values used are for changes in JHFT time from baseline whereas the meta-analysts report using "Time in JHFT".
-20. successfully reproduced using a $p$-value based on difference in medians test. 
+14. Faithfully reproducible
+15. Brute-force approximated because based on change from baseline values when the MA gives "Score in JHFT (atDCS on iH during OT at retention: Rx vs sham during OT at retention: Ctrl)" as outcome
+16. Faithfully irreproducible using the values purported to have been used by the meta-analysts "3J-ROM(ctDCS on cH during OT at retention: Rx vs sham during OT at retention: Ctrl)", successfully reproduced using "Proportional change in 3J-ROM" values. The SMD based on the latter values will be used for MA model 2 .
+17. Faithfully irreproducible. 
+18. Faithfully irreproducible.
+19. Reproducible but not according to the information given in the MA. the values used are for changes in JHFT time from baseline whereas the meta-analysts report using "Time in JHFT".
+20. Brute-force reproducible using a $p$-value based on difference in medians test. 
 21. irreproducible.
 
 
@@ -414,7 +418,7 @@ For SMD 3, an SMD was reported in the primary study which was close to the one r
 7. Since the means and SDs from the first set are for changes in the outcome and not raw, I extracted raw means and SDs from figures. SMDs based on these values will be used for the pooled SMD. The SMD is irreproducible.
 8. successfully reproduced using a $p$ value for the comparison between the 3 groups cathodal, anodal and sham at post, will be used for MA model 2
 9. Data extraction correct, primary SMD irreproducible. successfully reproduced using a $p$ value for the comparison between the 3 groups cathodal, anodal and sham at post, will be used for MA model 2
-10. SMD can be considered as reproducible since the difference is probably due to variation in how the means and SDs were extracted from the figure. NOPE ACCORDING TO CLASSIFICATION SCHEME
+10. SMD can be considered as reproducible since the difference is probably due to variation in how the means and SDs were extracted from the figure.
 11. Same as 10, but negative since the scale used is negatively coded.
 12. I made a mistake in extracting sample sizes. The SMD remains irreproducible after correction.
 13. Data extraction correct, primary SMD irreproducible.
@@ -812,11 +816,11 @@ compute_gs(d, vd, nt_ps, nc_ps, MA3)$g[6]
 yup
 
 
-1. SMD 1 could be reproduced using a $p$ value (given as a range <0.01) for the comparison between the control and treatment medians at post. It will be used for MMA2.
-2. Best approximated by taking the first set of means and SDs (SMA) and doubling the sample size for the treatment group (USED FOR MMA2). It was negative because the variable is reaction times. The variation without doubling the sample size and by averaging the two sets will be used for MMA 1 since it corresponds to other reproducible SMDs. 
+1. SMD 1 could be brute-force reproduced using a $p$ value (given as a range <0.01) for the comparison between the control and treatment medians at post. 
+2. Approximated by taking the first set of means and SDs (SMA) and doubling the sample size for the treatment group (USED FOR MMA2). It was negative because the variable is reaction times. The variation without doubling the sample size and by averaging the two sets will be used for MMA 1 since it corresponds to other reproducible SMDs. 
 3. Same as 1 
 4. reproducible based on means and SDs of change percentages from pre to post 
-5. SMD 5 was approximated well by averaging sets 1 and 2 and computing the SMD based on the averaged values. 
+5. SMD 5 was approximated well by averaging sets 1 and 2 and computing the SMD based on the averaged values. Faithfully approximated because both outcomes are defined as primary outcomes in the primary study.
 6. SMD 6 could be reproduced using a $p$ value for the comparison between the control and treatment mean change from baseline. 
 
 
@@ -1054,13 +1058,13 @@ ggplot(MA_all, aes(smd_ma, round(smd_re1, 2))) +
   geom_point(aes(color = id_ma, shape = id_ma), size = 2.25) +
   theme_classic(base_family = "Times", base_size = 12)+
   labs(
-    x = "Reported primary SMD",
-    y = "Faithfully reproduced primary SMD",
+    x = "Reported primary ES",
+    y = "Reproduced primary ES",
     color = "Meta-analysis ID",
     shape = "Meta-analysis ID"
   ) +
-annotate("text", x = 0, y = 1.80, size = 4, label = "Underestimates pooled SMD", family = "Times") +
-annotate("text", x = 1, y = -.5, size = 4, label = "Overestimates pooled SMD", family = "Times") +
+annotate("text", x = 0, y = 1.80, size = 4, label = "Undererstimates ES", family = "Times") +
+annotate("text", x = 1, y = -.5, size = 4, label = "Overestimates ES", family = "Times") +
 scale_colour_manual(values = c("#009e73", "#0072b2", "#e69f00")) + theme(aspect.ratio=1)
 
 ```
@@ -1077,8 +1081,8 @@ ggplot(MA_all, aes(smd_ma, round(smd_re2, 2))) +
     color = "Meta-analysis ID",
     shape = "Meta-analysis ID"
   ) +
-annotate("text", x = 0, y = 1.80, size = 4, label = "Underestimates pooled SMD", family = "Times") +
-annotate("text", x = 1, y = -.5, size = 4, label = "Overestimates pooled SMD", family = "Times") +
+annotate("text", x = 0, y = 1.80, size = 4, label = "Underestimates ES", family = "Times") +
+annotate("text", x = 1, y = -.5, size = 4, label = "Overestimates ES", family = "Times") +
 scale_colour_manual(values = c("#009e73", "#0072b2", "#e69f00")) + theme(aspect.ratio=1)
 ```
 
